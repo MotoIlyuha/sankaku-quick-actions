@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.20.0
+// @version      1.20.1
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -5103,9 +5103,10 @@ function core(storedSettings) {
       }
       const n = wantVote && id ? voteOfId(id) : 0;
       cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
+      // ноль не показываем: пустой угол спокойнее, чем «♥ 0» на половине сетки
       const favs = wantFavs && id ? favsOfId(id) : null;
-      cardBadge(card, 'skq-favs', favs == null ? null : `♥ ${shortCount(favs)}`,
-        favs == null ? '' : t('Лайков: {n}', { n: favs }));
+      cardBadge(card, 'skq-favs', favs ? `♥ ${shortCount(favs)}` : null,
+        favs ? t('Лайков: {n}', { n: favs }) : '');
     }
   }
 
