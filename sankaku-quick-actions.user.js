@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.22.0
+// @version      1.23.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -4329,6 +4329,13 @@ function core(storedSettings) {
   const kb = { mode: false, card: null, id: null };
   let hoverCard = null;
 
+  // Телефон: наведения нет, клавиатуры обычно тоже. Медиазапрос честнее, чем
+  // разбор userAgent, и переключается сам, если подключили мышь.
+  const coarse = typeof matchMedia === 'function' ? matchMedia('(hover: none)') : null;
+  const TOUCH = () => !!(coarse && coarse.matches);
+  const markTouch = () => document.documentElement.classList.toggle('skq-touch', TOUCH());
+  if (coarse && coarse.addEventListener) coarse.addEventListener('change', markTouch);
+
   const isObj = (o) => o && typeof o === 'object';
   const looksLikePost = (o) =>
     isObj(o) && !Array.isArray(o) &&
@@ -5776,6 +5783,39 @@ function core(storedSettings) {
     }, true);
   }
 
+  // На телефоне наведения нет: скрытое превью открывается долгим нажатием,
+  // а открыть пост после него мы не даём — иначе жест был бы бесполезен.
+  if (!FRAME_MODE) {
+    const press = { timer: 0, card: null, x: 0, y: 0, opened: false };
+    const pressOff = () => { clearTimeout(press.timer); press.timer = 0; press.card = null; };
+
+    document.addEventListener('pointerdown', (e) => {
+      if (!e.isTrusted || e.pointerType === 'mouse' || !TOUCH()) return;
+      const card = closestEl(e.target, CARD_SEL);
+      if (!card || !isHidden(card)) return;
+      Object.assign(press, { card, x: e.clientX, y: e.clientY, opened: false });
+      press.timer = setTimeout(() => {
+        press.timer = 0;
+        press.opened = true;
+        reveal(card);
+      }, Math.max(300, settings.revealHoverMs));
+    }, true);
+
+    document.addEventListener('pointermove', (e) => {
+      if (!press.card) return;
+      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) pressOff();
+    }, true);
+    for (const type of ['pointerup', 'pointercancel', 'scroll']) {
+      document.addEventListener(type, pressOff, true);
+    }
+    document.addEventListener('click', (e) => {
+      if (!press.opened) return;
+      press.opened = false;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+  }
+
   // Реальное движение мыши возвращает управление мыши
   let lastMouse = null;
   document.addEventListener('mousemove', (e) => {
@@ -6170,6 +6210,19 @@ function core(storedSettings) {
     .muted { color: #888; }
     .tpub { display: none; }
     .list.grid .item.created .tile { cursor: default; }
+    /* телефон: одна колонка фактов, плитки помельче, кнопки покрупнее.
+       Сенсорный экран учитываем до 1000px — планшет тоже, ноутбук нет. */
+    @media (max-width: 700px), (hover: none) and (max-width: 1000px) {
+      .page { padding: 0 10px 40px; }
+      .top { gap: 8px; padding: 10px 0; }
+      .title { font-size: 17px; }
+      .btn { padding: 10px 14px; }
+      .drop { padding: 22px 14px; }
+      .head { flex-wrap: wrap; gap: 6px; padding: 8px; }
+      .body { height: 75vh; }
+      .facts { grid-template-columns: 1fr; gap: 6px; }
+      .list.grid { grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; }
+    }
     .list.grid .item.created .pic { opacity: .35; }
     .list.grid .item.created .check { display: none; }
     .list.grid .item.created .tpub {
@@ -6490,16 +6543,21 @@ function core(storedSettings) {
   const openForms = () => mass.items.filter((it) => it.iframe).length;
   const nextForForm = () => mass.items.find((it) => !it.iframe && !it.created) || null;
 
+  // на телефоне каждая форма — целая копия страницы сайта, больше двух не тянет
+  const formLimit = () => {
+    const limit = Math.max(1, settings.massMaxForms | 0);
+    return TOUCH() ? Math.min(2, limit) : limit;
+  };
+
   function pumpForms() {
     if (pumpTimer) return;
-    const limit = Math.max(1, settings.massMaxForms | 0);
-    if (openForms() >= limit || !nextForForm()) return;
+    if (openForms() >= formLimit() || !nextForForm()) return;
     const wait = Math.max(0, MASS_GAP - (Date.now() - lastFormOpenAt));
     pumpTimer = setTimeout(() => {
       pumpTimer = 0;
       const item = nextForForm();
       // за время паузы файл могли убрать, а место — занять
-      if (item && openForms() < Math.max(1, settings.massMaxForms | 0)) {
+      if (item && openForms() < formLimit()) {
         lastFormOpenAt = Date.now();
         openForm(item);
       }
@@ -8624,6 +8682,19 @@ function core(storedSettings) {
     .actions .spacer { flex: 1; }
     .save { background: #ff8c00; border-color: #ff8c00; color: #fff; font-weight: 500; }
     .save:hover { background: #ff9d26; }
+    .dlg.touch .keys-only { display: none; }
+    /* телефон: окно во весь экран и цели покрупнее */
+    @media (max-width: 600px), (hover: none) {
+      .dlg {
+        left: 0; top: 0; transform: none; width: 100vw; max-width: none;
+        height: 100vh; max-height: none; border-radius: 0; padding: 16px 16px 24px;
+      }
+      .row, .num { padding: 9px 0; }
+      input[type=checkbox] { width: 20px; height: 20px; }
+      input[type=number] { width: 104px; padding: 8px; font-size: 16px; }
+      button { padding: 10px 16px; font-size: 15px; }
+      .actions { position: sticky; bottom: 0; background: #2b2b2b; padding: 10px 0 2px; }
+    }
   `;
 
   function openSettings() {
@@ -8665,7 +8736,7 @@ function core(storedSettings) {
           <legend>${T('Скрытые превью')}</legend>
           <label class="num"><span class="grow">${T('Показывать при наведении мышью через')}</span>
             <input type="number" name="revealHoverMs" min="0" max="60000" step="50"> ${T('мс')}</label>
-          <label class="num"><span class="grow">${T('Показывать при выборе стрелками через')}</span>
+          <label class="num keys-only"><span class="grow">${T('Показывать при выборе стрелками через')}</span>
             <input type="number" name="revealKeyboardMs" min="0" max="60000" step="50"> ${T('мс')}</label>
           <label class="row"><input type="checkbox" name="rehideOnBlur"> ${T('Снова скрывать, когда карточка теряет фокус')}</label>
           <label class="num sub"><span class="grow">${T('через')}</span>
@@ -8677,7 +8748,7 @@ function core(storedSettings) {
             <input type="number" name="massMaxForms" min="1" max="10" step="1"></label>
           <p class="hint">${T('Каждая форма — отдельная копия страницы «Создать пост»; много форм сразу нагружают браузер.')}</p>
         </fieldset>
-        <fieldset>
+        <fieldset class="keys-only">
           <legend>${T('Клавиши')}</legend>
           ${HOTKEYS.map((h) => `<div class="num"><span class="grow">${esc(hotkeyLabel(h))}</span>
             <button type="button" class="key" data-setting="${h.id}"></button></div>`).join('')}
@@ -8693,6 +8764,8 @@ function core(storedSettings) {
     if (!embedded) document.body.appendChild(host);
 
     const form = root.querySelector('form');
+    // на сенсорном экране клавиш нет — эти настройки только мешают
+    form.classList.toggle('touch', TOUCH());
     const f = (name) => form.elements.namedItem(name);
     const keyBtns = [...root.querySelectorAll('.key')];
     const hint = root.querySelector('.keyhint');
@@ -8814,7 +8887,7 @@ function core(storedSettings) {
   }
 
   const EMBEDDED_CSS = `
-    .dlg { position: static; transform: none; width: auto; max-width: none; max-height: none; overflow: visible; }
+    .dlg { position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none; overflow: visible; padding: 0; }
     .cancel { display: none; }
     .actions { position: sticky; bottom: 0; background: #2b2b2b; padding: 10px 0 2px; }
   `;
@@ -8999,6 +9072,8 @@ function core(storedSettings) {
     .skq-rep:hover .skq-rep-refresh, .skq-rep-refresh:focus { display: inline-flex; }
     .skq-rep-refresh svg { width: 14px; height: 14px; }
     .skq-rep.skq-rep-busy .skq-rep-refresh { display: inline-flex; animation: skq-spin 1s linear infinite; }
+    /* на телефоне наводить нечем — кнопка видна всегда */
+    @media (hover: none) { .skq-rep-refresh { display: inline-flex; } }
     @keyframes skq-spin { to { transform: rotate(360deg); } }
     .skq-emo-layer { position: fixed; inset: 0; pointer-events: none; z-index: 2147483646; }
     .skq-emo-badge {
@@ -9018,6 +9093,7 @@ function core(storedSettings) {
   `;
 
   function start() {
+    markTouch();
     const style = document.createElement('style');
     style.textContent = css;
     (document.head || document.documentElement).appendChild(style);

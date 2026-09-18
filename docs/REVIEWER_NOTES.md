@@ -20,6 +20,15 @@ Everything happens on that one site, with the user's own session. Nothing is
 unlocked, no paid feature is bypassed: the "Plus" reminders are only hidden
 from view, exactly like an ad blocker hides banners.
 
+## Firefox for Android
+
+The manifest declares `gecko_android` (142+). On a touch screen the add-on
+drops the parts that need a mouse or a keyboard: hotkeys and arrow-key
+navigation are not registered, hidden previews open with a long press instead
+of hover, the settings render as a full-screen sheet, and bulk upload keeps at
+most two embedded forms open. Everything else — rating, favorites, counters —
+works the same way.
+
 ## Data
 
 The add-on collects and transmits nothing. The only storage used is

@@ -53,6 +53,10 @@ class H(http.server.BaseHTTPRequestHandler):
             return self._send(200, json.dumps(posts), 'application/json')
         if path.startswith('/api/me'):
             return self._send(200, json.dumps({'success': True}), 'application/json')
+        if path == '/PreviewUnavailable.svg':
+            svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">'
+                   '<rect width="200" height="200" fill="#333"/></svg>')
+            return self._send(200, svg, 'image/svg+xml')
         if path == '/pic.svg':
             svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">'
                    '<rect width="200" height="200" fill="#555"/></svg>')

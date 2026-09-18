@@ -76,6 +76,21 @@ In the extension the settings open from the toolbar button, in Tampermonkey
 from the «⚙ Settings» menu command. On the site's own settings page both add a
 «Plugin» tab.
 
+## Phones
+
+The add-on is marked compatible with Firefox for Android (`gecko_android`,
+version 142 and newer). On a touch screen:
+
+- a hidden preview opens with a long press on the card instead of on hover;
+- the reputation refresh button is always visible, with no hover needed;
+- the settings open full screen with larger targets, and the «Keys» section and
+  the arrow-key delay are hidden — there is no keyboard there;
+- bulk upload keeps at most two forms open at once even if the setting says
+  more: every form is a full copy of the site's page.
+
+Not available on a phone: the hotkeys (1–5, F, C, E), selecting cards with the
+arrow keys, and revealing previews on hover.
+
 ## Cutting a release
 
 1. Bump `VERSION` in `build.py`, add a section to `CHANGELOG.md`.
