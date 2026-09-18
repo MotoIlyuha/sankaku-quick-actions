@@ -869,7 +869,7 @@ function core(storedSettings) {
   // ---------------------------------------------------------------------------
   const ACTIVE_SEL = '.skq-star, .skq-fav';
   const HEART_PATH_RE = /16\.5[\s,]+3|12 21\.35/;
-  const closestEl = (t, sel) => (t instanceof Element ? t.closest(sel) : null);
+  const closestEl = (node, sel) => (node instanceof Element ? node.closest(sel) : null);
 
   // Не пускаем нажатия к Draggable/Swiper/ссылкам под виджетом
   for (const type of ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'touchstart', 'touchend', 'dblclick']) {
@@ -879,14 +879,14 @@ function core(storedSettings) {
   }
 
   document.addEventListener('click', async (e) => {
-    const t = closestEl(e.target, ACTIVE_SEL);
-    if (!t) return;
+    const hit = closestEl(e.target, ACTIVE_SEL);
+    if (!hit) return;
     e.preventDefault();
     e.stopPropagation();
     e.stopImmediatePropagation();
 
-    const isFav = t.classList.contains('skq-fav');
-    const w = isFav ? t : t.closest('.skq-rate');
+    const isFav = hit.classList.contains('skq-fav');
+    const w = isFav ? hit : hit.closest('.skq-rate');
     if (!w || w.classList.contains('skq-busy')) return;
     w.classList.add('skq-busy');
     try {
@@ -897,7 +897,7 @@ function core(storedSettings) {
         const on = await toggleFav(p.id);
         toast(on ? t('Добавлено в избранное') : t('Убрано из избранного'));
       } else {
-        const n = await vote(p.id, +t.dataset.skqN);
+        const n = await vote(p.id, +hit.dataset.skqN);
         toast(n ? t('Оценка: {stars}', { stars: '★'.repeat(n) }) : t('Оценка снята'));
       }
       refreshPost(p.id);
@@ -1216,12 +1216,12 @@ function core(storedSettings) {
     kb.id = cardId(card);
     card.classList.add('skq-kb-active');
     ensureVisible(card);
-    const t = hoverTarget(card);
+    const target = hoverTarget(card);
     if (prev && prev !== card) {
-      fire(hoverTarget(prev), 'out', t);
+      fire(hoverTarget(prev), 'out', target);
       cardLeft(prev);
     }
-    if (prev !== card) fire(t, 'over', prev ? hoverTarget(prev) : null);
+    if (prev !== card) fire(target, 'over', prev ? hoverTarget(prev) : null);
     scheduleReveal(card, settings.revealKeyboardMs);
   }
 
@@ -1582,8 +1582,8 @@ function core(storedSettings) {
 
   document.addEventListener('keydown', (e) => {
     if (settingsOpen || e.ctrlKey || e.altKey || e.metaKey) return;
-    const t = e.composedPath ? e.composedPath()[0] : e.target; // поля внутри shadow DOM тоже считаем
-    if (t instanceof Element && (t.closest('input, textarea, select') || t.isContentEditable)) return;
+    const node = e.composedPath ? e.composedPath()[0] : e.target; // поля внутри shadow DOM тоже считаем
+    if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
     if (handleEmotionKey(e)) return;
     // открытый диалог сайта — не мешаем, если только это не сам просмотр поста
     if ([...document.querySelectorAll('[role="dialog"]')].some((d) =>
@@ -3049,7 +3049,7 @@ function core(storedSettings) {
     return full.replace(/\s*[([]?\d[\d\s.,]*[kкm]?[)\]]?$/i, '') === key;
   }
 
-  const isCountText = (t) => /^[\s([]*[\d\s.,]+[kкmмbб]?[\s)\]]*$/i.test(t);
+  const isCountText = (text) => /^[\s([]*[\d\s.,]+[kкmмbб]?[\s)\]]*$/i.test(text);
   const RATING_RE = /^(?:g|pg(?:-?13)?|r\d{0,2}\+?|e|q|s|nsfw)$/i;
 
   // Снимок вычисленных стилей — чтобы нарисовать подсказку так же, как сайт
@@ -3090,8 +3090,8 @@ function core(storedSettings) {
     const leaves = [];
     const walker = root.ownerDocument.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     for (let n = walker.nextNode(); n; n = walker.nextNode()) {
-      const t = n.nodeValue.trim();
-      if (t) leaves.push({ t, el: n.parentElement });
+      const text = n.nodeValue.trim();
+      if (text) leaves.push({ t: text, el: n.parentElement });
     }
     return leaves;
   }
@@ -3167,7 +3167,7 @@ function core(storedSettings) {
     if (el === option || (el.parentElement === option && inlineIn(el, option))) {
       // весь текст варианта идёт одной строкой — убираем из него только счётчики
       const counts = leaves.filter((l) => isCountText(l.t));
-      label = counts.reduce((t, l) => t.replace(l.t, ''), option.textContent).replace(/\s+/g, ' ').trim();
+      label = counts.reduce((acc, l) => acc.replace(l.t, ''), option.textContent).replace(/\s+/g, ' ').trim();
       extra = counts.map((l) => l.t).join(' ');
       colorEl = first.el;
     } else {
@@ -3512,7 +3512,7 @@ function core(storedSettings) {
   function composeSugg(query, server) {
     const byKey = new Map((server || []).map((d) => [normTag(d.label), d]));
     const top = historyMatches(query).map((h) => ({ ...(byKey.get(h.key) || h.desc || { label: h.label }), history: true, key: h.key }));
-    const seen = new Set(top.map((t) => t.key));
+    const seen = new Set(top.map((item) => item.key));
     const rest = (server || []).filter((d) => !seen.has(normTag(d.label)));
     return [...top, ...rest];
   }
@@ -3905,7 +3905,7 @@ function core(storedSettings) {
       renderTileTags(it);
       syncTags(it);
     }
-    rememberTags(tags.filter((t) => isKnownTag(t, picked)), picked);
+    rememberTags(tags.filter((tag) => isKnownTag(tag, picked)), picked);
     if (!action.added.size) {
       toast(t('Эти теги уже добавлены выделенным файлам'));
       return true;
@@ -4103,9 +4103,9 @@ function core(storedSettings) {
     // Горячие клавиши сетки: Ctrl+Z — отмена, Ctrl+A — выделить все, Esc — снять выделение
     window.addEventListener('keydown', (e) => {
       if (!mass.visible || !mass.grid || settingsOpen) return;
-      const t = e.composedPath()[0];
-      const editable = t instanceof Element && (t.matches('input, textarea, select') || t.isContentEditable);
-      const emptyTagInput = t instanceof Element && t.classList.contains('taginput') && !t.value;
+      const node = e.composedPath()[0];
+      const editable = node instanceof Element && (node.matches('input, textarea, select') || node.isContentEditable);
+      const emptyTagInput = node instanceof Element && node.classList.contains('taginput') && !node.value;
       const mod = e.ctrlKey || e.metaKey;
       if (mod && !e.shiftKey && !e.altKey && e.code === 'KeyZ' && (!editable || emptyTagInput)) {
         e.preventDefault();

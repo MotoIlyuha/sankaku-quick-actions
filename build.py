@@ -19,7 +19,7 @@ import subprocess
 import sys
 import zlib
 
-VERSION = '1.21.0'
+VERSION = '1.21.1'
 # Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
 # Пока пусто — строки со ссылками из шапки убираются.
 REPO_URL = 'https://github.com/MotoIlyuha/sankaku-quick-actions'
@@ -207,8 +207,20 @@ def build():
     return us_path, n_keys, n_langs
 
 
+def check_no_shadowed_t():
+    """t — функция перевода. Локальная переменная с таким именем её закрывает,
+    и вызов t('строка') падает с «t is not a function» (так сломался клик по
+    звезде на странице поста в 1.17.0). Проще запретить имя целиком."""
+    decl = re.compile(r'(?:\b(?:const|let|var)\s+t\s*[=;,)]|\(\s*t\s*[,)]\s*=>|\bfunction\s*\(\s*t\b|\bcatch\s*\(\s*t\b)')
+    bad = [(i + 1, line.strip()[:80])
+           for i, line in enumerate(read(SRC, 'core.js').split('\n'))
+           if decl.search(line)]
+    assert not bad, 'имя t занято функцией перевода: %s' % bad
+
+
 def check(us_path):
     """node --check по всем собранным файлам и сверка ссылок в манифестах."""
+    check_no_shadowed_t()
     files = [us_path]
     for name in ('chrome', 'firefox-mv3', 'firefox-mv2'):
         folder = os.path.join(DIST, name)
