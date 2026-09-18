@@ -2353,13 +2353,30 @@ function core(storedSettings) {
     item.el.querySelector('.reload').hidden = !item.iframe;
   }
 
+  // Сайт жалуется, если автотег дёргают часто, а он запускается сам при
+  // вставке файла. Поэтому формы открываем по одной с паузой.
+  const MASS_GAP = 1500;
+  let lastFormOpenAt = 0;
+  let pumpTimer = 0;
+
+  const openForms = () => mass.items.filter((it) => it.iframe).length;
+  const nextForForm = () => mass.items.find((it) => !it.iframe && !it.created) || null;
+
   function pumpForms() {
+    if (pumpTimer) return;
     const limit = Math.max(1, settings.massMaxForms | 0);
-    let open = mass.items.filter((it) => it.iframe).length;
-    for (const it of mass.items) {
-      if (open >= limit) break;
-      if (!it.iframe && !it.created) { openForm(it); open++; }
-    }
+    if (openForms() >= limit || !nextForForm()) return;
+    const wait = Math.max(0, MASS_GAP - (Date.now() - lastFormOpenAt));
+    pumpTimer = setTimeout(() => {
+      pumpTimer = 0;
+      const item = nextForForm();
+      // за время паузы файл могли убрать, а место — занять
+      if (item && openForms() < Math.max(1, settings.massMaxForms | 0)) {
+        lastFormOpenAt = Date.now();
+        openForm(item);
+      }
+      pumpForms();
+    }, wait);
   }
 
   function openForm(item) {
@@ -3376,10 +3393,26 @@ function core(storedSettings) {
       AUTOTAG_RE.test(`${b.textContent} ${b.getAttribute('aria-label') || ''} ${b.title || ''}`)) || null;
   }
 
+  // очередь: между запусками автотега выдерживаем ту же паузу
+  let autotagQueue = Promise.resolve();
+  let lastAutotagAt = 0;
+
+  function autotagTurn() {
+    const turn = autotagQueue.then(async () => {
+      const wait = MASS_GAP - (Date.now() - lastAutotagAt);
+      if (wait > 0) await sleep(wait);
+      lastAutotagAt = Date.now();
+    });
+    autotagQueue = turn.catch(() => {});
+    return turn;
+  }
+
   async function runAutotag(item) {
+    if (!formDoc(item) || !findAutotagButton(formDoc(item))) return false;
+    await autotagTurn();
     const doc = formDoc(item);
     const btn = doc && findAutotagButton(doc);
-    if (!btn || isDisabled(btn)) return false;
+    if (!btn || isDisabled(btn) || !alive(item)) return false;
     // авто-теги могут заменить список — добавленные нами теги потом проверим заново
     for (const e of item.tags.values()) if (e.state === 'applied' || e.state === 'exists') e.state = 'pending';
     renderTileTags(item);
