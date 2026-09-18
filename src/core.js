@@ -53,6 +53,7 @@ function core(storedSettings) {
     showPoints: true,
     showReputation: true,
     showMyVote: true, // своя оценка прямо на карточке в сетке
+    showFavCount: true, // количество лайков в углу карточки
   };
   const settings = {
     ...DEFAULTS,
@@ -643,7 +644,7 @@ function core(storedSettings) {
 
   function refreshPost(id) {
     for (const w of widgets) if (w.dataset.skqKey === String(id)) refresh(w, true);
-    markMyVotes();
+    markCards();
   }
 
   function preview(w, n) {
@@ -829,7 +830,7 @@ function core(storedSettings) {
       else refresh(w, false);
     }
 
-    markMyVotes();
+    markCards();
 
     // виртуальная сетка пересоздаёт карточки — возвращаем уже раскрытые превью
     if (revealed.size) {
@@ -989,30 +990,44 @@ function core(storedSettings) {
     return p ? userVote(p) : Number(myVotes[String(id)]) || 0;
   }
 
-  function markMyVotes() {
+  function favsOfId(id) {
+    const p = posts.get(String(id));
+    return p && typeof p.fav_count === 'number' ? p.fav_count : null;
+  }
+
+  // большие числа сайт тоже сокращает: 12 300 → 12.3K
+  const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
+
+  // Одна метка на карточке: создаём, обновляем или убираем
+  function cardBadge(card, cls, text, title) {
+    let badge = card.querySelector(':scope > .' + cls);
+    if (text == null) { if (badge) badge.remove(); return; }
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = cls;
+      if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+      card.appendChild(badge);
+    }
+    if (badge.textContent !== text) badge.textContent = text;
+    if (badge.title !== title) badge.title = title;
+  }
+
+  function markCards() {
     if (FRAME_MODE || !document.body) return;
+    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = settings.showMyVote ? cardId(card) : null;
-      let badge = card.querySelector(':scope > .skq-myvote');
-      // оценка могла прийти в данных карточки, а не в перехваченном ответе
+      const id = wantVote || wantFavs ? cardId(card) : null;
+      // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
-      const n = id ? voteOfId(id) : 0;
-      if (!n) { if (badge) badge.remove(); continue; }
-      if (!badge) {
-        badge = document.createElement('div');
-        badge.className = 'skq-myvote';
-        if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-        card.appendChild(badge);
-      }
-      const text = `★ ${n}`;
-      if (badge.textContent !== text) {
-        badge.textContent = text;
-        badge.title = t('Ваша оценка: {n} из 5', { n });
-      }
+      const n = wantVote && id ? voteOfId(id) : 0;
+      cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
+      const favs = wantFavs && id ? favsOfId(id) : null;
+      cardBadge(card, 'skq-favs', favs == null ? null : `♥ ${shortCount(favs)}`,
+        favs == null ? '' : t('Лайков: {n}', { n: favs }));
     }
   }
 
@@ -4434,6 +4449,7 @@ function core(storedSettings) {
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
           <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
+          <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
         </fieldset>
         <fieldset>
@@ -4477,7 +4493,7 @@ function core(storedSettings) {
     let capturing = null; // какую клавишу сейчас назначаем
 
     function fill(s) {
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'rehideOnBlur']) f(k).checked = !!s[k];
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
       capturing = null;
@@ -4570,6 +4586,7 @@ function core(storedSettings) {
         showPoints: f('showPoints').checked,
         showReputation: f('showReputation').checked,
         showMyVote: f('showMyVote').checked,
+        showFavCount: f('showFavCount').checked,
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
         revealKeyboardMs: ms('revealKeyboardMs', DEFAULTS.revealKeyboardMs),
         rehideOnBlur: f('rehideOnBlur').checked,
@@ -4733,12 +4750,14 @@ function core(storedSettings) {
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
     ${CARD_SEL}.skq-kb-active > * { outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px; }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-myvote {
-      position: absolute; top: 6px; left: 6px; z-index: 3; pointer-events: none;
-      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72); color: #ffb347;
+    ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
+      position: absolute; top: 6px; z-index: 3; pointer-events: none;
+      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
+    ${CARD_SEL} > .skq-myvote { left: 6px; color: #ffb347; }
+    ${CARD_SEL} > .skq-favs { right: 6px; color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }

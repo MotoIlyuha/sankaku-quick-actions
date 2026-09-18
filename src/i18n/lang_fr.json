@@ -153,5 +153,7 @@
  "151": "« {key} » est déjà attribuée à : {action}.",
  "152": "Échap — annuler.",
  "153": "Paramètres enregistrés",
- "154": "Paramètres"
+ "154": "Paramètres",
+ "155": "Afficher le nombre de favoris sur la carte",
+ "156": "Favoris : {n}"
 }

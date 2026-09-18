@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.19.1
+// @version      1.20.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -155,6 +155,7 @@ function core(storedSettings) {
     showPoints: true,
     showReputation: true,
     showMyVote: true, // своя оценка прямо на карточке в сетке
+    showFavCount: true, // количество лайков в углу карточки
   };
   const settings = {
     ...DEFAULTS,
@@ -367,7 +368,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "\"{key}\" is already assigned to: {action}.",
           "Esc — отмена.": "Esc — cancel.",
           "Настройки сохранены": "Settings saved",
-          "Настройки": "Settings"
+          "Настройки": "Settings",
+          "Показывать количество лайков на карточке": "Show the favorite count on the card",
+          "Лайков: {n}": "Favorites: {n}"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -524,7 +527,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "「{key}」はすでに割り当てられています: {action}",
           "Esc — отмена.": "Esc — キャンセル。",
           "Настройки сохранены": "設定を保存しました",
-          "Настройки": "設定"
+          "Настройки": "設定",
+          "Показывать количество лайков на карточке": "お気に入り数をカードに表示",
+          "Лайков: {n}": "お気に入り: {n}"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -681,7 +686,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "“{key}”已分配给：{action}",
           "Esc — отмена.": "Esc — 取消。",
           "Настройки сохранены": "设置已保存",
-          "Настройки": "设置"
+          "Настройки": "设置",
+          "Показывать количество лайков на карточке": "在卡片上显示收藏数",
+          "Лайков: {n}": "收藏：{n}"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -838,7 +845,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "「{key}」已指派給：{action}",
           "Esc — отмена.": "Esc — 取消。",
           "Настройки сохранены": "設定已儲存",
-          "Настройки": "設定"
+          "Настройки": "設定",
+          "Показывать количество лайков на карточке": "在卡片上顯示收藏數",
+          "Лайков: {n}": "收藏：{n}"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -995,7 +1004,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "'{key}' 은(는) 이미 할당됨: {action}",
           "Esc — отмена.": "Esc — 취소.",
           "Настройки сохранены": "설정을 저장했습니다",
-          "Настройки": "설정"
+          "Настройки": "설정",
+          "Показывать количество лайков на карточке": "카드에 즐겨찾기 수 표시",
+          "Лайков: {n}": "즐겨찾기: {n}"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1152,7 +1163,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "„{key}“ ist bereits belegt: {action}.",
           "Esc — отмена.": "Esc — abbrechen.",
           "Настройки сохранены": "Einstellungen gespeichert",
-          "Настройки": "Einstellungen"
+          "Настройки": "Einstellungen",
+          "Показывать количество лайков на карточке": "Anzahl der Favoriten auf der Karte anzeigen",
+          "Лайков: {n}": "Favoriten: {n}"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1309,7 +1322,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "« {key} » est déjà attribuée à : {action}.",
           "Esc — отмена.": "Échap — annuler.",
           "Настройки сохранены": "Paramètres enregistrés",
-          "Настройки": "Paramètres"
+          "Настройки": "Paramètres",
+          "Показывать количество лайков на карточке": "Afficher le nombre de favoris sur la carte",
+          "Лайков: {n}": "Favoris : {n}"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1466,7 +1481,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» ya está asignada a: {action}.",
           "Esc — отмена.": "Esc — cancelar.",
           "Настройки сохранены": "Ajustes guardados",
-          "Настройки": "Ajustes"
+          "Настройки": "Ajustes",
+          "Показывать количество лайков на карточке": "Mostrar el número de favoritos en la tarjeta",
+          "Лайков: {n}": "Favoritos: {n}"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1623,7 +1640,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» já está atribuída a: {action}.",
           "Esc — отмена.": "Esc — cancelar.",
           "Настройки сохранены": "Configurações salvas",
-          "Настройки": "Configurações"
+          "Настройки": "Configurações",
+          "Показывать количество лайков на карточке": "Mostrar o número de favoritos no cartão",
+          "Лайков: {n}": "Favoritos: {n}"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1780,7 +1799,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» è già assegnato a: {action}.",
           "Esc — отмена.": "Esc — annulla.",
           "Настройки сохранены": "Impostazioni salvate",
-          "Настройки": "Impostazioni"
+          "Настройки": "Impostazioni",
+          "Показывать количество лайков на карточке": "Mostra il numero di preferiti sulla scheda",
+          "Лайков: {n}": "Preferiti: {n}"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -1937,7 +1958,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» is al toegewezen aan: {action}.",
           "Esc — отмена.": "Esc — annuleren.",
           "Настройки сохранены": "Instellingen opgeslagen",
-          "Настройки": "Instellingen"
+          "Настройки": "Instellingen",
+          "Показывать количество лайков на карточке": "Aantal favorieten op de kaart tonen",
+          "Лайков: {n}": "Favorieten: {n}"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2094,7 +2117,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» jest już przypisany do: {action}.",
           "Esc — отмена.": "Esc — anuluj.",
           "Настройки сохранены": "Ustawienia zapisane",
-          "Настройки": "Ustawienia"
+          "Настройки": "Ustawienia",
+          "Показывать количество лайков на карточке": "Pokazuj liczbę polubień na kafelku",
+          "Лайков: {n}": "Ulubione: {n}"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2251,7 +2276,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "”{key}” är redan kopplad till: {action}.",
           "Esc — отмена.": "Esc — avbryt.",
           "Настройки сохранены": "Inställningarna sparade",
-          "Настройки": "Inställningar"
+          "Настройки": "Inställningar",
+          "Показывать количество лайков на карточке": "Visa antalet favoriter på kortet",
+          "Лайков: {n}": "Favoriter: {n}"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2408,7 +2435,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "»{key}« er allerede tildelt: {action}.",
           "Esc — отмена.": "Esc — annullér.",
           "Настройки сохранены": "Indstillingerne er gemt",
-          "Настройки": "Indstillinger"
+          "Настройки": "Indstillinger",
+          "Показывать количество лайков на карточке": "Vis antal favoritter på kortet",
+          "Лайков: {n}": "Favoritter: {n}"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2565,7 +2594,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» er allerede tilordnet: {action}.",
           "Esc — отмена.": "Esc — avbryt.",
           "Настройки сохранены": "Innstillingene er lagret",
-          "Настройки": "Innstillinger"
+          "Настройки": "Innstillinger",
+          "Показывать количество лайков на карточке": "Vis antall favoritter på kortet",
+          "Лайков: {n}": "Favoritter: {n}"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -2722,7 +2753,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "”{key}” on jo määritetty toiminnolle: {action}.",
           "Esc — отмена.": "Esc — peruuta.",
           "Настройки сохранены": "Asetukset tallennettu",
-          "Настройки": "Asetukset"
+          "Настройки": "Asetukset",
+          "Показывать количество лайков на карточке": "Näytä suosikkien määrä kortissa",
+          "Лайков: {n}": "Suosikkeja: {n}"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -2879,7 +2912,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "A(z) „{key}” már ehhez tartozik: {action}.",
           "Esc — отмена.": "Esc — mégse.",
           "Настройки сохранены": "Beállítások mentve",
-          "Настройки": "Beállítások"
+          "Настройки": "Beállítások",
+          "Показывать количество лайков на карточке": "Kedvencek száma a kártyán",
+          "Лайков: {n}": "Kedvencek: {n}"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3036,7 +3071,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "„{key}” este deja atribuită: {action}.",
           "Esc — отмена.": "Esc — anulare.",
           "Настройки сохранены": "Setările au fost salvate",
-          "Настройки": "Setări"
+          "Настройки": "Setări",
+          "Показывать количество лайков на карточке": "Arată numărul de favorite pe card",
+          "Лайков: {n}": "Favorite: {n}"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3193,7 +3230,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "„{key}“ вече е присвоен на: {action}.",
           "Esc — отмена.": "Esc — отказ.",
           "Настройки сохранены": "Настройките са запазени",
-          "Настройки": "Настройки"
+          "Настройки": "Настройки",
+          "Показывать количество лайков на карточке": "Показвай броя любими върху картата",
+          "Лайков: {n}": "Любими: {n}"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3350,7 +3389,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "Το «{key}» έχει ήδη ανατεθεί: {action}.",
           "Esc — отмена.": "Esc — άκυρο.",
           "Настройки сохранены": "Οι ρυθμίσεις αποθηκεύτηκαν",
-          "Настройки": "Ρυθμίσεις"
+          "Настройки": "Ρυθμίσεις",
+          "Показывать количество лайков на карточке": "Εμφάνιση του αριθμού αγαπημένων στην κάρτα",
+          "Лайков: {n}": "Αγαπημένα: {n}"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3507,7 +3548,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» zaten şuna atanmış: {action}.",
           "Esc — отмена.": "Esc — iptal.",
           "Настройки сохранены": "Ayarlar kaydedildi",
-          "Настройки": "Ayarlar"
+          "Настройки": "Ayarlar",
+          "Показывать количество лайков на карточке": "Favori sayısını kartta göster",
+          "Лайков: {n}": "Favoriler: {n}"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -3664,7 +3707,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» ถูกกำหนดไว้แล้วสำหรับ: {action}",
           "Esc — отмена.": "Esc — ยกเลิก",
           "Настройки сохранены": "บันทึกการตั้งค่าแล้ว",
-          "Настройки": "การตั้งค่า"
+          "Настройки": "การตั้งค่า",
+          "Показывать количество лайков на карточке": "แสดงจำนวนรายการโปรดบนการ์ด",
+          "Лайков: {n}": "รายการโปรด: {n}"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -3821,7 +3866,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» पहले से इसे दी गई है: {action}",
           "Esc — отмена.": "Esc — रद्द करें।",
           "Настройки сохранены": "सेटिंग्स सहेजी गईं",
-          "Настройки": "सेटिंग्स"
+          "Настройки": "सेटिंग्स",
+          "Показывать количество лайков на карточке": "कार्ड पर पसंदीदा की संख्या दिखाएँ",
+          "Лайков: {n}": "पसंदीदा: {n}"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -3978,7 +4025,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» sudah ditetapkan untuk: {action}.",
           "Esc — отмена.": "Esc — batal.",
           "Настройки сохранены": "Pengaturan disimpan",
-          "Настройки": "Pengaturan"
+          "Настройки": "Pengaturan",
+          "Показывать количество лайков на карточке": "Tampilkan jumlah favorit di kartu",
+          "Лайков: {n}": "Favorit: {n}"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4135,7 +4184,9 @@ function core(storedSettings) {
           "«{key}» уже назначена: {action}.": "«{key}» sudah ditetapkan kepada: {action}.",
           "Esc — отмена.": "Esc — batal.",
           "Настройки сохранены": "Tetapan disimpan",
-          "Настройки": "Tetapan"
+          "Настройки": "Tetapan",
+          "Показывать количество лайков на карточке": "Tunjukkan bilangan kegemaran pada kad",
+          "Лайков: {n}": "Kegemaran: {n}"
     },
   } /* SKQ_I18N_END */;
 
@@ -4671,7 +4722,7 @@ function core(storedSettings) {
 
   function refreshPost(id) {
     for (const w of widgets) if (w.dataset.skqKey === String(id)) refresh(w, true);
-    markMyVotes();
+    markCards();
   }
 
   function preview(w, n) {
@@ -4857,7 +4908,7 @@ function core(storedSettings) {
       else refresh(w, false);
     }
 
-    markMyVotes();
+    markCards();
 
     // виртуальная сетка пересоздаёт карточки — возвращаем уже раскрытые превью
     if (revealed.size) {
@@ -5017,30 +5068,44 @@ function core(storedSettings) {
     return p ? userVote(p) : Number(myVotes[String(id)]) || 0;
   }
 
-  function markMyVotes() {
+  function favsOfId(id) {
+    const p = posts.get(String(id));
+    return p && typeof p.fav_count === 'number' ? p.fav_count : null;
+  }
+
+  // большие числа сайт тоже сокращает: 12 300 → 12.3K
+  const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
+
+  // Одна метка на карточке: создаём, обновляем или убираем
+  function cardBadge(card, cls, text, title) {
+    let badge = card.querySelector(':scope > .' + cls);
+    if (text == null) { if (badge) badge.remove(); return; }
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = cls;
+      if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
+      card.appendChild(badge);
+    }
+    if (badge.textContent !== text) badge.textContent = text;
+    if (badge.title !== title) badge.title = title;
+  }
+
+  function markCards() {
     if (FRAME_MODE || !document.body) return;
+    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = settings.showMyVote ? cardId(card) : null;
-      let badge = card.querySelector(':scope > .skq-myvote');
-      // оценка могла прийти в данных карточки, а не в перехваченном ответе
+      const id = wantVote || wantFavs ? cardId(card) : null;
+      // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
-      const n = id ? voteOfId(id) : 0;
-      if (!n) { if (badge) badge.remove(); continue; }
-      if (!badge) {
-        badge = document.createElement('div');
-        badge.className = 'skq-myvote';
-        if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-        card.appendChild(badge);
-      }
-      const text = `★ ${n}`;
-      if (badge.textContent !== text) {
-        badge.textContent = text;
-        badge.title = t('Ваша оценка: {n} из 5', { n });
-      }
+      const n = wantVote && id ? voteOfId(id) : 0;
+      cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
+      const favs = wantFavs && id ? favsOfId(id) : null;
+      cardBadge(card, 'skq-favs', favs == null ? null : `♥ ${shortCount(favs)}`,
+        favs == null ? '' : t('Лайков: {n}', { n: favs }));
     }
   }
 
@@ -8462,6 +8527,7 @@ function core(storedSettings) {
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
           <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
+          <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
         </fieldset>
         <fieldset>
@@ -8505,7 +8571,7 @@ function core(storedSettings) {
     let capturing = null; // какую клавишу сейчас назначаем
 
     function fill(s) {
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'rehideOnBlur']) f(k).checked = !!s[k];
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
       capturing = null;
@@ -8598,6 +8664,7 @@ function core(storedSettings) {
         showPoints: f('showPoints').checked,
         showReputation: f('showReputation').checked,
         showMyVote: f('showMyVote').checked,
+        showFavCount: f('showFavCount').checked,
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
         revealKeyboardMs: ms('revealKeyboardMs', DEFAULTS.revealKeyboardMs),
         rehideOnBlur: f('rehideOnBlur').checked,
@@ -8761,12 +8828,14 @@ function core(storedSettings) {
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
     ${CARD_SEL}.skq-kb-active > * { outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px; }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-myvote {
-      position: absolute; top: 6px; left: 6px; z-index: 3; pointer-events: none;
-      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72); color: #ffb347;
+    ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
+      position: absolute; top: 6px; z-index: 3; pointer-events: none;
+      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
+    ${CARD_SEL} > .skq-myvote { left: 6px; color: #ffb347; }
+    ${CARD_SEL} > .skq-favs { right: 6px; color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }

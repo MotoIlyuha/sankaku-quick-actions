@@ -153,5 +153,7 @@
  "151": "«{key}» ya está asignada a: {action}.",
  "152": "Esc — cancelar.",
  "153": "Ajustes guardados",
- "154": "Ajustes"
+ "154": "Ajustes",
+ "155": "Mostrar el número de favoritos en la tarjeta",
+ "156": "Favoritos: {n}"
 }

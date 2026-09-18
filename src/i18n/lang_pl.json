@@ -153,5 +153,7 @@
  "151": "«{key}» jest już przypisany do: {action}.",
  "152": "Esc — anuluj.",
  "153": "Ustawienia zapisane",
- "154": "Ustawienia"
+ "154": "Ustawienia",
+ "155": "Pokazuj liczbę polubień na kafelku",
+ "156": "Ulubione: {n}"
 }

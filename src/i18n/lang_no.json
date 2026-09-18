@@ -153,5 +153,7 @@
  "151": "«{key}» er allerede tilordnet: {action}.",
  "152": "Esc — avbryt.",
  "153": "Innstillingene er lagret",
- "154": "Innstillinger"
+ "154": "Innstillinger",
+ "155": "Vis antall favoritter på kortet",
+ "156": "Favoritter: {n}"
 }

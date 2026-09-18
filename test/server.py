@@ -38,7 +38,7 @@ class H(http.server.BaseHTTPRequestHandler):
         if path.startswith('/posts'):
             posts = [
                 {'id': str(100 + i), 'md5': 'md5%d' % i, 'total_score': 12 + i, 'vote_count': 4,
-                 'fav_count': 3, 'is_favorited': False,
+                 'fav_count': [7, 71, 0, 1234, 25600, 3][i], 'is_favorited': False,
                  'preview_url': 'http://127.0.0.1:%s/pic.svg' % PORT,
                  'user_vote': {1: 5, 3: 2}.get(i, 0)}
                 for i in range(6)

@@ -154,6 +154,8 @@
   "«{key}» уже назначена: {action}.": "\"{key}\" is already assigned to: {action}.",
   "Esc — отмена.": "Esc — cancel.",
   "Настройки сохранены": "Settings saved",
-  "Настройки": "Settings"
+  "Настройки": "Settings",
+  "Показывать количество лайков на карточке": "Show the favorite count on the card",
+  "Лайков: {n}": "Favorites: {n}"
  }
 }
