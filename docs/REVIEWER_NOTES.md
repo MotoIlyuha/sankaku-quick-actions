@@ -48,6 +48,22 @@ forwards that click to the active tab.
 No remote code is loaded or executed. Everything that runs is inside the
 package.
 
+## About the three `innerHTML` warnings
+
+The linter flags three assignments in `core-main.js`: the bulk upload page, one
+queue item, and the settings form. All three are template literals made of
+literal markup plus strings from the add-on's own translation table, which is
+part of the package (`src/i18n/*.json`).
+
+Nothing from the page, the network or the file system is interpolated into
+them. File names, tag names, post IDs and any other outside value are written
+with `textContent` or `setAttribute` after the element exists — see
+`createItem()` right below the assignment.
+
+Since version 1.19.1 every interpolated string additionally goes through
+`esc()`, which escapes `& < > " '`, so a translation containing a quote cannot
+break out of an attribute either.
+
 ## How the package is built
 
 Python 3.12, no third-party dependencies, no network access needed:

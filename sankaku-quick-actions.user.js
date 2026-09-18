@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.19.0
+// @version      1.19.1
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -4197,6 +4197,13 @@ function core(storedSettings) {
     return out;
   }
 
+  // Экранирование для строк, попадающих в разметку. Кавычки важны не меньше
+  // угловых скобок: перевод с " внутри иначе развалил бы title="…".
+  const ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  const esc = (value) => String(value).replace(/[&<>"']/g, (ch) => ESC[ch]);
+  // T() — тот же перевод, но готовый к вставке в HTML-шаблон
+  const T = (key, vars) => esc(t(key, vars));
+
   // ---------------------------------------------------------------------------
   // Хранилище
   // ---------------------------------------------------------------------------
@@ -6080,36 +6087,36 @@ function core(storedSettings) {
       <div class="wrap">
         <div class="page">
           <div class="top">
-            <div class="title">${t('Массовая загрузка')}</div>
+            <div class="title">${T('Массовая загрузка')}</div>
             <div class="stats"></div>
-            <label class="switch"><input type="checkbox" class="gridtoggle"><span class="track"></span><span>${t('Показать сеткой')}</span></label>
-            <button type="button" class="btn clearpub" hidden>${t('Убрать опубликованные')}</button>
-            <button type="button" class="btn clear" hidden>${t('Очистить очередь')}</button>
-            <button type="button" class="btn primary add">${t('Добавить файлы')}</button>
+            <label class="switch"><input type="checkbox" class="gridtoggle"><span class="track"></span><span>${T('Показать сеткой')}</span></label>
+            <button type="button" class="btn clearpub" hidden>${T('Убрать опубликованные')}</button>
+            <button type="button" class="btn clear" hidden>${T('Очистить очередь')}</button>
+            <button type="button" class="btn primary add">${T('Добавить файлы')}</button>
             <input type="file" class="files" multiple accept="image/*,video/*" hidden>
             <div class="gridbar" hidden>
               <span class="selinfo"></span>
-              <button type="button" class="btn small selall">${t('Выделить все')}</button>
-              <button type="button" class="btn small selnone">${t('Снять выделение')}</button>
+              <button type="button" class="btn small selall">${T('Выделить все')}</button>
+              <button type="button" class="btn small selnone">${T('Снять выделение')}</button>
               <form class="tagform" autocomplete="off">
                 <div class="tagfield">
                   <input class="taginput" type="text" spellcheck="false" role="combobox"
                     aria-autocomplete="list" aria-expanded="false" aria-controls="skq-sugg"
-                    placeholder="${t('Тег для выделенных (несколько — через запятую)')}">
+                    placeholder="${T('Тег для выделенных (несколько — через запятую)')}">
                   <div class="sugg" id="skq-sugg" role="listbox" hidden></div>
                 </div>
-                <button type="submit" class="btn small addtag">${t('Добавить тег')}</button>
+                <button type="submit" class="btn small addtag">${T('Добавить тег')}</button>
               </form>
-              <button type="button" class="btn small undo" disabled>${t('Отменить')}</button>
+              <button type="button" class="btn small undo" disabled>${T('Отменить')}</button>
               <button type="button" class="btn small autotag" hidden>Autotag</button>
-              <button type="button" class="btn small book" hidden>${t('ID книги для выделенных')}</button>
+              <button type="button" class="btn small book" hidden>${T('ID книги для выделенных')}</button>
               <button type="button" class="btn primary publish" hidden></button>
             </div>
           </div>
-          <div class="drop" role="button" tabindex="0">${t('Перетащите сюда изображения и видео или нажмите, чтобы выбрать несколько файлов')}</div>
+          <div class="drop" role="button" tabindex="0">${T('Перетащите сюда изображения и видео или нажмите, чтобы выбрать несколько файлов')}</div>
           <div class="list"></div>
         </div>
-        <div class="dragover">${t('Отпустите, чтобы добавить файлы в очередь')}</div>
+        <div class="dragover">${T('Отпустите, чтобы добавить файлы в очередь')}</div>
       </div>`;
     document.body.appendChild(host);
     mass.host = host;
@@ -6231,21 +6238,21 @@ function core(storedSettings) {
         <div class="name"></div>
         <span class="badge"></span>
         <span class="pubactions">
-          <button type="button" class="btn small copyid">${t('Скопировать ID')}</button>
-          <a class="btn small openpost" target="_blank" rel="noopener">${t('Открыть пост ↗')}</a>
-          <button type="button" class="btn small expand" title="${t('Развернуть / свернуть')}"><span class="toggle">▾</span></button>
+          <button type="button" class="btn small copyid">${T('Скопировать ID')}</button>
+          <a class="btn small openpost" target="_blank" rel="noopener">${T('Открыть пост ↗')}</a>
+          <button type="button" class="btn small expand" title="${T('Развернуть / свернуть')}"><span class="toggle">▾</span></button>
         </span>
-        <button type="button" class="btn small reload" title="${t('Подставить файл в форму заново')}" hidden>↻</button>
-        <button type="button" class="btn small remove" title="${t('Убрать из очереди')}">✕</button>
+        <button type="button" class="btn small reload" title="${T('Подставить файл в форму заново')}" hidden>↻</button>
+        <button type="button" class="btn small remove" title="${T('Убрать из очереди')}">✕</button>
       </div>
-      <div class="tile" title="${t('Клик — выделить, Shift+клик — диапазон, перетаскивание — изменить порядок, двойной клик — открыть форму')}">
+      <div class="tile" title="${T('Клик — выделить, Shift+клик — диапазон, перетаскивание — изменить порядок, двойной клик — открыть форму')}">
         <div class="check">✓</div>
-        <button type="button" class="tremove" title="${t('Убрать из очереди')}">✕</button>
+        <button type="button" class="tremove" title="${T('Убрать из очереди')}">✕</button>
         <div class="tpub">
-          <div class="tpubtitle">✓ ${t('Опубликован')}</div>
+          <div class="tpubtitle">✓ ${T('Опубликован')}</div>
           <div class="postid"></div>
-          <button type="button" class="btn small copyid">${t('Скопировать ID')}</button>
-          <button type="button" class="btn small asparent" title="${t('Вписать этот ID в поле «ID родителя» выделенных файлов')}">${t('Родитель для выделенных')}</button>
+          <button type="button" class="btn small copyid">${T('Скопировать ID')}</button>
+          <button type="button" class="btn small asparent" title="${T('Вписать этот ID в поле «ID родителя» выделенных файлов')}">${T('Родитель для выделенных')}</button>
         </div>
         <div class="meta">
           <div class="tname"></div>
@@ -8438,52 +8445,52 @@ function core(storedSettings) {
     root.innerHTML = `
       <style>${SETTINGS_CSS}${embedded ? EMBEDDED_CSS : ''}</style>
       ${embedded ? '' : '<div class="backdrop"></div>'}
-      <form class="dlg" tabindex="-1" ${embedded ? '' : 'role="dialog" aria-modal="true"'} aria-label="${t('Настройки скрипта')}">
-        <h2>Sankaku: ${t('настройки скрипта')}</h2>
+      <form class="dlg" tabindex="-1" ${embedded ? '' : 'role="dialog" aria-modal="true"'} aria-label="${T('Настройки скрипта')}">
+        <h2>Sankaku: ${T('настройки скрипта')}</h2>
         <fieldset>
-          <legend>${t('Реклама')}</legend>
-          <label class="row"><input type="checkbox" name="hideAds"> ${t('Скрывать рекламу')}</label>
-          <label class="row"><input type="checkbox" name="hidePromo"> ${t('Скрывать напоминания о Sankaku Plus / Infinite')}</label>
+          <legend>${T('Реклама')}</legend>
+          <label class="row"><input type="checkbox" name="hideAds"> ${T('Скрывать рекламу')}</label>
+          <label class="row"><input type="checkbox" name="hidePromo"> ${T('Скрывать напоминания о Sankaku Plus / Infinite')}</label>
         </fieldset>
         <fieldset>
-          <legend>${t('Счётчики в меню')}</legend>
-          <label class="row"><input type="checkbox" name="showPoints"> ${t('Показывать очки сайта')}</label>
-          <label class="row"><input type="checkbox" name="showReputation"> ${t('Показывать репутацию')}</label>
-          <div class="num"><span class="grow">${t('Если число неверное')}</span>
-            <button type="button" class="btn repdebug">${t('Скопировать данные')}</button></div>
+          <legend>${T('Счётчики в меню')}</legend>
+          <label class="row"><input type="checkbox" name="showPoints"> ${T('Показывать очки сайта')}</label>
+          <label class="row"><input type="checkbox" name="showReputation"> ${T('Показывать репутацию')}</label>
+          <div class="num"><span class="grow">${T('Если число неверное')}</span>
+            <button type="button" class="btn repdebug">${T('Скопировать данные')}</button></div>
         </fieldset>
         <fieldset>
-          <legend>${t('Карточки в сетке')}</legend>
-          <label class="row"><input type="checkbox" name="showMyVote"> ${t('Показывать мою оценку (1–5) на карточке')}</label>
-          <p class="hint">${t('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
+          <legend>${T('Карточки в сетке')}</legend>
+          <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
+          <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
         </fieldset>
         <fieldset>
-          <legend>${t('Скрытые превью')}</legend>
-          <label class="num"><span class="grow">${t('Показывать при наведении мышью через')}</span>
-            <input type="number" name="revealHoverMs" min="0" max="60000" step="50"> ${t('мс')}</label>
-          <label class="num"><span class="grow">${t('Показывать при выборе стрелками через')}</span>
-            <input type="number" name="revealKeyboardMs" min="0" max="60000" step="50"> ${t('мс')}</label>
-          <label class="row"><input type="checkbox" name="rehideOnBlur"> ${t('Снова скрывать, когда карточка теряет фокус')}</label>
-          <label class="num sub"><span class="grow">${t('через')}</span>
-            <input type="number" name="rehideDelayMs" min="0" max="60000" step="50"> ${t('мс')}</label>
+          <legend>${T('Скрытые превью')}</legend>
+          <label class="num"><span class="grow">${T('Показывать при наведении мышью через')}</span>
+            <input type="number" name="revealHoverMs" min="0" max="60000" step="50"> ${T('мс')}</label>
+          <label class="num"><span class="grow">${T('Показывать при выборе стрелками через')}</span>
+            <input type="number" name="revealKeyboardMs" min="0" max="60000" step="50"> ${T('мс')}</label>
+          <label class="row"><input type="checkbox" name="rehideOnBlur"> ${T('Снова скрывать, когда карточка теряет фокус')}</label>
+          <label class="num sub"><span class="grow">${T('через')}</span>
+            <input type="number" name="rehideDelayMs" min="0" max="60000" step="50"> ${T('мс')}</label>
         </fieldset>
         <fieldset>
-          <legend>${t('Массовая загрузка')}</legend>
-          <label class="num"><span class="grow">${t('Одновременно открытых форм')}</span>
+          <legend>${T('Массовая загрузка')}</legend>
+          <label class="num"><span class="grow">${T('Одновременно открытых форм')}</span>
             <input type="number" name="massMaxForms" min="1" max="10" step="1"></label>
-          <p class="hint">${t('Каждая форма — отдельная копия страницы «Создать пост»; много форм сразу нагружают браузер.')}</p>
+          <p class="hint">${T('Каждая форма — отдельная копия страницы «Создать пост»; много форм сразу нагружают браузер.')}</p>
         </fieldset>
         <fieldset>
-          <legend>${t('Клавиши')}</legend>
-          ${HOTKEYS.map((h) => `<div class="num"><span class="grow">${hotkeyLabel(h)}</span>
+          <legend>${T('Клавиши')}</legend>
+          ${HOTKEYS.map((h) => `<div class="num"><span class="grow">${esc(hotkeyLabel(h))}</span>
             <button type="button" class="key" data-setting="${h.id}"></button></div>`).join('')}
-          <p class="hint keyhint">${t('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
+          <p class="hint keyhint">${T('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
         </fieldset>
         <div class="actions">
-          <button type="button" class="reset">${t('Сбросить')}</button>
+          <button type="button" class="reset">${T('Сбросить')}</button>
           <span class="spacer"></span>
-          <button type="button" class="cancel">${t('Отмена')}</button>
-          <button type="submit" class="save">${t('Сохранить')}</button>
+          <button type="button" class="cancel">${T('Отмена')}</button>
+          <button type="submit" class="save">${T('Сохранить')}</button>
         </div>
       </form>`;
     if (!embedded) document.body.appendChild(host);
