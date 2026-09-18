@@ -1,0 +1,14 @@
+// ==UserScript==
+// @name         Sankaku: оценки и избранное без открытия поста
+// @namespace    skq-quick-actions
+// @version      {{VERSION}}
+// @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
+// @match        https://www.sankakucomplex.com/*
+// @match        https://sankakucomplex.com/*
+// @match        https://sankaku.app/*
+// @run-at       document-start
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_registerMenuCommand
+// @grant        GM_addElement
+// ==/UserScript==

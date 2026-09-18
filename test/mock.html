@@ -1,0 +1,282 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Mock Sankaku</title>
+<script>
+  let skqExt = new URLSearchParams(location.search).get('ext');
+  // фреймы формы загрузки открываются без параметров — режим помним на вкладке
+  try {
+    if (skqExt) sessionStorage.setItem('skqExt', skqExt);
+    else skqExt = sessionStorage.getItem('skqExt');
+  } catch (e) { /* ignore */ }
+  if (!skqExt) {
+    // обычный режим: песочница Tampermonkey
+    const store = JSON.parse(localStorage.getItem('gm') || '{}');
+    window.GM_getValue = (k, d) => (k in store ? store[k] : d);
+    window.GM_setValue = (k, v) => { store[k] = v; localStorage.setItem('gm', JSON.stringify(store)); };
+    window.GM_registerMenuCommand = (n, fn) => { window.__openMenu = fn; };
+    window.GM_addElement = (tag, attrs) => { const s = document.createElement(tag); Object.assign(s, attrs); document.documentElement.appendChild(s); return s; };
+    document.write('<script src="/us.js"><\/script>');
+  } else {
+    // режим расширения: асинхронное хранилище и кнопка на панели
+    const box = JSON.parse(localStorage.getItem('extstore') || '{}');
+    window.__extInjected = [];
+    window.chrome = {
+      storage: { local: {
+        get(key, cb) { setTimeout(() => cb(key in box ? { [key]: box[key] } : {}), 50); },
+        set(obj) { Object.assign(box, obj); localStorage.setItem('extstore', JSON.stringify(box)); },
+      } },
+      runtime: {
+        getURL: (p) => '/' + p,
+        onMessage: { addListener(fn) { window.__extMessage = fn; } },
+      },
+    };
+    const orig = document.createElement.bind(document);
+    if (skqExt === 'main') document.write('<script src="/core-main.js"><\/script>');
+    document.write('<script src="' + (skqExt === 'mv2' ? '/bridge-mv2.js' : '/bridge.js') + '"><\/script>');
+  }
+</script>
+<style>body{margin:0;background:#303030;color:#fff;font-family:sans-serif} header{height:64px;background:#ff8c00;display:flex;align-items:center;gap:16px;padding:0 16px;position:fixed;top:0;left:0;right:0;z-index:1100}
+#app{padding-top:64px} nav{position:fixed;left:0;top:64px;width:260px;background:#000;z-index:1200;display:none} nav.open{display:block}
+.MuiAutocomplete-popper { position: absolute; left: 20px; top: 260px; width: 328px; z-index: 5; }
+.MuiAutocomplete-paper { background-color: rgb(66, 66, 66); color: #fff; border-radius: 4px; box-shadow: rgba(0,0,0,.2) 0 2px 1px -1px, rgba(0,0,0,.14) 0 1px 1px 0, rgba(0,0,0,.12) 0 1px 3px 0; font-family: Roboto, Helvetica, Arial, sans-serif; }
+.MuiAutocomplete-listbox { list-style: none; margin: 0; padding: 8px 0; max-height: 40vh; overflow: auto; }
+.MuiAutocomplete-option { display: flex; justify-content: flex-start; align-items: center; min-height: auto; height: 44px; box-sizing: border-box; padding: 6px 16px; font-size: 16px; font-weight: 400; line-height: 1.5; letter-spacing: .00938em; cursor: pointer; }
+.MuiAutocomplete-option:first-child { background-color: rgba(255,255,255,.08); }
+.MuiBox-root { width: 100%; }
+.MuiGrid-container { display: flex; flex-wrap: wrap; width: 100%; box-sizing: border-box; align-items: center; }
+.MuiGrid-item { margin: 0; box-sizing: border-box; }
+.MuiGrid-grid-xs-8 { flex-grow: 0; max-width: 66.666667%; flex-basis: 66.666667%; }
+.MuiGrid-grid-xs-4 { flex-grow: 0; max-width: 33.333333%; flex-basis: 33.333333%; }
+.MuiGrid-grid-xs-7 { flex-grow: 0; max-width: 58.333333%; flex-basis: 58.333333%; }
+.MuiGrid-grid-xs-5 { flex-grow: 0; max-width: 41.666667%; flex-basis: 41.666667%; }
+.tagchip { display: inline-flex; align-items: center; height: 32px; max-width: 100%; border-radius: 16px; color: #fff; font-size: 14px; font-weight: 700; box-sizing: border-box; cursor: pointer; }
+.tagchip > .lbl { padding: 0 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ratingbox { width: 60px; height: 28px; box-sizing: border-box; border: 2px solid rgb(38, 217, 56); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+.ratingtext { margin: 0; color: rgb(38, 217, 56); font-size: 15px; font-weight: 700; }
+.MuiTypography-caption { font-size: 14px; color: #fff; }
+#chips .MuiChip-root { display: inline-flex; margin: 2px; padding: 2px 8px; background: #8a6d00; border-radius: 12px; }
+
+.MuiTabs-root { position: relative; }
+.MuiTabs-flexContainer { display: flex; }
+.MuiTab-root { background: transparent; border: 0; color: #bbb; padding: 12px 18px; font-size: 14px; text-transform: uppercase; cursor: pointer; }
+.MuiTab-root.Mui-selected { color: #fff; }
+.MuiTabs-indicator { position: absolute; bottom: 0; height: 2px; background: #ff8c00; transition: left .2s, width .2s; }
+.panels { padding: 16px; }
+
+.grid { display: grid; grid-template-columns: repeat(3, 160px); gap: 12px; padding: 16px; }
+.pcard { width: 160px; }
+.pinner { background: #444; }
+.pcard img { width: 160px; height: 160px; display: block; }
+</style>
+</head><body>
+<header class="MuiAppBar-root"><button id="menu">☰</button><h6 id="title"></h6></header>
+<nav id="drawer"><ul class="MuiList-root"><li class=""><a data-test="upload_post" href="/ru/posts/upload"><div><span class="MuiListItemText-primary">Загрузить пост</span></div></a></li><li><a data-test="menu_browse_all" href="/ru"><span class="MuiListItemText-primary">Просмотр постов</span></a></li><li><div class="MuiGrid-root"><div class="MuiGrid-root"><button class="pointsbtn MuiButtonBase-root"><span class="MuiButton-label"><span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><rect width="24" height="24" x="0.5" fill="transparent" rx="12"></rect><path fill="#fff" d="m12.5 4-8 13.177h16l-1.619-2.668H9.138l3.359-5.624 3.06 4.963h2.924z"></path></svg></span><p class="MuiTypography-root">0</p></span></button></div></div></li></ul></nav>
+<div id="app"></div>
+<script>
+  const app = document.getElementById('app'), titleEl = document.getElementById('title');
+  document.getElementById('menu').onclick = () => document.getElementById('drawer').classList.toggle('open');
+  function render() {
+    const p = location.pathname.replace(/\/$/, '');
+    if (p.endsWith('/posts/upload')) {
+      titleEl.textContent = 'Создать пост';
+      app.innerHTML = `<div class="MuiAccordion-root"><input type="file" accept=".vtt,.srt" id="subs"></div>
+        <p class="ratings">Рейтинг: <button type="button" style="background-color: rgb(38, 217, 56);">G</button><button type="button">R15+</button><button type="button">R18+</button></p>
+        <div class="MuiAccordion-root adv"><div role="button" class="MuiAccordionSummary-root"><p>Продвинутый</p></div><div class="advbody"></div></div>
+        <div class="MuiAutocomplete-root"><div id="chips"></div>
+          <input id="autocomplete" class="MuiInputBase-input MuiAutocomplete-input" placeholder="Добавить теги"></div>
+        <button type="button" id="autotag">Autotag</button>
+        <input type="file" accept="image/*,video/*" id="f" hidden><button type="button" id="pick">Загрузить файл</button>
+        <div id="preview">нет файла</div>
+        <button type="button" id="create">Создать пост</button>`;
+      document.querySelectorAll('.ratings button').forEach((b) => b.addEventListener('click', () => {
+        document.querySelectorAll('.ratings button').forEach((x) => { x.style.backgroundColor = ''; });
+        b.style.backgroundColor = b.textContent === 'G' ? 'rgb(38, 217, 56)' : 'rgb(251, 98, 208)';
+      }));
+      // поле родителя появляется только в раскрытом разделе
+      document.querySelector('.adv [role=button]').addEventListener('click', () => {
+        const body = document.querySelector('.advbody');
+        if (body.firstChild) {
+          window.__parentValue = body.querySelector('[name=parent]').value;
+          window.__bookValue = body.querySelector('[name=pool_id]').value;
+          body.innerHTML = '';
+          return;
+        }
+        body.innerHTML = '<input name="parent" type="text" class="MuiInputBase-input" placeholder="ID родителя">' +
+          '<input name="pool_id" type="text" class="MuiInputBase-input MuiOutlinedInput-input" placeholder="ID книги">';
+        body.querySelector('[name=parent]').value = window.__parentValue || '';
+        body.querySelector('[name=pool_id]').value = window.__bookValue || '';
+      });
+      const f = document.getElementById('f');
+      const chips = document.getElementById('chips');
+      const ac = document.getElementById('autocomplete');
+      const addChip = (name) => {
+        if ([...chips.querySelectorAll('.MuiChip-label')].some((l) => l.textContent === name)) return;
+        const c = document.createElement('div');
+        c.className = 'MuiChip-root';
+        c.innerHTML = '<span class="MuiChip-label"></span><svg class="MuiChip-deleteIcon" width="10" height="10"></svg>';
+        c.firstChild.textContent = name;
+        c.lastChild.addEventListener('click', () => c.remove());
+        chips.appendChild(c);
+      };
+      window.__chips = () => [...chips.querySelectorAll('.MuiChip-label')].map((l) => l.textContent);
+      let lb = null, timer = 0;
+      const closeLb = () => { if (lb) { lb.remove(); lb = null; } };
+      ac.addEventListener('input', () => {
+        clearTimeout(timer);
+        const q = ac.value;
+        if (!q) { closeLb(); return; }
+        timer = setTimeout(async () => {
+          const list = await (await fetch('/api/tags?q=' + encodeURIComponent(q))).json();
+          closeLb();
+          lb = document.createElement('div');
+          lb.className = 'MuiAutocomplete-popper';
+          lb.innerHTML = '<div class="MuiPaper-root MuiAutocomplete-paper"><ul role="listbox" id="autocomplete-popup" class="MuiAutocomplete-listbox"></ul></div>';
+          const ul = lb.querySelector('ul');
+          ac.setAttribute('aria-controls', 'autocomplete-popup');
+          if (!list.length) lb.firstChild.innerHTML = '<div class="MuiAutocomplete-noOptions">No options</div>';
+          list.forEach((t, i) => {
+            const li = document.createElement('li');
+            li.setAttribute('role', 'option');
+            li.id = 'autocomplete-option-' + i;
+            li.className = 'MuiAutocomplete-option';
+            li.innerHTML = `<div class="MuiBox-root"><div class="MuiGrid-root MuiGrid-container">
+              <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-8"><div class="chipwrap"><div class="MuiChip-root tagchip" data-testid="tag-chip"><span class="MuiChip-label lbl"><span class=""><span class="lbl"></span></span></span></div></div></div>
+              <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"><div class="MuiGrid-root MuiGrid-container">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7"><div class="ratingbox"><p class="MuiTypography-root ratingtext"></p></div></div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-5"><span class="MuiTypography-root MuiTypography-caption"></span></div>
+              </div></div></div></div>`;
+            li.querySelector('.tagchip').style.backgroundColor = t.color;
+            li.querySelector('.lbl .lbl').textContent = t.name;
+            li.querySelector('.ratingtext').textContent = t.rating;
+            if (t.rating !== 'G') { li.querySelector('.ratingbox').style.borderColor = 'rgb(251, 98, 208)'; li.querySelector('.ratingtext').style.color = 'rgb(251, 98, 208)'; }
+            li.querySelector('.MuiTypography-caption').textContent = t.count;
+            li.addEventListener('click', () => { addChip(t.name); ac.value = ''; closeLb(); });
+            ul.appendChild(li);
+          });
+          document.body.appendChild(lb);
+        }, 150);
+      });
+      ac.addEventListener('keydown', (e) => {
+        const first = lb && lb.querySelector('[role=option]');
+        if (e.key === 'Enter') {
+          if (first) { first.click(); return; }
+          // сайт делит введённый текст по «_»
+          ac.value.split('_').map((x) => x.trim()).filter(Boolean).forEach(addChip);
+          ac.value = '';
+          closeLb();
+        }
+        if (e.key === 'Escape') closeLb();
+      });
+      document.getElementById('autotag').onclick = async () => {
+        await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
+        chips.innerHTML = '';
+        addChip('female'); addChip('smile');
+      };
+      f.addEventListener('change', async () => {
+        document.getElementById('preview').textContent = 'FILE: ' + f.files[0].name;
+        await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
+        if (!f.files[0].name.includes('notags')) addChip('blonde hair');
+      });
+      document.getElementById('create').onclick = async () => {
+        if (!f.files.length || !chips.children.length) return;
+        if (f.files[0].name.includes('bad')) {
+          await fetch('/api/posts/fail', { method: 'POST', body: 'x' });
+          return;
+        }
+        const fd = new FormData(); fd.append('file', f.files[0]); fd.append('tags', window.__chips().join(' '));
+        const empty = f.files[0].name.includes('empty');
+        const r = await fetch('/api/posts' + (empty ? '?empty=1' : ''), { method: 'POST', body: fd });
+        let j = null; try { j = await r.json(); } catch (err) { j = null; }
+        const snack = document.createElement('div');
+        snack.className = 'MuiSnackbarContent-root';
+        snack.style.cssText = 'position:fixed;left:16px;bottom:16px;background:#333;color:#fff;padding:12px 16px;border-radius:4px';
+        snack.innerHTML = '<div class="MuiSnackbarContent-message"><p class="MuiTypography-root">Пост успешно загружен.</p></div>';
+        document.body.appendChild(snack);
+        const pid = (j && j.post && j.post.id) || null;
+        (window.parent.__created = window.parent.__created || []).push({ file: f.files[0].name, tags: window.__chips(), parent: (document.querySelector('input[name=parent]') || {}).value || window.__parentValue || '', book: (document.querySelector('input[name=pool_id]') || {}).value || window.__bookValue || '', at: Date.now(), id: pid });
+      };
+    } else if (/\/posts\/[A-Za-z0-9]+$/.test(p)) {
+      titleEl.textContent = '7/22';
+      app.innerHTML = `<div class="postpanel" style="width:340px;padding:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="ratingrow" style="display:flex;align-items:center"><div style="display:flex;flex-direction:row-reverse"><svg width="24" height="24" viewBox="0 0 24 24" data-test="5stars"><path fill="#fff" d="m22 8.24-7.19-.62L12 1 9.19 7.63 2 8.24l5.46 4.73L5.82 20 12 16.27 18.18 20l-1.63-7.03zM12 14.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 5.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"></path></svg><svg width="24" height="24" viewBox="0 0 24 24" data-test="4stars"><path fill="#fff" d="m22 8.24-7.19-.62L12 1 9.19 7.63 2 8.24l5.46 4.73L5.82 20 12 16.27 18.18 20l-1.63-7.03zM12 14.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 5.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"></path></svg><svg width="24" height="24" viewBox="0 0 24 24" data-test="3stars"><path fill="#fff" d="m22 8.24-7.19-.62L12 1 9.19 7.63 2 8.24l5.46 4.73L5.82 20 12 16.27 18.18 20l-1.63-7.03zM12 14.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 5.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"></path></svg><svg width="24" height="24" viewBox="0 0 24 24" data-test="2stars"><path fill="#fff" d="m22 8.24-7.19-.62L12 1 9.19 7.63 2 8.24l5.46 4.73L5.82 20 12 16.27 18.18 20l-1.63-7.03zM12 14.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 5.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"></path></svg><svg width="24" height="24" viewBox="0 0 24 24" data-test="1stars"><path fill="#fff" d="m22 8.24-7.19-.62L12 1 9.19 7.63 2 8.24l5.46 4.73L5.82 20 12 16.27 18.18 20l-1.63-7.03zM12 14.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 5.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"></path></svg></div><p style="margin:0 0 0 6px">0</p></div>
+          <div style="display:flex;gap:12px">
+            <div class="favrow" style="display:flex;align-items:center"><svg width="24" height="24" viewBox="0 0 24 24" data-test="fav"><path fill="#fff" d="M16.5 3c-1.74 0-3.41.81-4.5 2.088C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.418 2 8.495c0 3.777 3.4 6.854 8.55 11.53L12 21.333l1.45-1.318C18.6 15.349 22 12.272 22 8.495 22 5.418 19.58 3 16.5 3"></path></svg><span>0</span></div>
+            <div class="commentrow" style="display:flex;align-items:center"><svg width="24" height="24" viewBox="0 0 24 24" data-test="fav" class="commenticon"><path fill="#fff" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2M6 9h12v2H6zm8 5H6v-2h8zm4-6H6V6h12z"></path></svg><span>1</span></div>
+          </div>
+        </div>
+        <div style="margin-top:8px"><button type="button" class="emobtn MuiIconButton-root"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#fff" d="M7 9.5C7 8.67 7.67 8 8.5 8s1.5.67 1.5 1.5S9.33 11 8.5 11 7 10.33 7 9.5zm5 8c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path></svg></button></div>
+        <div class="comments" hidden><div id="comment-editor"><div class="ql-container"><div class="ql-editor ql-blank" contenteditable="true" style="border:1px solid #666;min-height:40px;padding:8px"><p><br></p></div></div></div></div>
+      </div><div style="height:1500px"></div>`;
+      window.__keys = [];
+      document.addEventListener('keydown', (e) => window.__keys.push(e.key + (e.defaultPrevented ? ':prevented' : '')));
+      document.querySelector('.commenticon').addEventListener('click', () => {
+        const c = document.querySelector('.comments');
+        c.hidden = !c.hidden;
+        if (!c.hidden) { c.querySelector('.ql-editor').remove(); setTimeout(() => {
+          c.querySelector('.ql-container').innerHTML = '<div class="ql-editor ql-blank" contenteditable="true" style="border:1px solid #666;min-height:40px;padding:8px"><p><br></p></div>';
+        }, 300); }
+      });
+      document.querySelector('.emobtn').addEventListener('click', () => {
+        const old = document.querySelector('.emo-popover');
+        if (old) { old.remove(); return; }
+        const pop = document.createElement('div');
+        pop.className = 'emo-popover MuiPopover-root';
+        pop.style.cssText = 'position:fixed;left:40px;top:200px;background:#424242;padding:8px;border-radius:8px;z-index:1300';
+        pop.innerHTML = '<div class="MuiPaper-root"><div class="emolist" style="display:flex;gap:6px">' +
+          ['😍','😂','😮','😢','😡','👍'].map((x, i) => `<div class="emo-item"><button type="button" data-emo="${i + 1}" style="font-size:22px;width:40px;height:40px">${x}</button></div>`).join('') +
+          '</div><button type="button" class="closepop" style="margin-top:6px;width:120px">Закрыть</button></div>';
+        pop.addEventListener('click', (ev) => {
+          const b = ev.target.closest('[data-emo]');
+          if (b) { window.__emotion = +b.dataset.emo; pop.remove(); }
+        });
+        setTimeout(() => document.body.appendChild(pop), 120);
+      });
+      // сайт получает токен и ходит в API на другом домене
+      fetch('http://127.0.0.1:8766/api/me', { headers: { Authorization: 'Bearer test-token' } });
+    } else if (/\/reputation$/.test(p)) {
+      titleEl.textContent = 'Репутация';
+      app.innerHTML = `<div class="reprow" style="display:flex;align-items:center;gap:12px;padding:8px;background:#3a3a3a;margin:6px 0">
+          <b>1</b><span>someone</span>
+          <span class="repnum" style="display:flex;align-items:center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24"><path fill="#f9f" d="M9.686 8.25 12.336 3h.3l2.65 5.25zm2.05 11.85L3.111 9.75h8.625zm1.5 0V9.75h8.625zm3.7-11.85L14.336 3h5.15l2.625 5.25zm-14.075 0L5.486 3h5.15l-2.6 5.25z"></path></svg>120</span>
+          
+        </div><div class="reprow" style="display:flex;align-items:center;gap:12px;padding:8px;background:#3a3a3a;margin:6px 0">
+          <b>2</b><span>another</span>
+          <span class="repnum" style="display:flex;align-items:center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24"><path fill="#f9f" d="M9.686 8.25 12.336 3h.3l2.65 5.25zm2.05 11.85L3.111 9.75h8.625zm1.5 0V9.75h8.625zm3.7-11.85L14.336 3h5.15l2.625 5.25zm-14.075 0L5.486 3h5.15l-2.6 5.25z"></path></svg>77</span>
+          
+        </div><div class="reprow" style="display:flex;align-items:center;gap:12px;padding:8px;background:#3a3a3a;margin:6px 0">
+          <b>3</b><span>ilyuxa3211</span>
+          <span class="repnum" style="display:flex;align-items:center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24"><path fill="#f9f" d="M9.686 8.25 12.336 3h.3l2.65 5.25zm2.05 11.85L3.111 9.75h8.625zm1.5 0V9.75h8.625zm3.7-11.85L14.336 3h5.15l2.625 5.25zm-14.075 0L5.486 3h5.15l-2.6 5.25z"></path></svg>48</span>
+          <span class="mechip" style="margin-left:auto;background:#fff;color:#000;border-radius:12px;padding:2px 10px">Вы</span>
+        </div>`;
+      window.__loadRanking();
+    } else if (/\/settings$/.test(p)) {
+      titleEl.textContent = 'Настройки';
+      app.innerHTML = `<div class="MuiBox-root"><header class="MuiPaper-root"><div class="MuiTabs-root"><div class="MuiTabs-scroller">
+        <div aria-label="User Settings" class="MuiTabs-flexContainer" role="tablist"><button class="MuiButtonBase-root MuiTab-root Mui-selected" tabindex="0" type="button" role="tab" aria-selected="true" id="tab-0" aria-controls="tabpanel-0"><span class="MuiTab-wrapper">Общее</span><span class="MuiTouchRipple-root"></span></button><button class="MuiButtonBase-root MuiTab-root" tabindex="-1" type="button" role="tab" aria-selected="false" id="tab-1" aria-controls="tabpanel-1"><span class="MuiTab-wrapper">Видимость контента</span><span class="MuiTouchRipple-root"></span></button><button class="MuiButtonBase-root MuiTab-root" tabindex="-1" type="button" role="tab" aria-selected="false" id="tab-2" aria-controls="tabpanel-2"><span class="MuiTab-wrapper">Премиум</span><span class="MuiTouchRipple-root"></span></button><button class="MuiButtonBase-root MuiTab-root" tabindex="-1" type="button" role="tab" aria-selected="false" id="tab-3" aria-controls="tabpanel-3"><span class="MuiTab-wrapper">Уведомления</span><span class="MuiTouchRipple-root"></span></button></div>
+        <span class="MuiTabs-indicator" style="left:0;width:120px"></span>
+      </div></div></header><div class="panels"><div role="tabpanel" id="tabpanel-0" aria-labelledby="tab-0"><h3>Общее</h3><p>Раздел сайта «Общее»</p></div><div role="tabpanel" id="tabpanel-1" aria-labelledby="tab-1" hidden><h3>Видимость контента</h3><p>Раздел сайта «Видимость контента»</p></div><div role="tabpanel" id="tabpanel-2" aria-labelledby="tab-2" hidden><h3>Премиум</h3><p>Раздел сайта «Премиум»</p></div><div role="tabpanel" id="tabpanel-3" aria-labelledby="tab-3" hidden><h3>Уведомления</h3><p>Раздел сайта «Уведомления»</p></div></div></div>`;
+      const tabs = [...document.querySelectorAll('[role=tab]')];
+      const panels = [...document.querySelectorAll('[role=tabpanel]')];
+      document.querySelector('[role=tablist]').addEventListener('click', (e) => {
+        const b = e.target.closest('[role=tab]');
+        if (!b || b.id === 'skq-settings-tab') return;
+        tabs.forEach((t) => { t.classList.toggle('Mui-selected', t === b); t.setAttribute('aria-selected', String(t === b)); });
+        panels.forEach((pan) => { pan.hidden = pan.id !== b.getAttribute('aria-controls'); });
+        const ind = document.querySelector('.MuiTabs-indicator');
+        ind.style.left = b.offsetLeft + 'px';
+        ind.style.width = b.offsetWidth + 'px';
+      });
+    } else {
+      titleEl.textContent = 'Просмотр';
+      app.innerHTML = `<div class="grid"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/100"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/101"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/102"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/103"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/104"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/105"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div>`;
+      fetch('http://127.0.0.1:8766/posts?lang=ru&page=1&limit=6', { headers: { Authorization: 'Bearer test-token' } });
+    }
+  }
+  fetch('http://127.0.0.1:8766/api/me', { headers: { Authorization: 'Bearer test-token' } });
+  window.__loadRanking = () => fetch('http://127.0.0.1:8766/reputation/ranking', { headers: { Authorization: 'Bearer test-token' } }).then((r) => r.json());
+  window.addEventListener('popstate', render);
+  render();
+</script>
+</body></html>
