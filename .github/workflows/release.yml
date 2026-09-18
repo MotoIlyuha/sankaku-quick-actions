@@ -43,5 +43,6 @@ jobs:
             dist/sankaku-chrome-*.zip \
             dist/sankaku-firefox-mv3-*.zip \
             dist/sankaku-firefox-mv2-*.zip \
+            dist/sankaku-source-*.zip \
             --title "${GITHUB_REF_NAME}" \
             --notes-file notes.md

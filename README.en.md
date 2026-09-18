@@ -89,6 +89,30 @@ matches the sources, and creates a release with the script and the three
 extension archives. The release notes come from the matching `CHANGELOG.md`
 section.
 
+## Publishing on addons.mozilla.org
+
+The **MV3** build (`dist/firefox-mv3`) is the one submitted to AMO: it does not
+duplicate the core, unlike MV2, where the core ships both inline in the bridge
+and as a file. MV2 stays for self-distribution and older Firefox versions.
+
+A submission needs three things:
+
+1. **A source archive** — `python build.py --source` writes
+   `dist/sankaku-source-<version>.zip`. The build is reproduced from it with
+   `python build.py --zip`, with no network access and no third-party
+   dependencies.
+2. **Reviewer notes** — [`docs/REVIEWER_NOTES.md`](docs/REVIEWER_NOTES.md):
+   what the add-on does, why it needs the page context and the `fetch` wrapper,
+   why no data leaves the browser, how to build the package.
+3. **A test account on the site** — rating, favoriting and uploading cannot be
+   checked without signing in. The credentials go into the submission form.
+
+Listing text, categories and the rest of the fields are in
+[`docs/amo-listing.md`](docs/amo-listing.md) (in Russian, with the English
+listing text ready to paste). Data collection is declared in the manifest
+(`data_collection_permissions: none`), which is mandatory for new add-ons
+submitted from November 3, 2025.
+
 ## Testing against the mock
 
 The site is closed to automation, so a mock of its markup and API lives next to

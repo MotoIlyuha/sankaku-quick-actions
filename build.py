@@ -19,7 +19,7 @@ import subprocess
 import sys
 import zlib
 
-VERSION = '1.18.0'
+VERSION = '1.19.0'
 # Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
 # Пока пусто — строки со ссылками из шапки убираются.
 REPO_URL = 'https://github.com/MotoIlyuha/sankaku-quick-actions'
@@ -248,6 +248,27 @@ def make_zips():
     return made
 
 
+def make_source_zip():
+    """Архив исходников для ревьюеров AMO: из него воспроизводится сборка."""
+    import zipfile
+    zip_path = os.path.join(DIST, 'sankaku-source-%s.zip' % VERSION)
+    items = ['build.py', 'README.md', 'README.en.md', 'CHANGELOG.md', 'LICENSE',
+             'docs/REVIEWER_NOTES.md']
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as z:
+        for rel in items:
+            path = os.path.join(ROOT, rel)
+            if os.path.exists(path):
+                z.write(path, rel)
+        for folder in ('src', 'test'):
+            for base, _, names in os.walk(os.path.join(ROOT, folder)):
+                if '__pycache__' in base:
+                    continue
+                for n in names:
+                    full = os.path.join(base, n)
+                    z.write(full, os.path.relpath(full, ROOT).replace('\\', '/'))
+    return zip_path
+
+
 if __name__ == '__main__':
     us_path, n_keys, n_langs = build()
     n_checked = check(us_path)
@@ -256,3 +277,5 @@ if __name__ == '__main__':
     if '--zip' in sys.argv:
         for path in make_zips():
             print('zip:', os.path.relpath(path, ROOT))
+    if '--zip' in sys.argv or '--source' in sys.argv:
+        print('исходники:', os.path.relpath(make_source_zip(), ROOT))
