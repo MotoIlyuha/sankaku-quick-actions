@@ -3,6 +3,11 @@
 // @namespace    skq-quick-actions
 // @version      {{VERSION}}
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
+// @author       MotoIlyuha
+// @homepageURL  {{REPO}}
+// @supportURL   {{REPO}}/issues
+// @downloadURL  {{RAW}}/sankaku-quick-actions.user.js
+// @updateURL    {{RAW}}/sankaku-quick-actions.user.js
 // @match        https://www.sankakucomplex.com/*
 // @match        https://sankakucomplex.com/*
 // @match        https://sankaku.app/*

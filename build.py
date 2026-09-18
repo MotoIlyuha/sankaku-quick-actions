@@ -20,6 +20,10 @@ import sys
 import zlib
 
 VERSION = '1.18.0'
+# Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
+# Пока пусто — строки со ссылками из шапки убираются.
+REPO_URL = ''
+BRANCH = 'main'
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(ROOT, 'src')
@@ -157,6 +161,11 @@ def build():
     table_js, menu_js, n_keys, n_langs = build_i18n()
     core = read(SRC, 'core.js').replace('{{I18N}}', '/* SKQ_I18N_START */ ' + table_js + ' /* SKQ_I18N_END */')
     header = read(SRC, 'header.txt').replace('{{VERSION}}', VERSION)
+    if REPO_URL:
+        raw = REPO_URL.replace('https://github.com/', 'https://raw.githubusercontent.com/') + '/' + BRANCH
+        header = header.replace('{{REPO}}', REPO_URL).replace('{{RAW}}', raw)
+    else:
+        header = '\n'.join(l for l in header.split('\n') if '{{REPO}}' not in l and '{{RAW}}' not in l)
     loader = read(SRC, 'loaders', 'userscript.js').replace('{{MENU}}', menu_js)
     bridge = read(SRC, 'ext', 'bridge.js')
     background = read(SRC, 'ext', 'background.js')
