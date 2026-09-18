@@ -22,7 +22,7 @@ import zlib
 VERSION = '1.18.0'
 # Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
 # Пока пусто — строки со ссылками из шапки убираются.
-REPO_URL = ''
+REPO_URL = 'https://github.com/MotoIlyuha/sankaku-quick-actions'
 BRANCH = 'main'
 
 ROOT = os.path.dirname(os.path.abspath(__file__))

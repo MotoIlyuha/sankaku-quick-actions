@@ -4,6 +4,10 @@
 // @version      1.18.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
+// @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
+// @supportURL   https://github.com/MotoIlyuha/sankaku-quick-actions/issues
+// @downloadURL  https://raw.githubusercontent.com/MotoIlyuha/sankaku-quick-actions/main/sankaku-quick-actions.user.js
+// @updateURL    https://raw.githubusercontent.com/MotoIlyuha/sankaku-quick-actions/main/sankaku-quick-actions.user.js
 // @match        https://www.sankakucomplex.com/*
 // @match        https://sankakucomplex.com/*
 // @match        https://sankaku.app/*

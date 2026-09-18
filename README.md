@@ -55,21 +55,36 @@ python build.py --zip    # ещё и упаковать расширения в 
 
 ## Установка
 
-**Tampermonkey.** Открыть `dist/tampermonkey/sankaku-quick-actions.user.js`
-(или файл в корне) — Tampermonkey предложит установку.
+**Tampermonkey.** Открыть
+[sankaku-quick-actions.user.js](https://raw.githubusercontent.com/MotoIlyuha/sankaku-quick-actions/main/sankaku-quick-actions.user.js)
+— Tampermonkey предложит установку и дальше будет сам проверять обновления.
 
-**Chrome.** `chrome://extensions` → «Режим разработчика» → «Загрузить
-распакованное расширение» → папка `dist/chrome`.
+**Chrome.** Скачать `sankaku-chrome-*.zip` из
+[Releases](https://github.com/MotoIlyuha/sankaku-quick-actions/releases),
+распаковать, затем `chrome://extensions` → «Режим разработчика» → «Загрузить
+распакованное расширение». Собранное локально лежит в `dist/chrome`.
 
-**Firefox.** `about:debugging#/runtime/this-firefox` → «Загрузить временное
-дополнение» → файл `dist/firefox-mv3/manifest.json` (Firefox 128 и новее) или
-`dist/firefox-mv2/manifest.json` (старые сборки). Временное дополнение живёт до
-перезапуска браузера; для постоянной установки нужна подпись на
-addons.mozilla.org.
+**Firefox.** `sankaku-firefox-mv3-*.zip` для Firefox 128 и новее,
+`sankaku-firefox-mv2-*.zip` для старых сборок. Распаковать и загрузить через
+`about:debugging#/runtime/this-firefox` → «Загрузить временное дополнение» →
+`manifest.json`. Временное дополнение живёт до перезапуска браузера; для
+постоянной установки нужна подпись на addons.mozilla.org.
 
 Настройки в расширении открываются кнопкой на панели браузера, в
 Tampermonkey — пунктом «⚙ Настройки» в меню скрипта. На странице настроек
 сайта и там, и там появляется вкладка «Плагин».
+
+## Выпуск версии
+
+1. Поднять `VERSION` в `build.py`, добавить раздел в `CHANGELOG.md`.
+2. `python build.py` и закоммитить в том числе пересобранный
+   `sankaku-quick-actions.user.js` — по нему обновляется Tampermonkey.
+3. `git tag v1.18.0 && git push origin v1.18.0`.
+
+Дальше работает `.github/workflows/release.yml`: собирает все цели, сверяет тег
+с версией, проверяет, что закоммиченный юзерскрипт совпадает с исходниками, и
+создаёт релиз с файлом скрипта и тремя архивами расширений. Описание релиза
+берётся из раздела `CHANGELOG.md` для этой версии.
 
 ## Проверка на макете
 
