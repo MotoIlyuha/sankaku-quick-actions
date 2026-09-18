@@ -26,7 +26,11 @@ class H(http.server.BaseHTTPRequestHandler):
         path = self.path.split('?')[0].split('#')[0]
         if path.startswith('/users/me'):
             me = {'id': 7, 'name': 'ilyuxa3211'}
-            if os.path.exists(os.path.join(ROOT, 'rep_in_profile.flag')):
+            # значение можно менять на лету: запись в rep_value.txt
+            value = os.path.join(ROOT, 'rep_value.txt')
+            if os.path.exists(value):
+                me['reputation'] = int(open(value).read().strip())
+            elif os.path.exists(os.path.join(ROOT, 'rep_in_profile.flag')):
                 me['reputation'] = 48
             return self._send(200, json.dumps(me), 'application/json')
         if path.startswith('/reputation/ranking'):

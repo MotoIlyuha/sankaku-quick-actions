@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.20.1
+// @version      1.21.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -370,7 +370,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Settings saved",
           "Настройки": "Settings",
           "Показывать количество лайков на карточке": "Show the favorite count on the card",
-          "Лайков: {n}": "Favorites: {n}"
+          "Лайков: {n}": "Favorites: {n}",
+          "Обновить репутацию": "Refresh reputation",
+          "Репутация не изменилась: {n}": "Reputation unchanged: {n}"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -529,7 +531,9 @@ function core(storedSettings) {
           "Настройки сохранены": "設定を保存しました",
           "Настройки": "設定",
           "Показывать количество лайков на карточке": "お気に入り数をカードに表示",
-          "Лайков: {n}": "お気に入り: {n}"
+          "Лайков: {n}": "お気に入り: {n}",
+          "Обновить репутацию": "レピュテーションを更新",
+          "Репутация не изменилась: {n}": "レピュテーションは変わっていません: {n}"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -688,7 +692,9 @@ function core(storedSettings) {
           "Настройки сохранены": "设置已保存",
           "Настройки": "设置",
           "Показывать количество лайков на карточке": "在卡片上显示收藏数",
-          "Лайков: {n}": "收藏：{n}"
+          "Лайков: {n}": "收藏：{n}",
+          "Обновить репутацию": "刷新声望",
+          "Репутация не изменилась: {n}": "声望没有变化：{n}"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -847,7 +853,9 @@ function core(storedSettings) {
           "Настройки сохранены": "設定已儲存",
           "Настройки": "設定",
           "Показывать количество лайков на карточке": "在卡片上顯示收藏數",
-          "Лайков: {n}": "收藏：{n}"
+          "Лайков: {n}": "收藏：{n}",
+          "Обновить репутацию": "重新整理聲望",
+          "Репутация не изменилась: {n}": "聲望沒有變化：{n}"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1006,7 +1014,9 @@ function core(storedSettings) {
           "Настройки сохранены": "설정을 저장했습니다",
           "Настройки": "설정",
           "Показывать количество лайков на карточке": "카드에 즐겨찾기 수 표시",
-          "Лайков: {n}": "즐겨찾기: {n}"
+          "Лайков: {n}": "즐겨찾기: {n}",
+          "Обновить репутацию": "평판 새로고침",
+          "Репутация не изменилась: {n}": "평판이 그대로입니다: {n}"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1165,7 +1175,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Einstellungen gespeichert",
           "Настройки": "Einstellungen",
           "Показывать количество лайков на карточке": "Anzahl der Favoriten auf der Karte anzeigen",
-          "Лайков: {n}": "Favoriten: {n}"
+          "Лайков: {n}": "Favoriten: {n}",
+          "Обновить репутацию": "Reputation aktualisieren",
+          "Репутация не изменилась: {n}": "Reputation unverändert: {n}"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1324,7 +1336,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Paramètres enregistrés",
           "Настройки": "Paramètres",
           "Показывать количество лайков на карточке": "Afficher le nombre de favoris sur la carte",
-          "Лайков: {n}": "Favoris : {n}"
+          "Лайков: {n}": "Favoris : {n}",
+          "Обновить репутацию": "Actualiser la réputation",
+          "Репутация не изменилась: {n}": "Réputation inchangée : {n}"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1483,7 +1497,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Ajustes guardados",
           "Настройки": "Ajustes",
           "Показывать количество лайков на карточке": "Mostrar el número de favoritos en la tarjeta",
-          "Лайков: {n}": "Favoritos: {n}"
+          "Лайков: {n}": "Favoritos: {n}",
+          "Обновить репутацию": "Actualizar la reputación",
+          "Репутация не изменилась: {n}": "La reputación no ha cambiado: {n}"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1642,7 +1658,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Configurações salvas",
           "Настройки": "Configurações",
           "Показывать количество лайков на карточке": "Mostrar o número de favoritos no cartão",
-          "Лайков: {n}": "Favoritos: {n}"
+          "Лайков: {n}": "Favoritos: {n}",
+          "Обновить репутацию": "Atualizar a reputação",
+          "Репутация не изменилась: {n}": "Reputação sem alteração: {n}"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1801,7 +1819,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Impostazioni salvate",
           "Настройки": "Impostazioni",
           "Показывать количество лайков на карточке": "Mostra il numero di preferiti sulla scheda",
-          "Лайков: {n}": "Preferiti: {n}"
+          "Лайков: {n}": "Preferiti: {n}",
+          "Обновить репутацию": "Aggiorna la reputazione",
+          "Репутация не изменилась: {n}": "Reputazione invariata: {n}"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -1960,7 +1980,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Instellingen opgeslagen",
           "Настройки": "Instellingen",
           "Показывать количество лайков на карточке": "Aantal favorieten op de kaart tonen",
-          "Лайков: {n}": "Favorieten: {n}"
+          "Лайков: {n}": "Favorieten: {n}",
+          "Обновить репутацию": "Reputatie vernieuwen",
+          "Репутация не изменилась: {n}": "Reputatie onveranderd: {n}"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2119,7 +2141,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Ustawienia zapisane",
           "Настройки": "Ustawienia",
           "Показывать количество лайков на карточке": "Pokazuj liczbę polubień na kafelku",
-          "Лайков: {n}": "Ulubione: {n}"
+          "Лайков: {n}": "Ulubione: {n}",
+          "Обновить репутацию": "Odśwież reputację",
+          "Репутация не изменилась: {n}": "Reputacja bez zmian: {n}"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2278,7 +2302,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Inställningarna sparade",
           "Настройки": "Inställningar",
           "Показывать количество лайков на карточке": "Visa antalet favoriter på kortet",
-          "Лайков: {n}": "Favoriter: {n}"
+          "Лайков: {n}": "Favoriter: {n}",
+          "Обновить репутацию": "Uppdatera rykte",
+          "Репутация не изменилась: {n}": "Ryktet oförändrat: {n}"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2437,7 +2463,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Indstillingerne er gemt",
           "Настройки": "Indstillinger",
           "Показывать количество лайков на карточке": "Vis antal favoritter på kortet",
-          "Лайков: {n}": "Favoritter: {n}"
+          "Лайков: {n}": "Favoritter: {n}",
+          "Обновить репутацию": "Opdatér omdømme",
+          "Репутация не изменилась: {n}": "Omdømmet er uændret: {n}"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2596,7 +2624,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Innstillingene er lagret",
           "Настройки": "Innstillinger",
           "Показывать количество лайков на карточке": "Vis antall favoritter på kortet",
-          "Лайков: {n}": "Favoritter: {n}"
+          "Лайков: {n}": "Favoritter: {n}",
+          "Обновить репутацию": "Oppdater omdømme",
+          "Репутация не изменилась: {n}": "Omdømmet er uendret: {n}"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -2755,7 +2785,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Asetukset tallennettu",
           "Настройки": "Asetukset",
           "Показывать количество лайков на карточке": "Näytä suosikkien määrä kortissa",
-          "Лайков: {n}": "Suosikkeja: {n}"
+          "Лайков: {n}": "Suosikkeja: {n}",
+          "Обновить репутацию": "Päivitä maine",
+          "Репутация не изменилась: {n}": "Maine ennallaan: {n}"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -2914,7 +2946,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Beállítások mentve",
           "Настройки": "Beállítások",
           "Показывать количество лайков на карточке": "Kedvencek száma a kártyán",
-          "Лайков: {n}": "Kedvencek: {n}"
+          "Лайков: {n}": "Kedvencek: {n}",
+          "Обновить репутацию": "Hírnév frissítése",
+          "Репутация не изменилась: {n}": "A hírnév nem változott: {n}"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3073,7 +3107,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Setările au fost salvate",
           "Настройки": "Setări",
           "Показывать количество лайков на карточке": "Arată numărul de favorite pe card",
-          "Лайков: {n}": "Favorite: {n}"
+          "Лайков: {n}": "Favorite: {n}",
+          "Обновить репутацию": "Reîmprospătează reputația",
+          "Репутация не изменилась: {n}": "Reputația nu s-a schimbat: {n}"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3232,7 +3268,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Настройките са запазени",
           "Настройки": "Настройки",
           "Показывать количество лайков на карточке": "Показвай броя любими върху картата",
-          "Лайков: {n}": "Любими: {n}"
+          "Лайков: {n}": "Любими: {n}",
+          "Обновить репутацию": "Обнови репутацията",
+          "Репутация не изменилась: {n}": "Репутацията не се е променила: {n}"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3391,7 +3429,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Οι ρυθμίσεις αποθηκεύτηκαν",
           "Настройки": "Ρυθμίσεις",
           "Показывать количество лайков на карточке": "Εμφάνιση του αριθμού αγαπημένων στην κάρτα",
-          "Лайков: {n}": "Αγαπημένα: {n}"
+          "Лайков: {n}": "Αγαπημένα: {n}",
+          "Обновить репутацию": "Ανανέωση φήμης",
+          "Репутация не изменилась: {n}": "Η φήμη δεν άλλαξε: {n}"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3550,7 +3590,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Ayarlar kaydedildi",
           "Настройки": "Ayarlar",
           "Показывать количество лайков на карточке": "Favori sayısını kartta göster",
-          "Лайков: {n}": "Favoriler: {n}"
+          "Лайков: {n}": "Favoriler: {n}",
+          "Обновить репутацию": "İtibarı yenile",
+          "Репутация не изменилась: {n}": "İtibar değişmedi: {n}"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -3709,7 +3751,9 @@ function core(storedSettings) {
           "Настройки сохранены": "บันทึกการตั้งค่าแล้ว",
           "Настройки": "การตั้งค่า",
           "Показывать количество лайков на карточке": "แสดงจำนวนรายการโปรดบนการ์ด",
-          "Лайков: {n}": "รายการโปรด: {n}"
+          "Лайков: {n}": "รายการโปรด: {n}",
+          "Обновить репутацию": "รีเฟรชชื่อเสียง",
+          "Репутация не изменилась: {n}": "ชื่อเสียงไม่เปลี่ยนแปลง: {n}"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -3868,7 +3912,9 @@ function core(storedSettings) {
           "Настройки сохранены": "सेटिंग्स सहेजी गईं",
           "Настройки": "सेटिंग्स",
           "Показывать количество лайков на карточке": "कार्ड पर पसंदीदा की संख्या दिखाएँ",
-          "Лайков: {n}": "पसंदीदा: {n}"
+          "Лайков: {n}": "पसंदीदा: {n}",
+          "Обновить репутацию": "प्रतिष्ठा ताज़ा करें",
+          "Репутация не изменилась: {n}": "प्रतिष्ठा में बदलाव नहीं: {n}"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4027,7 +4073,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Pengaturan disimpan",
           "Настройки": "Pengaturan",
           "Показывать количество лайков на карточке": "Tampilkan jumlah favorit di kartu",
-          "Лайков: {n}": "Favorit: {n}"
+          "Лайков: {n}": "Favorit: {n}",
+          "Обновить репутацию": "Segarkan reputasi",
+          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4186,7 +4234,9 @@ function core(storedSettings) {
           "Настройки сохранены": "Tetapan disimpan",
           "Настройки": "Tetapan",
           "Показывать количество лайков на карточке": "Tunjukkan bilangan kegemaran pada kad",
-          "Лайков: {n}": "Kegemaran: {n}"
+          "Лайков: {n}": "Kegemaran: {n}",
+          "Обновить репутацию": "Segar semula reputasi",
+          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}"
     },
   } /* SKQ_I18N_END */;
 
@@ -8237,10 +8287,11 @@ function core(storedSettings) {
     }
   } catch { /* ignore */ }
 
-  function setReputation(value, source) {
+  function setReputation(value, source, force) {
     if (typeof value !== 'number' || !Number.isFinite(value)) return;
-    // то, что показано на странице рейтинга, надёжнее любых догадок по ответам
-    if (rep.source === 'dom' && source !== 'dom' && Date.now() - rep.at < REP_TTL) return;
+    // то, что показано на странице рейтинга, надёжнее любых догадок по ответам,
+    // но обновление по кнопке или при открытии панели важнее всего
+    if (!force && rep.source === 'dom' && source !== 'dom' && Date.now() - rep.at < REP_TTL) return;
     if (value === rep.value && source === rep.source) return;
     Object.assign(rep, { value, at: Date.now(), source });
     try {
@@ -8361,13 +8412,50 @@ function core(storedSettings) {
         const found = isObj(me) ? repFieldValue(me) : null;
         if (found) noteRepDebug({ where: path, key: found.key, value: found.value, name: userName(me), id: me.id, mine: true });
         const value = findReputation(data);
-        if (value != null) { setReputation(value, 'api'); return; }
+        if (value != null) { setReputation(value, 'api', force); return; }
         noteRepDebug({ where: path, key: '(поля репутации нет)', keys: Object.keys(isObj(me) ? me : {}).slice(0, 40).join(', ') });
       }
     } finally {
       rep.loading = false;
       mountReputation();
     }
+  }
+
+  // Обновление по кнопке: спрашиваем сайт заново и говорим, что получилось
+  async function reloadReputation() {
+    if (rep.loading) return;
+    const before = rep.value;
+    document.querySelectorAll('.skq-rep').forEach((el) => el.classList.add('skq-rep-busy'));
+    try {
+      await refreshReputation(true);
+      scanReputationDom();
+    } finally {
+      document.querySelectorAll('.skq-rep').forEach((el) => el.classList.remove('skq-rep-busy'));
+    }
+    if (rep.value == null) {
+      toast(t('Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт'), true);
+    } else {
+      toast(rep.value === before
+        ? t('Репутация не изменилась: {n}', { n: rep.value })
+        : t('Репутация: {n}', { n: rep.value }));
+    }
+  }
+
+  // Панель с счётчиком открыли — значение могло устареть, спрашиваем заново
+  const REP_OPEN_TTL = 30000;
+  let repShownAt = 0;
+  let repWatcher = null;
+
+  function watchRepVisibility(badge) {
+    if (typeof IntersectionObserver !== 'function') return;
+    if (repWatcher) repWatcher.disconnect();
+    repWatcher = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      if (Date.now() - repShownAt < REP_OPEN_TTL) return;
+      repShownAt = Date.now();
+      refreshReputation(true);
+    });
+    repWatcher.observe(badge);
   }
 
   // Данные для разбора, если число всё равно неверное
@@ -8403,7 +8491,15 @@ function core(storedSettings) {
           <stop stop-color="#FFBCFF"></stop><stop offset=".115" stop-color="#FFB9FF"></stop><stop offset=".36" stop-color="#FFA5FF"></stop>
           <stop offset=".563" stop-color="#FF8BFF"></stop><stop offset=".765" stop-color="#FF9FFF"></stop><stop offset="1" stop-color="#fff"></stop>
         </linearGradient></defs>
-      </svg><span class="skq-rep-value"></span>`;
+      </svg><span class="skq-rep-value"></span>
+      <button type="button" class="skq-rep-refresh" tabindex="-1" title="${T('Обновить репутацию')}" aria-label="${T('Обновить репутацию')}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"></path></svg>
+      </button>`;
+    badge.querySelector('.skq-rep-refresh').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      reloadReputation();
+    });
     return badge;
   }
 
@@ -8425,6 +8521,7 @@ function core(storedSettings) {
     if (!badge) {
       badge = createRepBadge();
       slot.after(badge);
+      watchRepVisibility(badge);
     }
     const known = rep.value != null;
     badge.querySelector('.skq-rep-value').textContent = known ? String(rep.value) : '—';
@@ -8860,6 +8957,16 @@ function core(storedSettings) {
       font-family: Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; font-weight: 500; color: #fff; white-space: nowrap;
     }
     .skq-rep svg { width: 22px; height: 22px; flex: none; }
+    .skq-rep-refresh {
+      display: none; align-items: center; justify-content: center; flex: none;
+      width: 20px; height: 20px; margin-left: 2px; padding: 0; border: 0; border-radius: 50%;
+      background: rgba(255, 255, 255, .14); color: #fff; cursor: pointer;
+    }
+    .skq-rep-refresh:hover { background: rgba(255, 255, 255, .28); }
+    .skq-rep:hover .skq-rep-refresh, .skq-rep-refresh:focus { display: inline-flex; }
+    .skq-rep-refresh svg { width: 14px; height: 14px; }
+    .skq-rep.skq-rep-busy .skq-rep-refresh { display: inline-flex; animation: skq-spin 1s linear infinite; }
+    @keyframes skq-spin { to { transform: rotate(360deg); } }
     .skq-emo-layer { position: fixed; inset: 0; pointer-events: none; z-index: 2147483646; }
     .skq-emo-badge {
       position: absolute; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; box-sizing: border-box;

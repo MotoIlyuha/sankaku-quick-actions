@@ -4159,10 +4159,11 @@ function core(storedSettings) {
     }
   } catch { /* ignore */ }
 
-  function setReputation(value, source) {
+  function setReputation(value, source, force) {
     if (typeof value !== 'number' || !Number.isFinite(value)) return;
-    // то, что показано на странице рейтинга, надёжнее любых догадок по ответам
-    if (rep.source === 'dom' && source !== 'dom' && Date.now() - rep.at < REP_TTL) return;
+    // то, что показано на странице рейтинга, надёжнее любых догадок по ответам,
+    // но обновление по кнопке или при открытии панели важнее всего
+    if (!force && rep.source === 'dom' && source !== 'dom' && Date.now() - rep.at < REP_TTL) return;
     if (value === rep.value && source === rep.source) return;
     Object.assign(rep, { value, at: Date.now(), source });
     try {
@@ -4283,13 +4284,50 @@ function core(storedSettings) {
         const found = isObj(me) ? repFieldValue(me) : null;
         if (found) noteRepDebug({ where: path, key: found.key, value: found.value, name: userName(me), id: me.id, mine: true });
         const value = findReputation(data);
-        if (value != null) { setReputation(value, 'api'); return; }
+        if (value != null) { setReputation(value, 'api', force); return; }
         noteRepDebug({ where: path, key: '(поля репутации нет)', keys: Object.keys(isObj(me) ? me : {}).slice(0, 40).join(', ') });
       }
     } finally {
       rep.loading = false;
       mountReputation();
     }
+  }
+
+  // Обновление по кнопке: спрашиваем сайт заново и говорим, что получилось
+  async function reloadReputation() {
+    if (rep.loading) return;
+    const before = rep.value;
+    document.querySelectorAll('.skq-rep').forEach((el) => el.classList.add('skq-rep-busy'));
+    try {
+      await refreshReputation(true);
+      scanReputationDom();
+    } finally {
+      document.querySelectorAll('.skq-rep').forEach((el) => el.classList.remove('skq-rep-busy'));
+    }
+    if (rep.value == null) {
+      toast(t('Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт'), true);
+    } else {
+      toast(rep.value === before
+        ? t('Репутация не изменилась: {n}', { n: rep.value })
+        : t('Репутация: {n}', { n: rep.value }));
+    }
+  }
+
+  // Панель с счётчиком открыли — значение могло устареть, спрашиваем заново
+  const REP_OPEN_TTL = 30000;
+  let repShownAt = 0;
+  let repWatcher = null;
+
+  function watchRepVisibility(badge) {
+    if (typeof IntersectionObserver !== 'function') return;
+    if (repWatcher) repWatcher.disconnect();
+    repWatcher = new IntersectionObserver((entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      if (Date.now() - repShownAt < REP_OPEN_TTL) return;
+      repShownAt = Date.now();
+      refreshReputation(true);
+    });
+    repWatcher.observe(badge);
   }
 
   // Данные для разбора, если число всё равно неверное
@@ -4325,7 +4363,15 @@ function core(storedSettings) {
           <stop stop-color="#FFBCFF"></stop><stop offset=".115" stop-color="#FFB9FF"></stop><stop offset=".36" stop-color="#FFA5FF"></stop>
           <stop offset=".563" stop-color="#FF8BFF"></stop><stop offset=".765" stop-color="#FF9FFF"></stop><stop offset="1" stop-color="#fff"></stop>
         </linearGradient></defs>
-      </svg><span class="skq-rep-value"></span>`;
+      </svg><span class="skq-rep-value"></span>
+      <button type="button" class="skq-rep-refresh" tabindex="-1" title="${T('Обновить репутацию')}" aria-label="${T('Обновить репутацию')}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4z"></path></svg>
+      </button>`;
+    badge.querySelector('.skq-rep-refresh').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      reloadReputation();
+    });
     return badge;
   }
 
@@ -4347,6 +4393,7 @@ function core(storedSettings) {
     if (!badge) {
       badge = createRepBadge();
       slot.after(badge);
+      watchRepVisibility(badge);
     }
     const known = rep.value != null;
     badge.querySelector('.skq-rep-value').textContent = known ? String(rep.value) : '—';
@@ -4782,6 +4829,16 @@ function core(storedSettings) {
       font-family: Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; font-weight: 500; color: #fff; white-space: nowrap;
     }
     .skq-rep svg { width: 22px; height: 22px; flex: none; }
+    .skq-rep-refresh {
+      display: none; align-items: center; justify-content: center; flex: none;
+      width: 20px; height: 20px; margin-left: 2px; padding: 0; border: 0; border-radius: 50%;
+      background: rgba(255, 255, 255, .14); color: #fff; cursor: pointer;
+    }
+    .skq-rep-refresh:hover { background: rgba(255, 255, 255, .28); }
+    .skq-rep:hover .skq-rep-refresh, .skq-rep-refresh:focus { display: inline-flex; }
+    .skq-rep-refresh svg { width: 14px; height: 14px; }
+    .skq-rep.skq-rep-busy .skq-rep-refresh { display: inline-flex; animation: skq-spin 1s linear infinite; }
+    @keyframes skq-spin { to { transform: rotate(360deg); } }
     .skq-emo-layer { position: fixed; inset: 0; pointer-events: none; z-index: 2147483646; }
     .skq-emo-badge {
       position: absolute; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; box-sizing: border-box;
