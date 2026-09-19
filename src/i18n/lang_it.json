@@ -157,5 +157,8 @@
  "155": "Mostra il numero di preferiti sulla scheda",
  "156": "Preferiti: {n}",
  "157": "Aggiorna la reputazione",
- "158": "Reputazione invariata: {n}"
+ "158": "Reputazione invariata: {n}",
+ "159": "Copia la versione",
+ "160": "Versione copiata: {v}",
+ "161": "Impossibile copiare"
 }

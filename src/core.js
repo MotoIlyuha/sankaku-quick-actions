@@ -110,6 +110,8 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
+  const SKQ_VERSION = '{{VERSION}}';
+
   const STRINGS = {{I18N}};
 
   // варианты записи одного и того же языка
@@ -4346,9 +4348,16 @@ function core(storedSettings) {
     for (const v of Object.values(data)) if (isObj(v)) sniffReputation(v, depth + 1);
   }
 
+  // Одинаковые записи не копим: иначе повторные осмотры страницы вытесняют ответы сайта
   function noteRepDebug(entry) {
+    const same = rep.debug.find((d) => d.where === entry.where && d.key === entry.key && d.value === entry.value);
+    if (same) {
+      same.at = new Date().toISOString();
+      same.times = (same.times || 1) + 1;
+      return;
+    }
     rep.debug.unshift({ ...entry, at: new Date().toISOString() });
-    rep.debug.length = Math.min(rep.debug.length, 12);
+    rep.debug.length = Math.min(rep.debug.length, 20);
   }
 
   // ---- Число со страницы рейтинга ----
@@ -4366,6 +4375,12 @@ function core(storedSettings) {
   };
   const diamondsIn = (el) => [...el.querySelectorAll('svg')].filter(isDiamond).length;
 
+  const rowText = (row) => (row.textContent || '').replace(/\s+/g, ' ').trim();
+
+  // Что последний раз показывала страница: пока это число не изменилось,
+  // более свежий ответ сайта важнее — страница могла просто не перерисоваться
+  let lastDom = { value: null, at: 0 };
+
   // Строка рейтинга с пометкой «Вы» или с нашим именем
   function scanReputationDom() {
     if (FRAME_MODE || !document.body) return;
@@ -4381,15 +4396,17 @@ function core(storedSettings) {
         if (diamondsIn(row.parentElement) > 1) break;
         row = row.parentElement;
         if (!rowIsMine(row)) continue;
+        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true, row: rowText(row).slice(0, 120) });
+        if (value !== lastDom.value) lastDom = { value, at: Date.now() };
+        if (rep.source === 'api' && rep.at > lastDom.at) return; // страница ещё со старым числом
         setReputation(value, 'dom');
-        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true });
         return;
       }
     }
   }
 
   function rowIsMine(row) {
-    const text = (row.textContent || '').replace(/\s+/g, ' ').trim();
+    const text = rowText(row);
     if (!text || text.length > 400) return false;
     if (rep.name && new RegExp(`(^|[^\\w])${escapeRe(rep.name)}([^\\w]|$)`, 'i').test(text)) return true;
     return [...row.querySelectorAll('span, p, div, button')].some((el) =>
@@ -4405,7 +4422,11 @@ function core(storedSettings) {
     try {
       for (const path of ['/users/me', '/user/me', '/users/me/reputation']) {
         let data = null;
-        try { data = await api('GET', path); } catch (e) { log('reputation', path, e.message); continue; }
+        try { data = await api('GET', path); } catch (e) {
+          log('reputation', path, e.message);
+          noteRepDebug({ where: path, key: 'запрос не удался', error: e.message });
+          continue;
+        }
         const me = isObj(data) && isObj(data.user) ? data.user : data;
         if (isObj(me)) {
           if (me.id != null) rep.userId = me.id;
@@ -4589,7 +4610,9 @@ function core(storedSettings) {
     .key.wait { border-color: #ff8c00; color: #ff8c00; }
     .hint { margin: 4px 0 0; color: #999; font-size: 12px; }
     .hint.err { color: #ff6b6b; }
-    .actions { display: flex; gap: 8px; margin-top: 4px; }
+    .actions { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
+    .ver { background: none; border: 0; padding: 7px 2px; color: #999; font-size: 12px; }
+    .ver:hover { background: none; color: #ddd; }
     .actions .spacer { flex: 1; }
     .save { background: #ff8c00; border-color: #ff8c00; color: #fff; font-weight: 500; }
     .save:hover { background: #ff9d26; }
@@ -4666,6 +4689,7 @@ function core(storedSettings) {
           <p class="hint keyhint">${T('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
         </fieldset>
         <div class="actions">
+          <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
           <button type="button" class="reset">${T('Сбросить')}</button>
           <span class="spacer"></span>
           <button type="button" class="cancel">${T('Отмена')}</button>
@@ -4766,6 +4790,11 @@ function core(storedSettings) {
       });
     }
     root.querySelector('.repdebug').addEventListener('click', copyReputationDebug);
+    root.querySelector('.ver').addEventListener('click', () => {
+      copyText(SKQ_VERSION).then((ok) => toast(ok
+        ? t('Версия скопирована: {v}', { v: SKQ_VERSION })
+        : t('Не удалось скопировать'), !ok));
+    });
     f('rehideOnBlur').addEventListener('change', syncRehide);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);

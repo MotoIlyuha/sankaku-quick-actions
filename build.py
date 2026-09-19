@@ -19,7 +19,7 @@ import subprocess
 import sys
 import zlib
 
-VERSION = '1.23.2'
+VERSION = '1.23.3'
 # Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
 # Пока пусто — строки со ссылками из шапки убираются.
 REPO_URL = 'https://github.com/MotoIlyuha/sankaku-quick-actions'
@@ -159,7 +159,9 @@ def write_icons(folder):
 # ---------------------------------------------------------------------------
 def build():
     table_js, menu_js, n_keys, n_langs = build_i18n()
-    core = read(SRC, 'core.js').replace('{{I18N}}', '/* SKQ_I18N_START */ ' + table_js + ' /* SKQ_I18N_END */')
+    core = (read(SRC, 'core.js')
+            .replace('{{I18N}}', '/* SKQ_I18N_START */ ' + table_js + ' /* SKQ_I18N_END */')
+            .replace('{{VERSION}}', VERSION))
     header = read(SRC, 'header.txt').replace('{{VERSION}}', VERSION)
     if REPO_URL:
         raw = REPO_URL.replace('https://github.com/', 'https://raw.githubusercontent.com/') + '/' + BRANCH

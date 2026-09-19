@@ -157,5 +157,8 @@
  "155": "Anzahl der Favoriten auf der Karte anzeigen",
  "156": "Favoriten: {n}",
  "157": "Reputation aktualisieren",
- "158": "Reputation unverändert: {n}"
+ "158": "Reputation unverändert: {n}",
+ "159": "Version kopieren",
+ "160": "Version kopiert: {v}",
+ "161": "Kopieren fehlgeschlagen"
 }

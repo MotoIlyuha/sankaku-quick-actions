@@ -157,5 +157,8 @@
  "155": "Vis antall favoritter på kortet",
  "156": "Favoritter: {n}",
  "157": "Oppdater omdømme",
- "158": "Omdømmet er uendret: {n}"
+ "158": "Omdømmet er uendret: {n}",
+ "159": "Kopier versjon",
+ "160": "Versjon kopiert: {v}",
+ "161": "Kunne ikke kopiere"
 }

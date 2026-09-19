@@ -158,6 +158,9 @@
   "Показывать количество лайков на карточке": "Show the favorite count on the card",
   "Лайков: {n}": "Favorites: {n}",
   "Обновить репутацию": "Refresh reputation",
-  "Репутация не изменилась: {n}": "Reputation unchanged: {n}"
+  "Репутация не изменилась: {n}": "Reputation unchanged: {n}",
+  "Скопировать версию": "Copy version",
+  "Версия скопирована: {v}": "Version copied: {v}",
+  "Не удалось скопировать": "Could not copy"
  }
 }

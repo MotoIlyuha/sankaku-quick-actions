@@ -157,5 +157,8 @@
  "155": "Visa antalet favoriter på kortet",
  "156": "Favoriter: {n}",
  "157": "Uppdatera rykte",
- "158": "Ryktet oförändrat: {n}"
+ "158": "Ryktet oförändrat: {n}",
+ "159": "Kopiera versionen",
+ "160": "Version kopierad: {v}",
+ "161": "Det gick inte att kopiera"
 }

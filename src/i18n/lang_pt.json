@@ -157,5 +157,8 @@
  "155": "Mostrar o número de favoritos no cartão",
  "156": "Favoritos: {n}",
  "157": "Atualizar a reputação",
- "158": "Reputação sem alteração: {n}"
+ "158": "Reputação sem alteração: {n}",
+ "159": "Copiar a versão",
+ "160": "Versão copiada: {v}",
+ "161": "Não foi possível copiar"
 }

@@ -157,5 +157,8 @@
  "155": "Arată numărul de favorite pe card",
  "156": "Favorite: {n}",
  "157": "Reîmprospătează reputația",
- "158": "Reputația nu s-a schimbat: {n}"
+ "158": "Reputația nu s-a schimbat: {n}",
+ "159": "Copiază versiunea",
+ "160": "Versiune copiată: {v}",
+ "161": "Nu s-a putut copia"
 }

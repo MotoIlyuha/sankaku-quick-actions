@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.23.2
+// @version      1.23.3
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -212,6 +212,8 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
+  const SKQ_VERSION = '1.23.3';
+
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
           "Массовая загрузка": "Bulk upload",
@@ -372,7 +374,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Show the favorite count on the card",
           "Лайков: {n}": "Favorites: {n}",
           "Обновить репутацию": "Refresh reputation",
-          "Репутация не изменилась: {n}": "Reputation unchanged: {n}"
+          "Репутация не изменилась: {n}": "Reputation unchanged: {n}",
+          "Скопировать версию": "Copy version",
+          "Версия скопирована: {v}": "Version copied: {v}",
+          "Не удалось скопировать": "Could not copy"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -533,7 +538,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "お気に入り数をカードに表示",
           "Лайков: {n}": "お気に入り: {n}",
           "Обновить репутацию": "レピュテーションを更新",
-          "Репутация не изменилась: {n}": "レピュテーションは変わっていません: {n}"
+          "Репутация не изменилась: {n}": "レピュテーションは変わっていません: {n}",
+          "Скопировать версию": "バージョンをコピー",
+          "Версия скопирована: {v}": "バージョンをコピーしました: {v}",
+          "Не удалось скопировать": "コピーできませんでした"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -694,7 +702,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "在卡片上显示收藏数",
           "Лайков: {n}": "收藏：{n}",
           "Обновить репутацию": "刷新声望",
-          "Репутация не изменилась: {n}": "声望没有变化：{n}"
+          "Репутация не изменилась: {n}": "声望没有变化：{n}",
+          "Скопировать версию": "复制版本号",
+          "Версия скопирована: {v}": "已复制版本号：{v}",
+          "Не удалось скопировать": "无法复制"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -855,7 +866,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "在卡片上顯示收藏數",
           "Лайков: {n}": "收藏：{n}",
           "Обновить репутацию": "重新整理聲望",
-          "Репутация не изменилась: {n}": "聲望沒有變化：{n}"
+          "Репутация не изменилась: {n}": "聲望沒有變化：{n}",
+          "Скопировать версию": "複製版本號",
+          "Версия скопирована: {v}": "已複製版本號：{v}",
+          "Не удалось скопировать": "無法複製"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1016,7 +1030,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "카드에 즐겨찾기 수 표시",
           "Лайков: {n}": "즐겨찾기: {n}",
           "Обновить репутацию": "평판 새로고침",
-          "Репутация не изменилась: {n}": "평판이 그대로입니다: {n}"
+          "Репутация не изменилась: {n}": "평판이 그대로입니다: {n}",
+          "Скопировать версию": "버전 복사",
+          "Версия скопирована: {v}": "버전을 복사했습니다: {v}",
+          "Не удалось скопировать": "복사하지 못했습니다"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1177,7 +1194,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Anzahl der Favoriten auf der Karte anzeigen",
           "Лайков: {n}": "Favoriten: {n}",
           "Обновить репутацию": "Reputation aktualisieren",
-          "Репутация не изменилась: {n}": "Reputation unverändert: {n}"
+          "Репутация не изменилась: {n}": "Reputation unverändert: {n}",
+          "Скопировать версию": "Version kopieren",
+          "Версия скопирована: {v}": "Version kopiert: {v}",
+          "Не удалось скопировать": "Kopieren fehlgeschlagen"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1338,7 +1358,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Afficher le nombre de favoris sur la carte",
           "Лайков: {n}": "Favoris : {n}",
           "Обновить репутацию": "Actualiser la réputation",
-          "Репутация не изменилась: {n}": "Réputation inchangée : {n}"
+          "Репутация не изменилась: {n}": "Réputation inchangée : {n}",
+          "Скопировать версию": "Copier la version",
+          "Версия скопирована: {v}": "Version copiée : {v}",
+          "Не удалось скопировать": "Impossible de copier"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1499,7 +1522,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Mostrar el número de favoritos en la tarjeta",
           "Лайков: {n}": "Favoritos: {n}",
           "Обновить репутацию": "Actualizar la reputación",
-          "Репутация не изменилась: {n}": "La reputación no ha cambiado: {n}"
+          "Репутация не изменилась: {n}": "La reputación no ha cambiado: {n}",
+          "Скопировать версию": "Copiar la versión",
+          "Версия скопирована: {v}": "Versión copiada: {v}",
+          "Не удалось скопировать": "No se pudo copiar"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1660,7 +1686,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Mostrar o número de favoritos no cartão",
           "Лайков: {n}": "Favoritos: {n}",
           "Обновить репутацию": "Atualizar a reputação",
-          "Репутация не изменилась: {n}": "Reputação sem alteração: {n}"
+          "Репутация не изменилась: {n}": "Reputação sem alteração: {n}",
+          "Скопировать версию": "Copiar a versão",
+          "Версия скопирована: {v}": "Versão copiada: {v}",
+          "Не удалось скопировать": "Não foi possível copiar"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1821,7 +1850,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Mostra il numero di preferiti sulla scheda",
           "Лайков: {n}": "Preferiti: {n}",
           "Обновить репутацию": "Aggiorna la reputazione",
-          "Репутация не изменилась: {n}": "Reputazione invariata: {n}"
+          "Репутация не изменилась: {n}": "Reputazione invariata: {n}",
+          "Скопировать версию": "Copia la versione",
+          "Версия скопирована: {v}": "Versione copiata: {v}",
+          "Не удалось скопировать": "Impossibile copiare"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -1982,7 +2014,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Aantal favorieten op de kaart tonen",
           "Лайков: {n}": "Favorieten: {n}",
           "Обновить репутацию": "Reputatie vernieuwen",
-          "Репутация не изменилась: {n}": "Reputatie onveranderd: {n}"
+          "Репутация не изменилась: {n}": "Reputatie onveranderd: {n}",
+          "Скопировать версию": "Versie kopiëren",
+          "Версия скопирована: {v}": "Versie gekopieerd: {v}",
+          "Не удалось скопировать": "Kopiëren mislukt"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2143,7 +2178,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Pokazuj liczbę polubień na kafelku",
           "Лайков: {n}": "Ulubione: {n}",
           "Обновить репутацию": "Odśwież reputację",
-          "Репутация не изменилась: {n}": "Reputacja bez zmian: {n}"
+          "Репутация не изменилась: {n}": "Reputacja bez zmian: {n}",
+          "Скопировать версию": "Skopiuj wersję",
+          "Версия скопирована: {v}": "Skopiowano wersję: {v}",
+          "Не удалось скопировать": "Nie udało się skopiować"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2304,7 +2342,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Visa antalet favoriter på kortet",
           "Лайков: {n}": "Favoriter: {n}",
           "Обновить репутацию": "Uppdatera rykte",
-          "Репутация не изменилась: {n}": "Ryktet oförändrat: {n}"
+          "Репутация не изменилась: {n}": "Ryktet oförändrat: {n}",
+          "Скопировать версию": "Kopiera versionen",
+          "Версия скопирована: {v}": "Version kopierad: {v}",
+          "Не удалось скопировать": "Det gick inte att kopiera"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2465,7 +2506,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Vis antal favoritter på kortet",
           "Лайков: {n}": "Favoritter: {n}",
           "Обновить репутацию": "Opdatér omdømme",
-          "Репутация не изменилась: {n}": "Omdømmet er uændret: {n}"
+          "Репутация не изменилась: {n}": "Omdømmet er uændret: {n}",
+          "Скопировать версию": "Kopiér version",
+          "Версия скопирована: {v}": "Version kopieret: {v}",
+          "Не удалось скопировать": "Kunne ikke kopiere"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2626,7 +2670,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Vis antall favoritter på kortet",
           "Лайков: {n}": "Favoritter: {n}",
           "Обновить репутацию": "Oppdater omdømme",
-          "Репутация не изменилась: {n}": "Omdømmet er uendret: {n}"
+          "Репутация не изменилась: {n}": "Omdømmet er uendret: {n}",
+          "Скопировать версию": "Kopier versjon",
+          "Версия скопирована: {v}": "Versjon kopiert: {v}",
+          "Не удалось скопировать": "Kunne ikke kopiere"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -2787,7 +2834,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Näytä suosikkien määrä kortissa",
           "Лайков: {n}": "Suosikkeja: {n}",
           "Обновить репутацию": "Päivitä maine",
-          "Репутация не изменилась: {n}": "Maine ennallaan: {n}"
+          "Репутация не изменилась: {n}": "Maine ennallaan: {n}",
+          "Скопировать версию": "Kopioi versio",
+          "Версия скопирована: {v}": "Versio kopioitu: {v}",
+          "Не удалось скопировать": "Kopiointi epäonnistui"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -2948,7 +2998,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Kedvencek száma a kártyán",
           "Лайков: {n}": "Kedvencek: {n}",
           "Обновить репутацию": "Hírnév frissítése",
-          "Репутация не изменилась: {n}": "A hírnév nem változott: {n}"
+          "Репутация не изменилась: {n}": "A hírnév nem változott: {n}",
+          "Скопировать версию": "Verzió másolása",
+          "Версия скопирована: {v}": "Verzió másolva: {v}",
+          "Не удалось скопировать": "Nem sikerült másolni"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3109,7 +3162,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Arată numărul de favorite pe card",
           "Лайков: {n}": "Favorite: {n}",
           "Обновить репутацию": "Reîmprospătează reputația",
-          "Репутация не изменилась: {n}": "Reputația nu s-a schimbat: {n}"
+          "Репутация не изменилась: {n}": "Reputația nu s-a schimbat: {n}",
+          "Скопировать версию": "Copiază versiunea",
+          "Версия скопирована: {v}": "Versiune copiată: {v}",
+          "Не удалось скопировать": "Nu s-a putut copia"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3270,7 +3326,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Показвай броя любими върху картата",
           "Лайков: {n}": "Любими: {n}",
           "Обновить репутацию": "Обнови репутацията",
-          "Репутация не изменилась: {n}": "Репутацията не се е променила: {n}"
+          "Репутация не изменилась: {n}": "Репутацията не се е променила: {n}",
+          "Скопировать версию": "Копиране на версията",
+          "Версия скопирована: {v}": "Версията е копирана: {v}",
+          "Не удалось скопировать": "Копирането е неуспешно"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3431,7 +3490,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Εμφάνιση του αριθμού αγαπημένων στην κάρτα",
           "Лайков: {n}": "Αγαπημένα: {n}",
           "Обновить репутацию": "Ανανέωση φήμης",
-          "Репутация не изменилась: {n}": "Η φήμη δεν άλλαξε: {n}"
+          "Репутация не изменилась: {n}": "Η φήμη δεν άλλαξε: {n}",
+          "Скопировать версию": "Αντιγραφή έκδοσης",
+          "Версия скопирована: {v}": "Η έκδοση αντιγράφηκε: {v}",
+          "Не удалось скопировать": "Δεν ήταν δυνατή η αντιγραφή"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3592,7 +3654,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Favori sayısını kartta göster",
           "Лайков: {n}": "Favoriler: {n}",
           "Обновить репутацию": "İtibarı yenile",
-          "Репутация не изменилась: {n}": "İtibar değişmedi: {n}"
+          "Репутация не изменилась: {n}": "İtibar değişmedi: {n}",
+          "Скопировать версию": "Sürümü kopyala",
+          "Версия скопирована: {v}": "Sürüm kopyalandı: {v}",
+          "Не удалось скопировать": "Kopyalanamadı"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -3753,7 +3818,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "แสดงจำนวนรายการโปรดบนการ์ด",
           "Лайков: {n}": "รายการโปรด: {n}",
           "Обновить репутацию": "รีเฟรชชื่อเสียง",
-          "Репутация не изменилась: {n}": "ชื่อเสียงไม่เปลี่ยนแปลง: {n}"
+          "Репутация не изменилась: {n}": "ชื่อเสียงไม่เปลี่ยนแปลง: {n}",
+          "Скопировать версию": "คัดลอกเวอร์ชัน",
+          "Версия скопирована: {v}": "คัดลอกเวอร์ชันแล้ว: {v}",
+          "Не удалось скопировать": "คัดลอกไม่สำเร็จ"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -3914,7 +3982,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "कार्ड पर पसंदीदा की संख्या दिखाएँ",
           "Лайков: {n}": "पसंदीदा: {n}",
           "Обновить репутацию": "प्रतिष्ठा ताज़ा करें",
-          "Репутация не изменилась: {n}": "प्रतिष्ठा में बदलाव नहीं: {n}"
+          "Репутация не изменилась: {n}": "प्रतिष्ठा में बदलाव नहीं: {n}",
+          "Скопировать версию": "संस्करण कॉपी करें",
+          "Версия скопирована: {v}": "संस्करण कॉपी किया गया: {v}",
+          "Не удалось скопировать": "कॉपी नहीं हो सका"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4075,7 +4146,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Tampilkan jumlah favorit di kartu",
           "Лайков: {n}": "Favorit: {n}",
           "Обновить репутацию": "Segarkan reputasi",
-          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}"
+          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}",
+          "Скопировать версию": "Salin versi",
+          "Версия скопирована: {v}": "Versi disalin: {v}",
+          "Не удалось скопировать": "Tidak bisa menyalin"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4236,7 +4310,10 @@ function core(storedSettings) {
           "Показывать количество лайков на карточке": "Tunjukkan bilangan kegemaran pada kad",
           "Лайков: {n}": "Kegemaran: {n}",
           "Обновить репутацию": "Segar semula reputasi",
-          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}"
+          "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}",
+          "Скопировать версию": "Salin versi",
+          "Версия скопирована: {v}": "Versi disalin: {v}",
+          "Не удалось скопировать": "Tidak dapat menyalin"
     },
   } /* SKQ_I18N_END */;
 
@@ -8474,9 +8551,16 @@ function core(storedSettings) {
     for (const v of Object.values(data)) if (isObj(v)) sniffReputation(v, depth + 1);
   }
 
+  // Одинаковые записи не копим: иначе повторные осмотры страницы вытесняют ответы сайта
   function noteRepDebug(entry) {
+    const same = rep.debug.find((d) => d.where === entry.where && d.key === entry.key && d.value === entry.value);
+    if (same) {
+      same.at = new Date().toISOString();
+      same.times = (same.times || 1) + 1;
+      return;
+    }
     rep.debug.unshift({ ...entry, at: new Date().toISOString() });
-    rep.debug.length = Math.min(rep.debug.length, 12);
+    rep.debug.length = Math.min(rep.debug.length, 20);
   }
 
   // ---- Число со страницы рейтинга ----
@@ -8494,6 +8578,12 @@ function core(storedSettings) {
   };
   const diamondsIn = (el) => [...el.querySelectorAll('svg')].filter(isDiamond).length;
 
+  const rowText = (row) => (row.textContent || '').replace(/\s+/g, ' ').trim();
+
+  // Что последний раз показывала страница: пока это число не изменилось,
+  // более свежий ответ сайта важнее — страница могла просто не перерисоваться
+  let lastDom = { value: null, at: 0 };
+
   // Строка рейтинга с пометкой «Вы» или с нашим именем
   function scanReputationDom() {
     if (FRAME_MODE || !document.body) return;
@@ -8509,15 +8599,17 @@ function core(storedSettings) {
         if (diamondsIn(row.parentElement) > 1) break;
         row = row.parentElement;
         if (!rowIsMine(row)) continue;
+        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true, row: rowText(row).slice(0, 120) });
+        if (value !== lastDom.value) lastDom = { value, at: Date.now() };
+        if (rep.source === 'api' && rep.at > lastDom.at) return; // страница ещё со старым числом
         setReputation(value, 'dom');
-        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true });
         return;
       }
     }
   }
 
   function rowIsMine(row) {
-    const text = (row.textContent || '').replace(/\s+/g, ' ').trim();
+    const text = rowText(row);
     if (!text || text.length > 400) return false;
     if (rep.name && new RegExp(`(^|[^\\w])${escapeRe(rep.name)}([^\\w]|$)`, 'i').test(text)) return true;
     return [...row.querySelectorAll('span, p, div, button')].some((el) =>
@@ -8533,7 +8625,11 @@ function core(storedSettings) {
     try {
       for (const path of ['/users/me', '/user/me', '/users/me/reputation']) {
         let data = null;
-        try { data = await api('GET', path); } catch (e) { log('reputation', path, e.message); continue; }
+        try { data = await api('GET', path); } catch (e) {
+          log('reputation', path, e.message);
+          noteRepDebug({ where: path, key: 'запрос не удался', error: e.message });
+          continue;
+        }
         const me = isObj(data) && isObj(data.user) ? data.user : data;
         if (isObj(me)) {
           if (me.id != null) rep.userId = me.id;
@@ -8717,7 +8813,9 @@ function core(storedSettings) {
     .key.wait { border-color: #ff8c00; color: #ff8c00; }
     .hint { margin: 4px 0 0; color: #999; font-size: 12px; }
     .hint.err { color: #ff6b6b; }
-    .actions { display: flex; gap: 8px; margin-top: 4px; }
+    .actions { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
+    .ver { background: none; border: 0; padding: 7px 2px; color: #999; font-size: 12px; }
+    .ver:hover { background: none; color: #ddd; }
     .actions .spacer { flex: 1; }
     .save { background: #ff8c00; border-color: #ff8c00; color: #fff; font-weight: 500; }
     .save:hover { background: #ff9d26; }
@@ -8794,6 +8892,7 @@ function core(storedSettings) {
           <p class="hint keyhint">${T('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
         </fieldset>
         <div class="actions">
+          <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
           <button type="button" class="reset">${T('Сбросить')}</button>
           <span class="spacer"></span>
           <button type="button" class="cancel">${T('Отмена')}</button>
@@ -8894,6 +8993,11 @@ function core(storedSettings) {
       });
     }
     root.querySelector('.repdebug').addEventListener('click', copyReputationDebug);
+    root.querySelector('.ver').addEventListener('click', () => {
+      copyText(SKQ_VERSION).then((ok) => toast(ok
+        ? t('Версия скопирована: {v}', { v: SKQ_VERSION })
+        : t('Не удалось скопировать'), !ok));
+    });
     f('rehideOnBlur').addEventListener('change', syncRehide);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);
