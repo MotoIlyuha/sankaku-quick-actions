@@ -3081,6 +3081,20 @@ function core(storedSettings) {
 
   // ---- Теги в формах сайта ----
   const normTag = (s) => String(s || '').toLowerCase().replace(/[_\s]+/g, ' ').trim();
+  // Сайт хранит теги с подчёркиванием, поэтому пробел внутри тега — сразу «_»,
+  // а рядом с запятой он вообще не часть тега
+  const underscoreTags = (s) => String(s).replace(/\s+/g, '_').replace(/_*([,;])_*/g, '$1').replace(/^_+/, '');
+
+  // Правит уже набранное, сохраняя каретку: длина префикса считается тем же преобразованием
+  function forceUnderscores(input) {
+    const v = input.value;
+    const fixed = underscoreTags(v);
+    if (fixed === v) return;
+    const pos = input.selectionStart;
+    const caret = typeof pos === 'number' ? underscoreTags(v.slice(0, pos)).length : null;
+    input.value = fixed;
+    if (caret !== null) input.setSelectionRange(caret, caret);
+  }
 
   function formDoc(item) {
     try {
@@ -3824,14 +3838,14 @@ function core(storedSettings) {
     const input = mq('.taginput');
     const v = input.value;
     const cut = Math.max(v.lastIndexOf(','), v.lastIndexOf(';'));
-    input.value = (cut >= 0 ? v.slice(0, cut + 1) + ' ' : '') + opt.label;
+    input.value = underscoreTags((cut >= 0 ? v.slice(0, cut + 1) + ' ' : '') + opt.label);
     hideSugg();
     releaseProbe();
     input.focus();
     if (opt.history) {
       // недавний тег подставляем в поле — его ещё можно поправить
-      sugg.query = opt.label;
-      probe(opt.label);
+      sugg.query = lastSegment(input.value);
+      probe(sugg.query);
       return;
     }
     // подсказка сайта: как на сайте, выбор сразу добавляет тег
@@ -3919,6 +3933,7 @@ function core(storedSettings) {
   function initTagSuggestions() {
     const input = mq('.taginput');
     input.addEventListener('input', () => {
+      forceUnderscores(input);
       clearTimeout(sugg.timer);
       resetIntents();
       const q = lastSegment(input.value);
@@ -3977,7 +3992,8 @@ function core(storedSettings) {
 
   // ---- Общий тег для выделенных и отмена ----
   function addTagToSelected(raw, picked) {
-    const tags = [...new Set(String(raw).split(/[,;]/).map((s) => s.trim().replace(/\s+/g, ' ')).filter(Boolean))];
+    const tags = [...new Set(String(raw).split(/[,;]/)
+      .map((s) => underscoreTags(s.trim()).replace(/^_+|_+$/g, '')).filter(Boolean))];
     if (!tags.length) return false;
     const items = selectedItems();
     if (!items.length) { toast(t('Сначала выделите файлы'), true); return false; }
