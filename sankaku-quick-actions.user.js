@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.23.3
+// @version      1.23.4
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -212,7 +212,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.23.3';
+  const SKQ_VERSION = '1.23.4';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -4445,9 +4445,12 @@ function core(storedSettings) {
   }
   const ensurePost = (id) => posts.get(String(id)) || remember({ id });
 
-  function harvest(data, depth = 0) {
+  let harvestUrl = '';
+
+  function harvest(data, depth = 0, url) {
     if (!isObj(data) || depth > 7) return;
     if (depth === 0) {
+      harvestUrl = url || '';
       sniffReputation(data);
       harvest(data, 1);
       // в ответе могла прийти наша оценка — обновляем метки на карточках
@@ -4512,7 +4515,7 @@ function core(storedSettings) {
       res.then(netEnd, netEnd);
     }
     if (url && shouldHarvest(url)) {
-      res.then((r) => r.clone().json().then(harvest)).catch(() => {});
+      res.then((r) => r.clone().json().then((d) => harvest(d, 0, url))).catch(() => {});
     }
     if (FRAME_MODE && url) {
       const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
@@ -4547,8 +4550,8 @@ function core(storedSettings) {
       if (shouldHarvest(meta.url)) {
         this.addEventListener('load', () => {
           try {
-            if (this.responseType === 'json') harvest(this.response);
-            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText));
+            if (this.responseType === 'json') harvest(this.response, 0, meta.url);
+            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText), 0, meta.url);
           } catch { /* ignore */ }
         });
       }
@@ -8539,19 +8542,38 @@ function core(storedSettings) {
     return null;
   }
 
+  // Сайт кладёт нашу репутацию в user_reputation — объектом или сразу числом
+  function myRepField(node) {
+    if (typeof node === 'number' && Number.isFinite(node)) return { key: 'user_reputation', value: node };
+    return isObj(node) && !Array.isArray(node) ? repFieldValue(node) : null;
+  }
+
   // Наша запись в любом ответе сайта (например, в списке рейтинга)
   function sniffReputation(data, depth = 0) {
-    if (!isObj(data) || depth > 6 || (rep.userId == null && !rep.name)) return;
+    if (!isObj(data) || depth > 6) return;
+    // ответ страницы рейтинга: эта запись про нас, сверять имя и id не нужно
+    if (depth === 0 && data.user_reputation !== undefined) {
+      const mine = myRepField(data.user_reputation);
+      noteRepDebug({
+        where: harvestUrl || 'ответ сайта', key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
+        value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
+      });
+      // это прямой ответ сайта про нас — надёжнее, чем число, считанное со страницы
+      if (mine) { setReputation(mine.value, 'api', true); return; }
+    }
+    if (rep.userId == null && !rep.name) return;
     if (Array.isArray(data)) { for (const x of data) sniffReputation(x, depth + 1); return; }
     const found = repFieldValue(data);
     if (found) {
-      noteRepDebug({ where: 'ответ сайта', key: found.key, value: found.value, name: userName(data), id: data.id, userId: data.user_id, mine: isMe(data) });
+      noteRepDebug({ where: harvestUrl || 'ответ сайта', key: found.key, value: found.value, name: userName(data), id: data.id, userId: data.user_id, mine: isMe(data) });
       if (isMe(data)) { setReputation(found.value, 'api'); return; }
     }
     for (const v of Object.values(data)) if (isObj(v)) sniffReputation(v, depth + 1);
   }
 
   // Одинаковые записи не копим: иначе повторные осмотры страницы вытесняют ответы сайта
+  const repKeys = (o) => (isObj(o) && !Array.isArray(o) ? Object.keys(o).join(', ').slice(0, 300) : typeof o);
+
   function noteRepDebug(entry) {
     const same = rep.debug.find((d) => d.where === entry.where && d.key === entry.key && d.value === entry.value);
     if (same) {
@@ -8600,8 +8622,12 @@ function core(storedSettings) {
         row = row.parentElement;
         if (!rowIsMine(row)) continue;
         noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true, row: rowText(row).slice(0, 120) });
-        if (value !== lastDom.value) lastDom = { value, at: Date.now() };
-        if (rep.source === 'api' && rep.at > lastDom.at) return; // страница ещё со старым числом
+        if (value !== lastDom.value) {
+          // первая встреча числа ничего не доказывает: страница могла отрисоваться до ответа сайта
+          const first = lastDom.value === null && rep.source === 'api';
+          lastDom = { value, at: first ? rep.at : Date.now() };
+        }
+        if (rep.source === 'api' && rep.at >= lastDom.at) return; // страница ещё со старым числом
         setReputation(value, 'dom');
         return;
       }
@@ -8623,11 +8649,22 @@ function core(storedSettings) {
     if (!force && rep.value != null && Date.now() - rep.at < REP_TTL) return;
     rep.loading = true;
     try {
-      for (const path of ['/users/me', '/user/me', '/users/me/reputation']) {
+      // /reputation/ranking — тот же запрос, что делает страница рейтинга сайта;
+      // репутация в профиле не приходит, поэтому это единственный точный источник
+      for (const path of ['/reputation/ranking', '/users/me', '/user/me', '/users/me/reputation']) {
         let data = null;
         try { data = await api('GET', path); } catch (e) {
           log('reputation', path, e.message);
           noteRepDebug({ where: path, key: 'запрос не удался', error: e.message });
+          continue;
+        }
+        if (isObj(data) && data.user_reputation !== undefined) {
+          const mine = myRepField(data.user_reputation);
+          noteRepDebug({
+            where: path, key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
+            value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
+          });
+          if (mine) { setReputation(mine.value, 'api', force); return mine.value; }
           continue;
         }
         const me = isObj(data) && isObj(data.user) ? data.user : data;
@@ -8638,13 +8675,14 @@ function core(storedSettings) {
         const found = isObj(me) ? repFieldValue(me) : null;
         if (found) noteRepDebug({ where: path, key: found.key, value: found.value, name: userName(me), id: me.id, mine: true });
         const value = findReputation(data);
-        if (value != null) { setReputation(value, 'api', force); return; }
+        if (value != null) { setReputation(value, 'api', force); return value; }
         noteRepDebug({ where: path, key: '(поля репутации нет)', keys: Object.keys(isObj(me) ? me : {}).slice(0, 40).join(', ') });
       }
     } finally {
       rep.loading = false;
       mountReputation();
     }
+    return null;
   }
 
   // Обновление по кнопке: спрашиваем сайт заново и говорим, что получилось

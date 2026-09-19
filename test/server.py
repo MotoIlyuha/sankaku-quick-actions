@@ -10,6 +10,15 @@ JS_FILES = {
     '/bridge-mv2.js': os.path.join(REPO, 'dist', 'firefox-mv2', 'bridge.js'),
     '/core-main.js': os.path.join(REPO, 'dist', 'chrome', 'core-main.js'),
 }
+# значение можно менять на лету: запись в test/rep_value.txt
+def reputation_value():
+    path = os.path.join(ROOT, 'rep_value.txt')
+    try:
+        return int(open(path).read().strip())
+    except Exception:
+        return 48
+
+
 class H(http.server.BaseHTTPRequestHandler):
     def _send(self, code, body, ctype):
         data = body.encode() if isinstance(body, str) else body
@@ -25,20 +34,22 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         path = self.path.split('?')[0].split('#')[0]
         if path.startswith('/users/me'):
-            me = {'id': 7, 'name': 'ilyuxa3211'}
-            # значение можно менять на лету: запись в rep_value.txt
-            value = os.path.join(ROOT, 'rep_value.txt')
-            if os.path.exists(value):
-                me['reputation'] = int(open(value).read().strip())
-            elif os.path.exists(os.path.join(ROOT, 'rep_in_profile.flag')):
-                me['reputation'] = 48
+            # у сайта в профиле репутации нет: она приходит только из reputation/ranking
+            me = {'id': 7, 'name': 'ilyuxa3211', 'points': 300, 'favorite_count': 12}
+            if os.path.exists(os.path.join(ROOT, 'rep_in_profile.flag')):
+                me['reputation'] = reputation_value()
             return self._send(200, json.dumps(me), 'application/json')
         if path.startswith('/reputation/ranking'):
-            return self._send(200, json.dumps({'users': [
-                {'id': 7, 'user': {'id': 3, 'name': 'someone'}, 'reputation': 120},
-                {'id': 99, 'user_id': 7, 'name': 'ilyuxa3211', 'reputation_rank': 3,
-                 'reputation_week': 9, 'reputation': 48},
-            ]}), 'application/json')
+            # форма ответа как у сайта: {list: [...], user_reputation: {...}}
+            mine = reputation_value()
+            return self._send(200, json.dumps({
+                'list': [
+                    {'id': 7, 'user': {'id': 3, 'name': 'someone'}, 'reputation': 120},
+                    {'id': 99, 'user_id': 7, 'name': 'ilyuxa3211', 'reputation_rank': 3,
+                     'reputation_week': 9, 'reputation': 48},
+                ],
+                'user_reputation': {'rank': 3, 'reputation_week': 9, 'reputation': mine},
+            }), 'application/json')
         if path.startswith('/posts'):
             posts = [
                 {'id': str(100 + i), 'md5': 'md5%d' % i, 'total_score': 12 + i, 'vote_count': 4,
