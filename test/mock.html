@@ -107,7 +107,9 @@
       const f = document.getElementById('f');
       const chips = document.getElementById('chips');
       const ac = document.getElementById('autocomplete');
-      const addChip = (name) => {
+      const addChip = (raw) => {
+        const name = String(raw).trim().replace(/_/g, ' '); // сайт показывает тег с пробелами
+        if (!name) return;
         if ([...chips.querySelectorAll('.MuiChip-label')].some((l) => l.textContent === name)) return;
         const c = document.createElement('div');
         c.className = 'MuiChip-root';
@@ -158,8 +160,8 @@
         const first = lb && lb.querySelector('[role=option]');
         if (e.key === 'Enter') {
           if (first) { first.click(); return; }
-          // сайт делит введённый текст по «_»
-          ac.value.split('_').map((x) => x.trim()).filter(Boolean).forEach(addChip);
+          // сайт делит введённый текст по пробелам, «_» — часть тега
+          ac.value.split(/\s+/).filter(Boolean).forEach(addChip);
           ac.value = '';
           closeLb();
         }

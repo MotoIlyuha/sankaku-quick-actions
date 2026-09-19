@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.23.1
+// @version      1.23.2
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -7425,6 +7425,19 @@ function core(storedSettings) {
     return true;
   }
 
+  // Enter по тексту в поле формы. Пробел сайт считает концом тега, поэтому
+  // многословные теги вводятся только с «_»
+  async function enterTag(input, text) {
+    if (input.value !== text) setNativeValue(input, text);
+    pressKey(input, 'Enter', 'Enter', 13);
+    await sleep(400);
+  }
+
+  // Убирает всё, что появилось в форме после нашего ввода
+  function dropAdded(doc, before) {
+    for (const [k, chip] of tagChips(doc)) if (!before.has(k)) removeChip(chip);
+  }
+
   function closeSuggestions(input) {
     if (input.value) setNativeValue(input, '');
     pressKey(input, 'Escape', 'Escape', 27);
@@ -7439,8 +7452,8 @@ function core(storedSettings) {
     const input = findTagInput(doc);
     if (!input) throw new Error(t('не нашёл поле тегов'));
 
-    // «large_breasts» и «large breasts» — пробуем оба написания
-    // в поле тегов сайта «_» работает как разделитель, поэтому вводим написание с пробелами
+    // «large_breasts» и «large breasts» — подсказку ищем по обоим написаниям:
+    // сайт показывает теги с пробелами, а хранит с «_»
     const spaced = tag.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
     const variants = [...new Set([spaced, tag, tag.replace(/\s+/g, '_')])];
     let res = { opened: false, options: [], option: null };
@@ -7461,19 +7474,29 @@ function core(storedSettings) {
     if (option) {
       try { refreshHistoryStyles([describeOption(option)]); } catch { /* ignore */ }
       option.click();
+      await sleep(400);
     } else {
-      if (input.value !== spaced) setNativeValue(input, spaced);
-      pressKey(input, 'Enter', 'Enter', 13);
+      // «alisa (everlasting summer)» сайт разобрал бы на три тега — жмём Enter по написанию с «_»
+      const underscored = spaced.replace(/ /g, '_');
+      await enterTag(input, underscored);
+      if (!tagChips(doc).has(key) && underscored !== spaced) {
+        dropAdded(doc, before);
+        await enterTag(input, spaced);
+      }
     }
-    await sleep(400);
 
     const after = tagChips(doc);
     const added = [...after.keys()].filter((k) => !before.has(k));
     closeSuggestions(input);
     if (doc.activeElement === input) input.blur();
 
-    if (option) return added.length ? { state: 'applied', label: added[0] } : { state: 'exists' };
-    if (added.includes(key)) return { state: 'applied', label: key };
+    if (added.includes(key)) {
+      // если сайт всё же разбил ввод — лишние теги убираем
+      for (const k of added) if (k !== key) removeChip(after.get(k));
+      return { state: 'applied', label: key };
+    }
+    if (option && added.length === 1) return { state: 'applied', label: added[0] }; // сайт подставил своё написание
+    if (option && !added.length) return { state: 'exists' };
     // Enter выбрал что-то другое — откатываем
     for (const k of added) removeChip(after.get(k));
     const hint = similar.slice(0, 3).map((o) => o.textContent.trim()).filter(Boolean);
