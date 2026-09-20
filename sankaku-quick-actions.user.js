@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.25.1
+// @version      1.26.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -157,6 +157,9 @@ function core(storedSettings) {
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
+    menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
+    menuKeyOn: false,
+    menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
   };
   const settings = {
     ...DEFAULTS,
@@ -213,7 +216,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.25.1';
+  const SKQ_VERSION = '1.26.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -390,7 +393,9 @@ function core(storedSettings) {
           "Своё название": "Your own name",
           "Показывать счётчик": "Show the counter",
           "Переход по клавише": "Open by key",
-          "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu",
+          "Открывать и закрывать меню клавишей": "Open and close the menu with a key",
+          "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -566,7 +571,9 @@ function core(storedSettings) {
           "Своё название": "独自の名前",
           "Показывать счётчик": "カウンターを表示",
           "Переход по клавише": "キーで開く",
-          "Не знаю, куда вести этот пункт — откройте меню": "この項目の行き先が分かりません。メニューを開いてください"
+          "Не знаю, куда вести этот пункт — откройте меню": "この項目の行き先が分かりません。メニューを開いてください",
+          "Открывать и закрывать меню клавишей": "キーでメニューを開閉する",
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl か Alt を押している間メニューを表示"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -742,7 +749,9 @@ function core(storedSettings) {
           "Своё название": "自定义名称",
           "Показывать счётчик": "显示计数",
           "Переход по клавише": "用按键打开",
-          "Не знаю, куда вести этот пункт — откройте меню": "不知道这个条目通向哪里，请先打开菜单"
+          "Не знаю, куда вести этот пункт — откройте меню": "不知道这个条目通向哪里，请先打开菜单",
+          "Открывать и закрывать меню клавишей": "用按键打开和关闭菜单",
+          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 时显示菜单"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -918,7 +927,9 @@ function core(storedSettings) {
           "Своё название": "自訂名稱",
           "Показывать счётчик": "顯示計數",
           "Переход по клавише": "用按鍵開啟",
-          "Не знаю, куда вести этот пункт — откройте меню": "不知道這個項目通向哪裡，請先開啟選單"
+          "Не знаю, куда вести этот пункт — откройте меню": "不知道這個項目通向哪裡，請先開啟選單",
+          "Открывать и закрывать меню клавишей": "用按鍵開啟和關閉選單",
+          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 時顯示選單"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1094,7 +1105,9 @@ function core(storedSettings) {
           "Своё название": "직접 지은 이름",
           "Показывать счётчик": "카운터 표시",
           "Переход по клавише": "키로 열기",
-          "Не знаю, куда вести этот пункт — откройте меню": "이 항목이 어디로 가는지 모릅니다 — 메뉴를 열어 주세요"
+          "Не знаю, куда вести этот пункт — откройте меню": "이 항목이 어디로 가는지 모릅니다 — 메뉴를 열어 주세요",
+          "Открывать и закрывать меню клавишей": "키로 메뉴 열고 닫기",
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl 또는 Alt를 누르고 있는 동안 메뉴 표시"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1270,7 +1283,9 @@ function core(storedSettings) {
           "Своё название": "Eigener Name",
           "Показывать счётчик": "Zähler anzeigen",
           "Переход по клавише": "Mit Taste öffnen",
-          "Не знаю, куда вести этот пункт — откройте меню": "Ich weiß nicht, wohin dieser Eintrag führt — öffnen Sie das Menü"
+          "Не знаю, куда вести этот пункт — откройте меню": "Ich weiß nicht, wohin dieser Eintrag führt — öffnen Sie das Menü",
+          "Открывать и закрывать меню клавишей": "Menü mit einer Taste öffnen und schließen",
+          "Показывать меню, пока зажат Ctrl или Alt": "Menü anzeigen, solange Strg oder Alt gedrückt ist"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1446,7 +1461,9 @@ function core(storedSettings) {
           "Своё название": "Nom personnalisé",
           "Показывать счётчик": "Afficher le compteur",
           "Переход по клавише": "Ouvrir par une touche",
-          "Не знаю, куда вести этот пункт — откройте меню": "Je ne sais pas où mène cet élément — ouvrez le menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Je ne sais pas où mène cet élément — ouvrez le menu",
+          "Открывать и закрывать меню клавишей": "Ouvrir et fermer le menu avec une touche",
+          "Показывать меню, пока зажат Ctrl или Alt": "Afficher le menu tant que Ctrl ou Alt est maintenu"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1622,7 +1639,9 @@ function core(storedSettings) {
           "Своё название": "Nombre propio",
           "Показывать счётчик": "Mostrar el contador",
           "Переход по клавише": "Abrir con una tecla",
-          "Не знаю, куда вести этот пункт — откройте меню": "No sé adónde lleva este elemento: abra el menú"
+          "Не знаю, куда вести этот пункт — откройте меню": "No sé adónde lleva este elemento: abra el menú",
+          "Открывать и закрывать меню клавишей": "Abrir y cerrar el menú con una tecla",
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar el menú mientras se mantiene Ctrl o Alt"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1798,7 +1817,9 @@ function core(storedSettings) {
           "Своё название": "Nome próprio",
           "Показывать счётчик": "Mostrar o contador",
           "Переход по клавише": "Abrir por tecla",
-          "Не знаю, куда вести этот пункт — откройте меню": "Não sei para onde leva este item — abra o menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Não sei para onde leva este item — abra o menu",
+          "Открывать и закрывать меню клавишей": "Abrir e fechar o menu com uma tecla",
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar o menu enquanto Ctrl ou Alt estiver premido"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1974,7 +1995,9 @@ function core(storedSettings) {
           "Своё название": "Nome personalizzato",
           "Показывать счётчик": "Mostra il contatore",
           "Переход по клавише": "Apri con un tasto",
-          "Не знаю, куда вести этот пункт — откройте меню": "Non so dove porta questa voce: apri il menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Non so dove porta questa voce: apri il menu",
+          "Открывать и закрывать меню клавишей": "Aprire e chiudere il menu con un tasto",
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrare il menu finché Ctrl o Alt è premuto"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2150,7 +2173,9 @@ function core(storedSettings) {
           "Своё название": "Eigen naam",
           "Показывать счётчик": "Teller tonen",
           "Переход по клавише": "Openen met een toets",
-          "Не знаю, куда вести этот пункт — откройте меню": "Ik weet niet waar dit item heen gaat — open het menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Ik weet niet waar dit item heen gaat — open het menu",
+          "Открывать и закрывать меню клавишей": "Menu openen en sluiten met een toets",
+          "Показывать меню, пока зажат Ctrl или Alt": "Menu tonen zolang Ctrl of Alt ingedrukt is"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2326,7 +2351,9 @@ function core(storedSettings) {
           "Своё название": "Własna nazwa",
           "Показывать счётчик": "Pokaż licznik",
           "Переход по клавише": "Otwieranie klawiszem",
-          "Не знаю, куда вести этот пункт — откройте меню": "Nie wiem, dokąd prowadzi ta pozycja — otwórz menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Nie wiem, dokąd prowadzi ta pozycja — otwórz menu",
+          "Открывать и закрывать меню клавишей": "Otwieranie i zamykanie menu klawiszem",
+          "Показывать меню, пока зажат Ctrl или Alt": "Pokazuj menu, dopóki wciśnięty jest Ctrl lub Alt"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2502,7 +2529,9 @@ function core(storedSettings) {
           "Своё название": "Eget namn",
           "Показывать счётчик": "Visa räknaren",
           "Переход по клавише": "Öppna med tangent",
-          "Не знаю, куда вести этот пункт — откройте меню": "Jag vet inte vart posten leder — öppna menyn"
+          "Не знаю, куда вести этот пункт — откройте меню": "Jag vet inte vart posten leder — öppna menyn",
+          "Открывать и закрывать меню клавишей": "Öppna och stäng menyn med en tangent",
+          "Показывать меню, пока зажат Ctrl или Alt": "Visa menyn medan Ctrl eller Alt hålls nere"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2678,7 +2707,9 @@ function core(storedSettings) {
           "Своё название": "Eget navn",
           "Показывать счётчик": "Vis tælleren",
           "Переход по клавише": "Åbn med tast",
-          "Не знаю, куда вести этот пункт — откройте меню": "Jeg ved ikke, hvor punktet fører hen — åbn menuen"
+          "Не знаю, куда вести этот пункт — откройте меню": "Jeg ved ikke, hvor punktet fører hen — åbn menuen",
+          "Открывать и закрывать меню клавишей": "Åbn og luk menuen med en tast",
+          "Показывать меню, пока зажат Ctrl или Alt": "Vis menuen, mens Ctrl eller Alt holdes nede"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2854,7 +2885,9 @@ function core(storedSettings) {
           "Своё название": "Eget navn",
           "Показывать счётчик": "Vis telleren",
           "Переход по клавише": "Åpne med tast",
-          "Не знаю, куда вести этот пункт — откройте меню": "Jeg vet ikke hvor dette punktet fører — åpne menyen"
+          "Не знаю, куда вести этот пункт — откройте меню": "Jeg vet ikke hvor dette punktet fører — åpne menyen",
+          "Открывать и закрывать меню клавишей": "Åpne og lukke menyen med en tast",
+          "Показывать меню, пока зажат Ctrl или Alt": "Vis menyen mens Ctrl eller Alt holdes inne"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3030,7 +3063,9 @@ function core(storedSettings) {
           "Своё название": "Oma nimi",
           "Показывать счётчик": "Näytä laskuri",
           "Переход по клавише": "Avaa näppäimellä",
-          "Не знаю, куда вести этот пункт — откройте меню": "En tiedä, mihin tämä kohta vie — avaa valikko"
+          "Не знаю, куда вести этот пункт — откройте меню": "En tiedä, mihin tämä kohta vie — avaa valikko",
+          "Открывать и закрывать меню клавишей": "Avaa ja sulje valikko näppäimellä",
+          "Показывать меню, пока зажат Ctrl или Alt": "Näytä valikko, kun Ctrl tai Alt on pohjassa"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3206,7 +3241,9 @@ function core(storedSettings) {
           "Своё название": "Saját név",
           "Показывать счётчик": "Számláló megjelenítése",
           "Переход по клавише": "Megnyitás billentyűvel",
-          "Не знаю, куда вести этот пункт — откройте меню": "Nem tudom, hová vezet ez az elem — nyissa meg a menüt"
+          "Не знаю, куда вести этот пункт — откройте меню": "Nem tudom, hová vezet ez az elem — nyissa meg a menüt",
+          "Открывать и закрывать меню клавишей": "Menü megnyitása és bezárása billentyűvel",
+          "Показывать меню, пока зажат Ctrl или Alt": "Menü megjelenítése, amíg a Ctrl vagy az Alt nyomva van"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3382,7 +3419,9 @@ function core(storedSettings) {
           "Своё название": "Nume propriu",
           "Показывать счётчик": "Afișează contorul",
           "Переход по клавише": "Deschide cu o tastă",
-          "Не знаю, куда вести этот пункт — откройте меню": "Nu știu unde duce acest element — deschideți meniul"
+          "Не знаю, куда вести этот пункт — откройте меню": "Nu știu unde duce acest element — deschideți meniul",
+          "Открывать и закрывать меню клавишей": "Deschide și închide meniul cu o tastă",
+          "Показывать меню, пока зажат Ctrl или Alt": "Arată meniul cât timp este ținut Ctrl sau Alt"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3558,7 +3597,9 @@ function core(storedSettings) {
           "Своё название": "Свое име",
           "Показывать счётчик": "Показване на брояча",
           "Переход по клавише": "Отваряне с клавиш",
-          "Не знаю, куда вести этот пункт — откройте меню": "Не знам накъде води този елемент — отворете менюто"
+          "Не знаю, куда вести этот пункт — откройте меню": "Не знам накъде води този елемент — отворете менюто",
+          "Открывать и закрывать меню клавишей": "Отваряне и затваряне на менюто с клавиш",
+          "Показывать меню, пока зажат Ctrl или Alt": "Показване на менюто, докато е задържан Ctrl или Alt"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3734,7 +3775,9 @@ function core(storedSettings) {
           "Своё название": "Δικό σας όνομα",
           "Показывать счётчик": "Εμφάνιση μετρητή",
           "Переход по клавише": "Άνοιγμα με πλήκτρο",
-          "Не знаю, куда вести этот пункт — откройте меню": "Δεν ξέρω πού οδηγεί αυτό το στοιχείο — ανοίξτε το μενού"
+          "Не знаю, куда вести этот пункт — откройте меню": "Δεν ξέρω πού οδηγεί αυτό το στοιχείο — ανοίξτε το μενού",
+          "Открывать и закрывать меню клавишей": "Άνοιγμα και κλείσιμο του μενού με πλήκτρο",
+          "Показывать меню, пока зажат Ctrl или Alt": "Εμφάνιση του μενού όσο κρατάτε Ctrl ή Alt"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3910,7 +3953,9 @@ function core(storedSettings) {
           "Своё название": "Kendi adınız",
           "Показывать счётчик": "Sayacı göster",
           "Переход по клавише": "Tuşla aç",
-          "Не знаю, куда вести этот пункт — откройте меню": "Bu ögenin nereye gittiğini bilmiyorum — menüyü açın"
+          "Не знаю, куда вести этот пункт — откройте меню": "Bu ögenin nereye gittiğini bilmiyorum — menüyü açın",
+          "Открывать и закрывать меню клавишей": "Menüyü bir tuşla aç ve kapat",
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl veya Alt basılıyken menüyü göster"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4086,7 +4131,9 @@ function core(storedSettings) {
           "Своё название": "ชื่อที่ตั้งเอง",
           "Показывать счётчик": "แสดงตัวนับ",
           "Переход по клавише": "เปิดด้วยปุ่ม",
-          "Не знаю, куда вести этот пункт — откройте меню": "ไม่ทราบว่ารายการนี้ไปที่ใด — เปิดเมนูก่อน"
+          "Не знаю, куда вести этот пункт — откройте меню": "ไม่ทราบว่ารายการนี้ไปที่ใด — เปิดเมนูก่อน",
+          "Открывать и закрывать меню клавишей": "เปิดและปิดเมนูด้วยปุ่ม",
+          "Показывать меню, пока зажат Ctrl или Alt": "แสดงเมนูขณะกด Ctrl หรือ Alt ค้างไว้"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4262,7 +4309,9 @@ function core(storedSettings) {
           "Своё название": "अपना नाम",
           "Показывать счётчик": "काउंटर दिखाएँ",
           "Переход по клавише": "कुंजी से खोलें",
-          "Не знаю, куда вести этот пункт — откройте меню": "पता नहीं यह आइटम कहाँ ले जाता है — मेन्यू खोलें"
+          "Не знаю, куда вести этот пункт — откройте меню": "पता नहीं यह आइटम कहाँ ले जाता है — मेन्यू खोलें",
+          "Открывать и закрывать меню клавишей": "मेन्यू को एक कुंजी से खोलें और बंद करें",
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl या Alt दबाए रखने पर मेन्यू दिखाएँ"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4438,7 +4487,9 @@ function core(storedSettings) {
           "Своё название": "Nama sendiri",
           "Показывать счётчик": "Tampilkan penghitung",
           "Переход по клавише": "Buka dengan tombol",
-          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini menuju — buka menunya"
+          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini menuju — buka menunya",
+          "Открывать и закрывать меню клавишей": "Buka dan tutup menu dengan tombol",
+          "Показывать меню, пока зажат Ctrl или Alt": "Tampilkan menu selama Ctrl atau Alt ditahan"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4614,7 +4665,9 @@ function core(storedSettings) {
           "Своё название": "Nama sendiri",
           "Показывать счётчик": "Tunjukkan kaunter",
           "Переход по клавише": "Buka dengan kekunci",
-          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini pergi — buka menu"
+          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini pergi — buka menu",
+          "Открывать и закрывать меню клавишей": "Buka dan tutup menu dengan kekunci",
+          "Показывать меню, пока зажат Ctrl или Alt": "Tunjukkan menu selagi Ctrl atau Alt ditekan"
     },
   } /* SKQ_I18N_END */;
 
@@ -9343,6 +9396,32 @@ function core(storedSettings) {
   // Меню открыли — счётчики могли устареть
   let menuVisible = false;
   let menuOpenedAt = 0;
+  let menuHeldOpen = false; // меню открыли мы, пока держат Ctrl или Alt
+
+  // Закрытое меню сайт либо убирает из разметки, либо прячет стилями
+  function isShown(el) {
+    if (!el || !el.isConnected) return false;
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return false;
+    if (r.right <= 0 || r.left >= (window.innerWidth || 0)) return false;
+    const st = getComputedStyle(el);
+    return st.visibility !== 'hidden' && st.display !== 'none' && parseFloat(st.opacity || '1') > 0.05;
+  }
+
+  const menuButton = () =>
+    document.querySelector('[data-test="hamburger-menu"], [aria-label="Open menu"], header button');
+
+  function toggleSiteMenu() {
+    const btn = menuButton();
+    if (!btn) return false;
+    btn.click();
+    return true;
+  }
+
+  function setSiteMenu(open) {
+    if (!!menuVisible === !!open) return true;
+    return toggleSiteMenu(); // у сайта одна кнопка-переключатель
+  }
 
   function onMenuOpened() {
     if (Date.now() - menuOpenedAt < REP_OPEN_TTL) return;
@@ -9369,12 +9448,14 @@ function core(storedSettings) {
   function applySiteMenu() {
     if (FRAME_MODE || !document.body) return;
     let seen = 0;
+    let shownItems = 0;
     for (const el of document.querySelectorAll('[data-test]')) {
       const key = el.getAttribute('data-test');
       const cfg = MENU_BY_KEY.get(key);
       if (!cfg) continue;
       if (!el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]')) continue;
       seen++;
+      if (!shownItems && isShown(el)) shownItems++;
       el.classList.toggle('skq-menu-off', menuHidden(key));
       const textEl = menuTextEl(el);
       if (textEl) {
@@ -9389,8 +9470,9 @@ function core(storedSettings) {
         if (badge.textContent !== text) badge.textContent = text;
       }
     }
-    if (seen && !menuVisible) onMenuOpened();
-    menuVisible = seen > 0;
+    const open = seen > 0 && shownItems > 0;
+    if (open && !menuVisible) onMenuOpened();
+    menuVisible = open;
     applyMenuTitles();
   }
 
@@ -9439,6 +9521,7 @@ function core(storedSettings) {
   }
 
   function goToMenuItem(key) {
+    menuHeldOpen = false;
     const link = [...document.querySelectorAll('[data-test]')].find((el) =>
       el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]'));
     if (link) { link.click(); return true; } // меню открыто — пусть сайт сам переходит
@@ -9448,17 +9531,46 @@ function core(storedSettings) {
     return true;
   }
 
+  const HOLD_KEYS = { Control: 1, Alt: 1 };
+
   document.addEventListener('keydown', (e) => {
-    if (FRAME_MODE || settingsOpen || !(e.ctrlKey || e.altKey || e.metaKey)) return;
+    if (FRAME_MODE || settingsOpen) return;
     const node = e.composedPath ? e.composedPath()[0] : e.target;
     if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
+
+    // меню показывается, пока держат Ctrl или Alt — чтобы видеть, что под какой цифрой
+    if (settings.menuHoldMod && HOLD_KEYS[e.key] && !e.repeat && !menuVisible && !menuHeldOpen) {
+      menuHeldOpen = toggleSiteMenu();
+      return;
+    }
+
     const combo = comboOf(e);
+    if (settings.menuKeyOn && combo && combo === (settings.menuKey || DEFAULTS.menuKey)) {
+      e.preventDefault();
+      e.stopPropagation();
+      menuHeldOpen = false;
+      toggleSiteMenu();
+      return;
+    }
+    if (!(e.ctrlKey || e.altKey || e.metaKey)) return;
     const item = MENU_ITEMS.find((it) => menuHotkey(it.key) === combo);
     if (!item) return;
     e.preventDefault();
     e.stopPropagation();
     if (!goToMenuItem(item.key)) toast(t('Не знаю, куда вести этот пункт — откройте меню'), true);
   }, true);
+
+  function releaseHeldMenu() {
+    if (!menuHeldOpen) return;
+    menuHeldOpen = false;
+    setSiteMenu(false);
+  }
+
+  document.addEventListener('keyup', (e) => {
+    if (HOLD_KEYS[e.key]) releaseHeldMenu();
+  }, true);
+  // Alt+Tab и переход по клавише уводят фокус, а клавишу отпускают уже не здесь
+  window.addEventListener('blur', releaseHeldMenu);
 
   const HOTKEYS = [
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
@@ -9617,6 +9729,14 @@ function core(storedSettings) {
         </fieldset>
         </div>
         <div class="page" data-page="menu" hidden>
+          <fieldset class="keys-only">
+            <legend>${T('Клавиши')}</legend>
+            <div class="num"><input type="checkbox" name="menuKeyOn">
+              <span class="grow">${T('Открывать и закрывать меню клавишей')}</span>
+              <button type="button" class="key menukey"></button></div>
+            <label class="row"><input type="checkbox" name="menuHoldMod">
+              ${T('Показывать меню, пока зажат Ctrl или Alt')}</label>
+          </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
         </div>
@@ -9634,14 +9754,30 @@ function core(storedSettings) {
     // на сенсорном экране клавиш нет — эти настройки только мешают
     form.classList.toggle('touch', TOUCH());
     const f = (name) => form.elements.namedItem(name);
-    const keyBtns = [...root.querySelectorAll('.key')];
+    const keyBtns = [...root.querySelectorAll('.key[data-setting]')];
     const hint = root.querySelector('.keyhint');
     const hintText = hint.textContent;
     const subRow = root.querySelector('.sub');
     const keys = {};
     let capturing = null; // какую клавишу сейчас назначаем
     let capturingMenu = null; // ... и то же для пункта меню
+    let capturingToggle = false; // ... и для клавиши, открывающей меню
     let menuDraft = {};
+    let menuKeyDraft = settings.menuKey || DEFAULTS.menuKey;
+    const menuKeyBtn = root.querySelector('.menukey');
+
+    function renderMenuKey() {
+      menuKeyBtn.textContent = capturingToggle ? t('Нажмите клавишу…') : comboLabel(menuKeyDraft);
+      menuKeyBtn.classList.toggle('wait', capturingToggle);
+      menuKeyBtn.disabled = !f('menuKeyOn').checked;
+    }
+
+    menuKeyBtn.addEventListener('click', () => {
+      capturingToggle = true;
+      setCapturingMenu(null);
+      renderMenuKey();
+      setHint(t('Esc — отмена.'));
+    });
 
     for (const tab of root.querySelectorAll('.tab')) {
       tab.addEventListener('click', () => {
@@ -9655,6 +9791,7 @@ function core(storedSettings) {
 
     function setCapturingMenu(key) {
       capturingMenu = key;
+      if (key) capturingToggle = false;
       renderMenuRows();
     }
 
@@ -9752,7 +9889,11 @@ function core(storedSettings) {
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       capturingMenu = null;
       renderMenuRows();
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
+        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod']) f(k).checked = !!s[k];
+      capturingToggle = false;
+      menuKeyDraft = s.menuKey || DEFAULTS.menuKey;
+      renderMenuKey();
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
       capturing = null;
@@ -9818,6 +9959,18 @@ function core(storedSettings) {
         setHint(hintText);
         return;
       }
+      if (capturingToggle) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'Escape') { capturingToggle = false; renderMenuKey(); setHint(hintText); return; }
+        if (/^(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?$/.test(e.code)) return;
+        menuKeyDraft = comboOf(e);
+        capturingToggle = false;
+        f('menuKeyOn').checked = true;
+        renderMenuKey();
+        setHint(hintText);
+        return;
+      }
       if (capturingMenu) {
         e.preventDefault();
         e.stopPropagation();
@@ -9850,6 +10003,7 @@ function core(storedSettings) {
         : t('Не удалось скопировать'), !ok));
     });
     f('rehideOnBlur').addEventListener('change', syncRehide);
+    f('menuKeyOn').addEventListener('change', renderMenuKey);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);
     root.querySelector('.cancel').addEventListener('click', close);
@@ -9869,6 +10023,9 @@ function core(storedSettings) {
         rehideDelayMs: ms('rehideDelayMs', DEFAULTS.rehideDelayMs),
         massMaxForms: Math.min(10, Math.max(1, ms('massMaxForms', DEFAULTS.massMaxForms) || DEFAULTS.massMaxForms)),
         menu: collectMenu(),
+        menuKey: menuKeyDraft,
+        menuKeyOn: f('menuKeyOn').checked,
+        menuHoldMod: f('menuHoldMod').checked,
         ...keys,
       });
       setCapturing(null);

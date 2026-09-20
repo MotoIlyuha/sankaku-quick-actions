@@ -172,5 +172,7 @@
  "170": "Nome próprio",
  "171": "Mostrar o contador",
  "172": "Abrir por tecla",
- "173": "Não sei para onde leva este item — abra o menu"
+ "173": "Não sei para onde leva este item — abra o menu",
+ "174": "Abrir e fechar o menu com uma tecla",
+ "175": "Mostrar o menu enquanto Ctrl ou Alt estiver premido"
 }

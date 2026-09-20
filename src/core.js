@@ -55,6 +55,9 @@ function core(storedSettings) {
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
+    menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
+    menuKeyOn: false,
+    menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
   };
   const settings = {
     ...DEFAULTS,
@@ -4840,6 +4843,32 @@ function core(storedSettings) {
   // Меню открыли — счётчики могли устареть
   let menuVisible = false;
   let menuOpenedAt = 0;
+  let menuHeldOpen = false; // меню открыли мы, пока держат Ctrl или Alt
+
+  // Закрытое меню сайт либо убирает из разметки, либо прячет стилями
+  function isShown(el) {
+    if (!el || !el.isConnected) return false;
+    const r = el.getBoundingClientRect();
+    if (r.width <= 0 || r.height <= 0) return false;
+    if (r.right <= 0 || r.left >= (window.innerWidth || 0)) return false;
+    const st = getComputedStyle(el);
+    return st.visibility !== 'hidden' && st.display !== 'none' && parseFloat(st.opacity || '1') > 0.05;
+  }
+
+  const menuButton = () =>
+    document.querySelector('[data-test="hamburger-menu"], [aria-label="Open menu"], header button');
+
+  function toggleSiteMenu() {
+    const btn = menuButton();
+    if (!btn) return false;
+    btn.click();
+    return true;
+  }
+
+  function setSiteMenu(open) {
+    if (!!menuVisible === !!open) return true;
+    return toggleSiteMenu(); // у сайта одна кнопка-переключатель
+  }
 
   function onMenuOpened() {
     if (Date.now() - menuOpenedAt < REP_OPEN_TTL) return;
@@ -4866,12 +4895,14 @@ function core(storedSettings) {
   function applySiteMenu() {
     if (FRAME_MODE || !document.body) return;
     let seen = 0;
+    let shownItems = 0;
     for (const el of document.querySelectorAll('[data-test]')) {
       const key = el.getAttribute('data-test');
       const cfg = MENU_BY_KEY.get(key);
       if (!cfg) continue;
       if (!el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]')) continue;
       seen++;
+      if (!shownItems && isShown(el)) shownItems++;
       el.classList.toggle('skq-menu-off', menuHidden(key));
       const textEl = menuTextEl(el);
       if (textEl) {
@@ -4886,8 +4917,9 @@ function core(storedSettings) {
         if (badge.textContent !== text) badge.textContent = text;
       }
     }
-    if (seen && !menuVisible) onMenuOpened();
-    menuVisible = seen > 0;
+    const open = seen > 0 && shownItems > 0;
+    if (open && !menuVisible) onMenuOpened();
+    menuVisible = open;
     applyMenuTitles();
   }
 
@@ -4936,6 +4968,7 @@ function core(storedSettings) {
   }
 
   function goToMenuItem(key) {
+    menuHeldOpen = false;
     const link = [...document.querySelectorAll('[data-test]')].find((el) =>
       el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]'));
     if (link) { link.click(); return true; } // меню открыто — пусть сайт сам переходит
@@ -4945,17 +4978,46 @@ function core(storedSettings) {
     return true;
   }
 
+  const HOLD_KEYS = { Control: 1, Alt: 1 };
+
   document.addEventListener('keydown', (e) => {
-    if (FRAME_MODE || settingsOpen || !(e.ctrlKey || e.altKey || e.metaKey)) return;
+    if (FRAME_MODE || settingsOpen) return;
     const node = e.composedPath ? e.composedPath()[0] : e.target;
     if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
+
+    // меню показывается, пока держат Ctrl или Alt — чтобы видеть, что под какой цифрой
+    if (settings.menuHoldMod && HOLD_KEYS[e.key] && !e.repeat && !menuVisible && !menuHeldOpen) {
+      menuHeldOpen = toggleSiteMenu();
+      return;
+    }
+
     const combo = comboOf(e);
+    if (settings.menuKeyOn && combo && combo === (settings.menuKey || DEFAULTS.menuKey)) {
+      e.preventDefault();
+      e.stopPropagation();
+      menuHeldOpen = false;
+      toggleSiteMenu();
+      return;
+    }
+    if (!(e.ctrlKey || e.altKey || e.metaKey)) return;
     const item = MENU_ITEMS.find((it) => menuHotkey(it.key) === combo);
     if (!item) return;
     e.preventDefault();
     e.stopPropagation();
     if (!goToMenuItem(item.key)) toast(t('Не знаю, куда вести этот пункт — откройте меню'), true);
   }, true);
+
+  function releaseHeldMenu() {
+    if (!menuHeldOpen) return;
+    menuHeldOpen = false;
+    setSiteMenu(false);
+  }
+
+  document.addEventListener('keyup', (e) => {
+    if (HOLD_KEYS[e.key]) releaseHeldMenu();
+  }, true);
+  // Alt+Tab и переход по клавише уводят фокус, а клавишу отпускают уже не здесь
+  window.addEventListener('blur', releaseHeldMenu);
 
   const HOTKEYS = [
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
@@ -5114,6 +5176,14 @@ function core(storedSettings) {
         </fieldset>
         </div>
         <div class="page" data-page="menu" hidden>
+          <fieldset class="keys-only">
+            <legend>${T('Клавиши')}</legend>
+            <div class="num"><input type="checkbox" name="menuKeyOn">
+              <span class="grow">${T('Открывать и закрывать меню клавишей')}</span>
+              <button type="button" class="key menukey"></button></div>
+            <label class="row"><input type="checkbox" name="menuHoldMod">
+              ${T('Показывать меню, пока зажат Ctrl или Alt')}</label>
+          </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
         </div>
@@ -5131,14 +5201,30 @@ function core(storedSettings) {
     // на сенсорном экране клавиш нет — эти настройки только мешают
     form.classList.toggle('touch', TOUCH());
     const f = (name) => form.elements.namedItem(name);
-    const keyBtns = [...root.querySelectorAll('.key')];
+    const keyBtns = [...root.querySelectorAll('.key[data-setting]')];
     const hint = root.querySelector('.keyhint');
     const hintText = hint.textContent;
     const subRow = root.querySelector('.sub');
     const keys = {};
     let capturing = null; // какую клавишу сейчас назначаем
     let capturingMenu = null; // ... и то же для пункта меню
+    let capturingToggle = false; // ... и для клавиши, открывающей меню
     let menuDraft = {};
+    let menuKeyDraft = settings.menuKey || DEFAULTS.menuKey;
+    const menuKeyBtn = root.querySelector('.menukey');
+
+    function renderMenuKey() {
+      menuKeyBtn.textContent = capturingToggle ? t('Нажмите клавишу…') : comboLabel(menuKeyDraft);
+      menuKeyBtn.classList.toggle('wait', capturingToggle);
+      menuKeyBtn.disabled = !f('menuKeyOn').checked;
+    }
+
+    menuKeyBtn.addEventListener('click', () => {
+      capturingToggle = true;
+      setCapturingMenu(null);
+      renderMenuKey();
+      setHint(t('Esc — отмена.'));
+    });
 
     for (const tab of root.querySelectorAll('.tab')) {
       tab.addEventListener('click', () => {
@@ -5152,6 +5238,7 @@ function core(storedSettings) {
 
     function setCapturingMenu(key) {
       capturingMenu = key;
+      if (key) capturingToggle = false;
       renderMenuRows();
     }
 
@@ -5249,7 +5336,11 @@ function core(storedSettings) {
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       capturingMenu = null;
       renderMenuRows();
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
+        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod']) f(k).checked = !!s[k];
+      capturingToggle = false;
+      menuKeyDraft = s.menuKey || DEFAULTS.menuKey;
+      renderMenuKey();
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
       capturing = null;
@@ -5315,6 +5406,18 @@ function core(storedSettings) {
         setHint(hintText);
         return;
       }
+      if (capturingToggle) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'Escape') { capturingToggle = false; renderMenuKey(); setHint(hintText); return; }
+        if (/^(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?$/.test(e.code)) return;
+        menuKeyDraft = comboOf(e);
+        capturingToggle = false;
+        f('menuKeyOn').checked = true;
+        renderMenuKey();
+        setHint(hintText);
+        return;
+      }
       if (capturingMenu) {
         e.preventDefault();
         e.stopPropagation();
@@ -5347,6 +5450,7 @@ function core(storedSettings) {
         : t('Не удалось скопировать'), !ok));
     });
     f('rehideOnBlur').addEventListener('change', syncRehide);
+    f('menuKeyOn').addEventListener('change', renderMenuKey);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);
     root.querySelector('.cancel').addEventListener('click', close);
@@ -5366,6 +5470,9 @@ function core(storedSettings) {
         rehideDelayMs: ms('rehideDelayMs', DEFAULTS.rehideDelayMs),
         massMaxForms: Math.min(10, Math.max(1, ms('massMaxForms', DEFAULTS.massMaxForms) || DEFAULTS.massMaxForms)),
         menu: collectMenu(),
+        menuKey: menuKeyDraft,
+        menuKeyOn: f('menuKeyOn').checked,
+        menuHoldMod: f('menuHoldMod').checked,
         ...keys,
       });
       setCapturing(null);

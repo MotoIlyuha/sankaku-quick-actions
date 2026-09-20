@@ -84,6 +84,10 @@ Ctrl+1…6, Books gets Alt+1…6, all disabled by default). Favorited and upload
 posts and books show their counts next to the item, the rankings item shows the
 reputation; the counters refresh when the menu opens.
 
+The same tab has two keys for the menu itself: one opens and closes it (a
+single key with no modifiers is allowed), and a separate setting shows the menu
+while Ctrl or Alt is held and hides it on release. Both are off by default.
+
 Items are found by their `data-test` attribute — the key from the site's own
 menu config (`post-indexes`, `my_posts`, `menu_favorites-book`…) — and their
 original names come from the site's dictionary in `window.__PRELOADED_STATE__`.
