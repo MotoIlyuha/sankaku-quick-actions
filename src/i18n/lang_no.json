@@ -160,5 +160,9 @@
  "158": "Omdømmet er uendret: {n}",
  "159": "Kopier versjon",
  "160": "Versjon kopiert: {v}",
- "161": "Kunne ikke kopiere"
+ "161": "Kunne ikke kopiere",
+ "162": "en tagg med flere ord godtas bare fra nettstedets egne forslag, og denne ble ikke foreslått",
+ "163": "lignende: {list}",
+ "164": "Tagg kopiert: {tag}",
+ "165": "Kopier først en tagg med høyreklikk"
 }

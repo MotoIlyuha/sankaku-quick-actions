@@ -1820,12 +1820,35 @@ function core(storedSettings) {
   }
 
   const CREATE_RE = /созда\S*\s+пост|create\s+post|опубликовать|publish|submit/i;
+  // Сайт держит все свои надписи в словаре рядом с состоянием страницы. Берём их
+  // оттуда: на голландском кнопка называется «Bericht maken», по словам не найти
+  const CREATE_KEYS = ['common-title__create_post', 'common-title__create-new-post'];
+
+  function siteWord(key, win) {
+    try {
+      const st = (win || W).__PRELOADED_STATE__;
+      const store = st && st.initialI18nStore;
+      if (!isObj(store)) return '';
+      const from = (lang) => (isObj(store[lang]) && isObj(store[lang].translation) ? store[lang].translation[key] : '');
+      const found = from(st.initialLanguage) || Object.keys(store).map(from).find(Boolean);
+      return typeof found === 'string' ? found : '';
+    } catch { return ''; }
+  }
+
+  const createWords = (win) => CREATE_KEYS.map((k) => siteWord(k, win)).filter(Boolean).map((w) => w.toLowerCase());
+  const btnText = (b) => String((b && (b.textContent || b.value)) || '').replace(/\s+/g, ' ').trim();
+
+  function looksLikeCreate(b, win) {
+    const text = btnText(b);
+    if (!text) return false;
+    return createWords(win).includes(text.toLowerCase()) || CREATE_RE.test(text);
+  }
 
   function initFrameMode() {
     document.documentElement.classList.add('skq-frame');
     document.addEventListener('click', (e) => {
       const b = closestEl(e.target, 'button, [role="button"], input[type="submit"]');
-      if (b && (b.type === 'submit' || CREATE_RE.test(b.textContent || b.value || ''))) frameArm();
+      if (b && (b.type === 'submit' || looksLikeCreate(b, W))) frameArm();
     }, true);
     document.addEventListener('submit', frameArm, true);
     new MutationObserver(checkSnackbar).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
@@ -3329,10 +3352,11 @@ function core(storedSettings) {
     const input = findTagInput(doc);
     if (!input) throw new Error(t('не нашёл поле тегов'));
 
-    // «large_breasts» и «large breasts» — подсказку ищем по обоим написаниям:
-    // сайт показывает теги с пробелами, а хранит с «_»
+    // Сайт хранит теги с «_» и ищет подсказки по этому написанию, а показывает
+    // их с пробелами. Начинаем с «_», иначе для составного тега подсказок не будет
     const spaced = tag.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
-    const variants = [...new Set([spaced, tag, tag.replace(/\s+/g, '_')])];
+    const underscored = spaced.replace(/ /g, '_');
+    const variants = [...new Set([underscored, spaced, tag])];
     let res = { opened: false, options: [], option: null };
     let similar = [];
     // сначала без фокуса (чтобы не отбирать ввод у пользователя), затем с фокусом
@@ -3342,24 +3366,29 @@ function core(storedSettings) {
         res = await suggest(doc, input, text, key, withFocus);
         opened = opened || res.opened;
         if (res.options.length && !similar.length) similar = res.options;
-        if (res.option || !res.opened) break; // подсказки не появились вовсе — дело не в написании
+        if (res.option) break; // остальные написания перебираем: по одному сайт молчит
       }
       if (res.option || opened) break;
     }
     const option = res.option;
 
+    const parted = /[\s_]/.test(spaced);
     if (option) {
       try { refreshHistoryStyles([describeOption(option)]); } catch { /* ignore */ }
       option.click();
       await sleep(400);
-    } else {
-      // «alisa (everlasting summer)» сайт разобрал бы на три тега — жмём Enter по написанию с «_»
-      const underscored = spaced.replace(/ /g, '_');
+    } else if (!parted) {
+      // тег из одного слова сайт создаёт по Enter — делить там нечего
       await enterTag(input, underscored);
-      if (!tagChips(doc).has(key) && underscored !== spaced) {
-        dropAdded(doc, before);
-        await enterTag(input, spaced);
-      }
+    } else {
+      // «alisa_(everlasting_summer)» по Enter превратится в три тега: и пробел,
+      // и «_» в поле сайта разделители, составной тег берётся только из подсказок
+      closeSuggestions(input);
+      if (doc.activeElement === input) input.blur();
+      dropAdded(doc, before);
+      const near = similar.slice(0, 3).map((o) => o.textContent.trim()).filter(Boolean);
+      throw new Error(t('составной тег сайт принимает только из своих подсказок, а такой не предложил')
+        + (near.length ? '; ' + t('похожие: {list}', { list: near.join(', ') }) : ''));
     }
 
     const after = tagChips(doc);
@@ -3379,6 +3408,57 @@ function core(storedSettings) {
     const hint = similar.slice(0, 3).map((o) => o.textContent.trim()).filter(Boolean);
     throw new Error(hint.length ? t('нет такого тега; похожие: {list}', { list: hint.join(', ') }) : t('нет такого тега'));
   }
+
+  // ---- Правый щелчок: тег из формы в буфер и обратно ----
+  const CHIP_SEL = '[data-testid="tag-chip"], [class*="MuiChip-root"]';
+  // буфер живёт в верхнем окне: у каждой встроенной формы свой экземпляр скрипта
+  function tagClip(value) {
+    try {
+      const top = W.top || W;
+      if (value !== undefined) top.__skqTagClip = value;
+      return top.__skqTagClip || '';
+    } catch { return value === undefined ? '' : value; }
+  }
+
+  const chipTag = (chip) => {
+    const label = chip.querySelector('[class*="MuiChip-label"]') || chip;
+    return normTag(label.textContent).replace(/\s+/g, '_');
+  };
+
+  function frameToast(text, isErr) {
+    if (!FRAME_MODE) { toast(text, isErr); return; }
+    notifyParent({ type: 'toast', message: text, error: !!isErr });
+  }
+
+  function onTagContextMenu(e) {
+    if (!FRAME_MODE && !mass.visible) return;
+    const el = e.target instanceof Element ? e.target : null;
+    if (!el) return;
+    const chip = el.closest(CHIP_SEL);
+    if (chip && !chip.closest('[role="option"]')) {
+      const tag = chipTag(chip);
+      if (!tag) return;
+      e.preventDefault();
+      tagClip(tag);
+      copyText(tag).then((ok) => frameToast(ok ? t('Тег скопирован: {tag}', { tag }) : t('Не удалось скопировать'), !ok));
+      return;
+    }
+    const input = el.closest('input');
+    if (!input || input !== findTagInput(input.ownerDocument)) return;
+    e.preventDefault();
+    pasteTag(input);
+  }
+
+  async function pasteTag(input) {
+    let text = '';
+    try { text = await navigator.clipboard.readText(); } catch { /* доступа нет — свой буфер */ }
+    const tag = underscoreTags(String(text || '').trim()) || tagClip();
+    if (!tag) { frameToast(t('Сначала скопируйте тег правым щелчком'), true); return; }
+    input.focus({ preventScroll: true });
+    setNativeValue(input, tag);
+  }
+
+  document.addEventListener('contextmenu', onTagContextMenu, true);
 
   // Вводит текст в поле тегов и ждёт подсказки сайта
   async function suggest(doc, input, text, key, withFocus) {
@@ -4099,16 +4179,24 @@ function core(storedSettings) {
   }
 
   function findCreateButton(doc) {
-    const text = (b) => (b.textContent || b.value || '').trim();
     const all = [...doc.querySelectorAll('button, [role="button"], input[type="submit"]')];
-    const named = all.filter((b) => CREATE_RE.test(text(b)));
-    const exact = named.find((b) => /^(создать пост|create post)$/i.test(text(b)));
+    // сначала по названию из словаря самого сайта — оно точное на любом языке;
+    // ключи перебираем по порядку: «создать пост» важнее, чем «создать новый пост»
+    for (const key of CREATE_KEYS) {
+      const word = siteWord(key, doc.defaultView).toLowerCase();
+      const hit = word && all.filter((b) => btnText(b).toLowerCase() === word);
+      if (hit && hit.length) return hit[hit.length - 1];
+    }
+    const named = all.filter((b) => CREATE_RE.test(btnText(b)));
+    const exact = named.find((b) => /^(создать пост|create post)$/i.test(btnText(b)));
     if (exact || named.length) return exact || named[0];
-    // язык сайта другой — ищем кнопку отправки формы
+    // словаря нет и слова не те — ищем кнопку отправки формы
     const submit = all.find((b) => b.type === 'submit' && !isDisabled(b));
     if (submit) return submit;
     const filled = all.filter((b) => /MuiButton-contained/i.test(typeof b.className === 'string' ? b.className : ''));
-    return filled[filled.length - 1] || null;
+    if (filled.length) return filled[filled.length - 1];
+    log('create button not found', all.map(btnText));
+    return null;
   }
 
   async function publishOne(item) {
@@ -4201,6 +4289,7 @@ function core(storedSettings) {
     window.addEventListener('message', (e) => {
       if (e.origin !== location.origin || !isObj(e.data) || e.data.skq !== true) return;
       if (e.data.type === 'dragenter') { showDrag(); return; }
+      if (e.data.type === 'toast') { toast(String(e.data.message || ''), !!e.data.error); return; }
       const item = mass.items.find((it) => it.iframe && it.iframe.contentWindow === e.source);
       if (!item) return;
       if (e.data.type === 'armed') {

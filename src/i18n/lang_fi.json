@@ -160,5 +160,9 @@
  "158": "Maine ennallaan: {n}",
  "159": "Kopioi versio",
  "160": "Versio kopioitu: {v}",
- "161": "Kopiointi epäonnistui"
+ "161": "Kopiointi epäonnistui",
+ "162": "monisanaisen tagin sivusto hyväksyy vain omista ehdotuksistaan, eikä se ehdottanut tätä",
+ "163": "samankaltaiset: {list}",
+ "164": "Tagi kopioitu: {tag}",
+ "165": "Kopioi ensin tagi hiiren oikealla painikkeella"
 }

@@ -161,6 +161,10 @@
   "Репутация не изменилась: {n}": "Reputation unchanged: {n}",
   "Скопировать версию": "Copy version",
   "Версия скопирована: {v}": "Version copied: {v}",
-  "Не удалось скопировать": "Could not copy"
+  "Не удалось скопировать": "Could not copy",
+  "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a multi-word tag can only be taken from the site’s own suggestions, and it did not offer this one",
+  "похожие: {list}": "similar: {list}",
+  "Тег скопирован: {tag}": "Tag copied: {tag}",
+  "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first"
  }
 }

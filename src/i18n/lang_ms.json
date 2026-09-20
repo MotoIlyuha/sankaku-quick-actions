@@ -160,5 +160,9 @@
  "158": "Reputasi tidak berubah: {n}",
  "159": "Salin versi",
  "160": "Versi disalin: {v}",
- "161": "Tidak dapat menyalin"
+ "161": "Tidak dapat menyalin",
+ "162": "tag berbilang perkataan hanya diterima daripada cadangan tapak, dan yang ini tidak ditawarkan",
+ "163": "serupa: {list}",
+ "164": "Tag disalin: {tag}",
+ "165": "Salin tag dahulu dengan klik kanan"
 }

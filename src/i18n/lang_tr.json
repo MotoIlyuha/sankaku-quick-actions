@@ -160,5 +160,9 @@
  "158": "İtibar değişmedi: {n}",
  "159": "Sürümü kopyala",
  "160": "Sürüm kopyalandı: {v}",
- "161": "Kopyalanamadı"
+ "161": "Kopyalanamadı",
+ "162": "birden çok kelimeli etiket yalnızca sitenin kendi önerilerinden eklenir, bu ise önerilmedi",
+ "163": "benzerleri: {list}",
+ "164": "Etiket kopyalandı: {tag}",
+ "165": "Önce sağ tıklayarak bir etiket kopyalayın"
 }

@@ -88,7 +88,11 @@ class H(http.server.BaseHTTPRequestHandler):
                 {'name': 'looking at mirror', 'count': '15K', 'color': 'rgb(163, 127, 0)', 'rating': 'G'},
             ]
             time.sleep(0.5)
-            return self._send(200, json.dumps([t for t in known if q and (t['name'].startswith(q) or (' ' + q) in t['name'])]), 'application/json')
+            # сайт ищет по написанию с «_»: «cat ears» не находит ничего
+            def hit(name):
+                us = name.replace(' ', '_')
+                return q and (us.startswith(q) or ('_' + q) in us)
+            return self._send(200, json.dumps([t for t in known if hit(t['name'])]), 'application/json')
         if path in JS_FILES and os.path.exists(JS_FILES[path]):
             return self._send(200, open(JS_FILES[path], 'rb').read(),
                               'application/javascript; charset=utf-8')

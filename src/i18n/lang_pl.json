@@ -160,5 +160,9 @@
  "158": "Reputacja bez zmian: {n}",
  "159": "Skopiuj wersję",
  "160": "Skopiowano wersję: {v}",
- "161": "Nie udało się skopiować"
+ "161": "Nie udało się skopiować",
+ "162": "tag z kilku słów strona przyjmuje tylko z własnych podpowiedzi, a tego nie zaproponowała",
+ "163": "podobne: {list}",
+ "164": "Skopiowano tag: {tag}",
+ "165": "Najpierw skopiuj tag prawym przyciskiem"
 }

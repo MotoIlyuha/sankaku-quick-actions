@@ -158,6 +158,9 @@ from `dist/`:
 | `?ext=mv2` | the Firefox MV2 bridge: core injected inline |
 
 The mode is remembered per tab so the upload form's iframes open the same way.
+`?sitelang=nl` switches the mock's own language: the create button becomes
+«Bericht maken», which shows that the add-on finds it through the site's
+dictionary rather than by wording.
 In extension mode `chrome.storage` is a stub and asynchronous, and
 `window.__extMessage({skq:'open-settings'})` stands in for a click on the
 toolbar button.

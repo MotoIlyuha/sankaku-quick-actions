@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.23.4
+// @version      1.24.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -212,7 +212,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.23.4';
+  const SKQ_VERSION = '1.24.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -377,7 +377,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputation unchanged: {n}",
           "Скопировать версию": "Copy version",
           "Версия скопирована: {v}": "Version copied: {v}",
-          "Не удалось скопировать": "Could not copy"
+          "Не удалось скопировать": "Could not copy",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a multi-word tag can only be taken from the site’s own suggestions, and it did not offer this one",
+          "похожие: {list}": "similar: {list}",
+          "Тег скопирован: {tag}": "Tag copied: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -541,7 +545,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "レピュテーションは変わっていません: {n}",
           "Скопировать версию": "バージョンをコピー",
           "Версия скопирована: {v}": "バージョンをコピーしました: {v}",
-          "Не удалось скопировать": "コピーできませんでした"
+          "Не удалось скопировать": "コピーできませんでした",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "複数語のタグはサイトの候補からしか追加できません。この候補は出ませんでした",
+          "похожие: {list}": "似たもの: {list}",
+          "Тег скопирован: {tag}": "タグをコピーしました: {tag}",
+          "Сначала скопируйте тег правым щелчком": "まず右クリックでタグをコピーしてください"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -705,7 +713,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "声望没有变化：{n}",
           "Скопировать версию": "复制版本号",
           "Версия скопирована: {v}": "已复制版本号：{v}",
-          "Не удалось скопировать": "无法复制"
+          "Не удалось скопировать": "无法复制",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "多词标签只能从站点的候选里添加，而它没有给出这个候选",
+          "похожие: {list}": "相近：{list}",
+          "Тег скопирован: {tag}": "已复制标签：{tag}",
+          "Сначала скопируйте тег правым щелчком": "请先用右键复制一个标签"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -869,7 +881,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "聲望沒有變化：{n}",
           "Скопировать версию": "複製版本號",
           "Версия скопирована: {v}": "已複製版本號：{v}",
-          "Не удалось скопировать": "無法複製"
+          "Не удалось скопировать": "無法複製",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "多詞標籤只能從站點的候選裡新增，而它沒有給出這個候選",
+          "похожие: {list}": "相近：{list}",
+          "Тег скопирован: {tag}": "已複製標籤：{tag}",
+          "Сначала скопируйте тег правым щелчком": "請先用右鍵複製一個標籤"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1033,7 +1049,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "평판이 그대로입니다: {n}",
           "Скопировать версию": "버전 복사",
           "Версия скопирована: {v}": "버전을 복사했습니다: {v}",
-          "Не удалось скопировать": "복사하지 못했습니다"
+          "Не удалось скопировать": "복사하지 못했습니다",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "여러 단어로 된 태그는 사이트 추천에서만 추가할 수 있는데, 이 태그는 추천되지 않았습니다",
+          "похожие: {list}": "비슷한 것: {list}",
+          "Тег скопирован: {tag}": "태그를 복사했습니다: {tag}",
+          "Сначала скопируйте тег правым щелчком": "먼저 오른쪽 클릭으로 태그를 복사하세요"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1197,7 +1217,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputation unverändert: {n}",
           "Скопировать версию": "Version kopieren",
           "Версия скопирована: {v}": "Version kopiert: {v}",
-          "Не удалось скопировать": "Kopieren fehlgeschlagen"
+          "Не удалось скопировать": "Kopieren fehlgeschlagen",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "einen mehrteiligen Tag nimmt die Seite nur aus ihren eigenen Vorschlägen, und diesen hat sie nicht angeboten",
+          "похожие: {list}": "ähnlich: {list}",
+          "Тег скопирован: {tag}": "Tag kopiert: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopieren Sie zuerst einen Tag mit Rechtsklick"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1361,7 +1385,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Réputation inchangée : {n}",
           "Скопировать версию": "Copier la version",
           "Версия скопирована: {v}": "Version copiée : {v}",
-          "Не удалось скопировать": "Impossible de copier"
+          "Не удалось скопировать": "Impossible de copier",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "un tag en plusieurs mots n’est accepté que depuis les suggestions du site, et celle-ci n’a pas été proposée",
+          "похожие: {list}": "similaires : {list}",
+          "Тег скопирован: {tag}": "Tag copié : {tag}",
+          "Сначала скопируйте тег правым щелчком": "Copiez d’abord un tag par clic droit"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1525,7 +1553,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "La reputación no ha cambiado: {n}",
           "Скопировать версию": "Copiar la versión",
           "Версия скопирована: {v}": "Versión copiada: {v}",
-          "Не удалось скопировать": "No se pudo copiar"
+          "Не удалось скопировать": "No se pudo copiar",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "una etiqueta de varias palabras solo se acepta desde las sugerencias del sitio, y esta no apareció",
+          "похожие: {list}": "similares: {list}",
+          "Тег скопирован: {tag}": "Etiqueta copiada: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Primero copie una etiqueta con el botón derecho"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1689,7 +1721,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputação sem alteração: {n}",
           "Скопировать версию": "Copiar a versão",
           "Версия скопирована: {v}": "Versão copiada: {v}",
-          "Не удалось скопировать": "Não foi possível copiar"
+          "Не удалось скопировать": "Não foi possível copiar",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "uma etiqueta com várias palavras só é aceite a partir das sugestões do site, e esta não apareceu",
+          "похожие: {list}": "semelhantes: {list}",
+          "Тег скопирован: {tag}": "Etiqueta copiada: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Primeiro copie uma etiqueta com o botão direito"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1853,7 +1889,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputazione invariata: {n}",
           "Скопировать версию": "Copia la versione",
           "Версия скопирована: {v}": "Versione copiata: {v}",
-          "Не удалось скопировать": "Impossibile copiare"
+          "Не удалось скопировать": "Impossibile copiare",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "un tag di più parole viene accettato solo dai suggerimenti del sito, e questo non è stato proposto",
+          "похожие: {list}": "simili: {list}",
+          "Тег скопирован: {tag}": "Tag copiato: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Prima copia un tag con il tasto destro"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2017,7 +2057,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputatie onveranderd: {n}",
           "Скопировать версию": "Versie kopiëren",
           "Версия скопирована: {v}": "Versie gekopieerd: {v}",
-          "Не удалось скопировать": "Kopiëren mislukt"
+          "Не удалось скопировать": "Kopiëren mislukt",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "een tag uit meerdere woorden neemt de site alleen uit eigen suggesties, en deze bood ze niet aan",
+          "похожие: {list}": "vergelijkbaar: {list}",
+          "Тег скопирован: {tag}": "Tag gekopieerd: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopieer eerst een tag met rechtermuisklik"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2181,7 +2225,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputacja bez zmian: {n}",
           "Скопировать версию": "Skopiuj wersję",
           "Версия скопирована: {v}": "Skopiowano wersję: {v}",
-          "Не удалось скопировать": "Nie udało się skopiować"
+          "Не удалось скопировать": "Nie udało się skopiować",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag z kilku słów strona przyjmuje tylko z własnych podpowiedzi, a tego nie zaproponowała",
+          "похожие: {list}": "podobne: {list}",
+          "Тег скопирован: {tag}": "Skopiowano tag: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Najpierw skopiuj tag prawym przyciskiem"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2345,7 +2393,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Ryktet oförändrat: {n}",
           "Скопировать версию": "Kopiera versionen",
           "Версия скопирована: {v}": "Version kopierad: {v}",
-          "Не удалось скопировать": "Det gick inte att kopiera"
+          "Не удалось скопировать": "Det gick inte att kopiera",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "en tagg med flera ord tas bara från webbplatsens egna förslag, och den föreslogs inte",
+          "похожие: {list}": "liknande: {list}",
+          "Тег скопирован: {tag}": "Tagg kopierad: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopiera först en tagg med högerklick"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2509,7 +2561,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Omdømmet er uændret: {n}",
           "Скопировать версию": "Kopiér version",
           "Версия скопирована: {v}": "Version kopieret: {v}",
-          "Не удалось скопировать": "Kunne ikke kopiere"
+          "Не удалось скопировать": "Kunne ikke kopiere",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "et tag med flere ord kan kun tages fra sidens egne forslag, og det blev ikke foreslået",
+          "похожие: {list}": "lignende: {list}",
+          "Тег скопирован: {tag}": "Tag kopieret: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopiér først et tag med højreklik"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2673,7 +2729,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Omdømmet er uendret: {n}",
           "Скопировать версию": "Kopier versjon",
           "Версия скопирована: {v}": "Versjon kopiert: {v}",
-          "Не удалось скопировать": "Kunne ikke kopiere"
+          "Не удалось скопировать": "Kunne ikke kopiere",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "en tagg med flere ord godtas bare fra nettstedets egne forslag, og denne ble ikke foreslått",
+          "похожие: {list}": "lignende: {list}",
+          "Тег скопирован: {tag}": "Tagg kopiert: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopier først en tagg med høyreklikk"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -2837,7 +2897,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Maine ennallaan: {n}",
           "Скопировать версию": "Kopioi versio",
           "Версия скопирована: {v}": "Versio kopioitu: {v}",
-          "Не удалось скопировать": "Kopiointi epäonnistui"
+          "Не удалось скопировать": "Kopiointi epäonnistui",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "monisanaisen tagin sivusto hyväksyy vain omista ehdotuksistaan, eikä se ehdottanut tätä",
+          "похожие: {list}": "samankaltaiset: {list}",
+          "Тег скопирован: {tag}": "Tagi kopioitu: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Kopioi ensin tagi hiiren oikealla painikkeella"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3001,7 +3065,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "A hírnév nem változott: {n}",
           "Скопировать версию": "Verzió másolása",
           "Версия скопирована: {v}": "Verzió másolva: {v}",
-          "Не удалось скопировать": "Nem sikerült másolni"
+          "Не удалось скопировать": "Nem sikerült másolni",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a többszavas címkét az oldal csak a saját javaslataiból fogadja el, ezt pedig nem ajánlotta fel",
+          "похожие: {list}": "hasonlók: {list}",
+          "Тег скопирован: {tag}": "Címke másolva: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Előbb másoljon egy címkét jobb kattintással"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3165,7 +3233,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputația nu s-a schimbat: {n}",
           "Скопировать версию": "Copiază versiunea",
           "Версия скопирована: {v}": "Versiune copiată: {v}",
-          "Не удалось скопировать": "Nu s-a putut copia"
+          "Не удалось скопировать": "Nu s-a putut copia",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "o etichetă din mai multe cuvinte este acceptată doar din sugestiile site-ului, iar aceasta nu a apărut",
+          "похожие: {list}": "similare: {list}",
+          "Тег скопирован: {tag}": "Etichetă copiată: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Copiați mai întâi o etichetă cu clic dreapta"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3329,7 +3401,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Репутацията не се е променила: {n}",
           "Скопировать версию": "Копиране на версията",
           "Версия скопирована: {v}": "Версията е копирана: {v}",
-          "Не удалось скопировать": "Копирането е неуспешно"
+          "Не удалось скопировать": "Копирането е неуспешно",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "съставен таг се приема само от подсказките на сайта, а такъв не беше предложен",
+          "похожие: {list}": "подобни: {list}",
+          "Тег скопирован: {tag}": "Тагът е копиран: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Първо копирайте таг с десен бутон"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3493,7 +3569,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Η φήμη δεν άλλαξε: {n}",
           "Скопировать версию": "Αντιγραφή έκδοσης",
           "Версия скопирована: {v}": "Η έκδοση αντιγράφηκε: {v}",
-          "Не удалось скопировать": "Δεν ήταν δυνατή η αντιγραφή"
+          "Не удалось скопировать": "Δεν ήταν δυνατή η αντιγραφή",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "μια ετικέτα με πολλές λέξεις γίνεται δεκτή μόνο από τις προτάσεις του ιστότοπου, και αυτή δεν προτάθηκε",
+          "похожие: {list}": "παρόμοια: {list}",
+          "Тег скопирован: {tag}": "Η ετικέτα αντιγράφηκε: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Πρώτα αντιγράψτε μια ετικέτα με δεξί κλικ"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3657,7 +3737,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "İtibar değişmedi: {n}",
           "Скопировать версию": "Sürümü kopyala",
           "Версия скопирована: {v}": "Sürüm kopyalandı: {v}",
-          "Не удалось скопировать": "Kopyalanamadı"
+          "Не удалось скопировать": "Kopyalanamadı",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "birden çok kelimeli etiket yalnızca sitenin kendi önerilerinden eklenir, bu ise önerilmedi",
+          "похожие: {list}": "benzerleri: {list}",
+          "Тег скопирован: {tag}": "Etiket kopyalandı: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Önce sağ tıklayarak bir etiket kopyalayın"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -3821,7 +3905,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "ชื่อเสียงไม่เปลี่ยนแปลง: {n}",
           "Скопировать версию": "คัดลอกเวอร์ชัน",
           "Версия скопирована: {v}": "คัดลอกเวอร์ชันแล้ว: {v}",
-          "Не удалось скопировать": "คัดลอกไม่สำเร็จ"
+          "Не удалось скопировать": "คัดลอกไม่สำเร็จ",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "แท็กหลายคำเพิ่มได้จากรายการแนะนำของเว็บไซต์เท่านั้น และไม่มีแท็กนี้ในรายการ",
+          "похожие: {list}": "ใกล้เคียง: {list}",
+          "Тег скопирован: {tag}": "คัดลอกแท็กแล้ว: {tag}",
+          "Сначала скопируйте тег правым щелчком": "คัดลอกแท็กด้วยคลิกขวาก่อน"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -3985,7 +4073,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "प्रतिष्ठा में बदलाव नहीं: {n}",
           "Скопировать версию": "संस्करण कॉपी करें",
           "Версия скопирована: {v}": "संस्करण कॉपी किया गया: {v}",
-          "Не удалось скопировать": "कॉपी नहीं हो सका"
+          "Не удалось скопировать": "कॉपी नहीं हो सका",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "कई शब्दों वाला टैग साइट केवल अपने सुझावों से लेती है, और यह सुझाव नहीं मिला",
+          "похожие: {list}": "मिलते-जुलते: {list}",
+          "Тег скопирован: {tag}": "टैग कॉपी किया गया: {tag}",
+          "Сначала скопируйте тег правым щелчком": "पहले दाएँ क्लिक से कोई टैग कॉपी करें"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4149,7 +4241,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}",
           "Скопировать версию": "Salin versi",
           "Версия скопирована: {v}": "Versi disalin: {v}",
-          "Не удалось скопировать": "Tidak bisa menyalin"
+          "Не удалось скопировать": "Tidak bisa menyalin",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag beberapa kata hanya diterima dari saran situs, dan yang ini tidak ditawarkan",
+          "похожие: {list}": "mirip: {list}",
+          "Тег скопирован: {tag}": "Tag disalin: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Salin dulu sebuah tag dengan klik kanan"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4313,7 +4409,11 @@ function core(storedSettings) {
           "Репутация не изменилась: {n}": "Reputasi tidak berubah: {n}",
           "Скопировать версию": "Salin versi",
           "Версия скопирована: {v}": "Versi disalin: {v}",
-          "Не удалось скопировать": "Tidak dapat menyalin"
+          "Не удалось скопировать": "Tidak dapat menyalin",
+          "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag berbilang perkataan hanya diterima daripada cadangan tapak, dan yang ini tidak ditawarkan",
+          "похожие: {list}": "serupa: {list}",
+          "Тег скопирован: {tag}": "Tag disalin: {tag}",
+          "Сначала скопируйте тег правым щелчком": "Salin tag dahulu dengan klik kanan"
     },
   } /* SKQ_I18N_END */;
 
@@ -6023,12 +6123,35 @@ function core(storedSettings) {
   }
 
   const CREATE_RE = /созда\S*\s+пост|create\s+post|опубликовать|publish|submit/i;
+  // Сайт держит все свои надписи в словаре рядом с состоянием страницы. Берём их
+  // оттуда: на голландском кнопка называется «Bericht maken», по словам не найти
+  const CREATE_KEYS = ['common-title__create_post', 'common-title__create-new-post'];
+
+  function siteWord(key, win) {
+    try {
+      const st = (win || W).__PRELOADED_STATE__;
+      const store = st && st.initialI18nStore;
+      if (!isObj(store)) return '';
+      const from = (lang) => (isObj(store[lang]) && isObj(store[lang].translation) ? store[lang].translation[key] : '');
+      const found = from(st.initialLanguage) || Object.keys(store).map(from).find(Boolean);
+      return typeof found === 'string' ? found : '';
+    } catch { return ''; }
+  }
+
+  const createWords = (win) => CREATE_KEYS.map((k) => siteWord(k, win)).filter(Boolean).map((w) => w.toLowerCase());
+  const btnText = (b) => String((b && (b.textContent || b.value)) || '').replace(/\s+/g, ' ').trim();
+
+  function looksLikeCreate(b, win) {
+    const text = btnText(b);
+    if (!text) return false;
+    return createWords(win).includes(text.toLowerCase()) || CREATE_RE.test(text);
+  }
 
   function initFrameMode() {
     document.documentElement.classList.add('skq-frame');
     document.addEventListener('click', (e) => {
       const b = closestEl(e.target, 'button, [role="button"], input[type="submit"]');
-      if (b && (b.type === 'submit' || CREATE_RE.test(b.textContent || b.value || ''))) frameArm();
+      if (b && (b.type === 'submit' || looksLikeCreate(b, W))) frameArm();
     }, true);
     document.addEventListener('submit', frameArm, true);
     new MutationObserver(checkSnackbar).observe(document.documentElement, { childList: true, subtree: true, characterData: true });
@@ -7532,10 +7655,11 @@ function core(storedSettings) {
     const input = findTagInput(doc);
     if (!input) throw new Error(t('не нашёл поле тегов'));
 
-    // «large_breasts» и «large breasts» — подсказку ищем по обоим написаниям:
-    // сайт показывает теги с пробелами, а хранит с «_»
+    // Сайт хранит теги с «_» и ищет подсказки по этому написанию, а показывает
+    // их с пробелами. Начинаем с «_», иначе для составного тега подсказок не будет
     const spaced = tag.replace(/_/g, ' ').replace(/\s+/g, ' ').trim();
-    const variants = [...new Set([spaced, tag, tag.replace(/\s+/g, '_')])];
+    const underscored = spaced.replace(/ /g, '_');
+    const variants = [...new Set([underscored, spaced, tag])];
     let res = { opened: false, options: [], option: null };
     let similar = [];
     // сначала без фокуса (чтобы не отбирать ввод у пользователя), затем с фокусом
@@ -7545,24 +7669,29 @@ function core(storedSettings) {
         res = await suggest(doc, input, text, key, withFocus);
         opened = opened || res.opened;
         if (res.options.length && !similar.length) similar = res.options;
-        if (res.option || !res.opened) break; // подсказки не появились вовсе — дело не в написании
+        if (res.option) break; // остальные написания перебираем: по одному сайт молчит
       }
       if (res.option || opened) break;
     }
     const option = res.option;
 
+    const parted = /[\s_]/.test(spaced);
     if (option) {
       try { refreshHistoryStyles([describeOption(option)]); } catch { /* ignore */ }
       option.click();
       await sleep(400);
-    } else {
-      // «alisa (everlasting summer)» сайт разобрал бы на три тега — жмём Enter по написанию с «_»
-      const underscored = spaced.replace(/ /g, '_');
+    } else if (!parted) {
+      // тег из одного слова сайт создаёт по Enter — делить там нечего
       await enterTag(input, underscored);
-      if (!tagChips(doc).has(key) && underscored !== spaced) {
-        dropAdded(doc, before);
-        await enterTag(input, spaced);
-      }
+    } else {
+      // «alisa_(everlasting_summer)» по Enter превратится в три тега: и пробел,
+      // и «_» в поле сайта разделители, составной тег берётся только из подсказок
+      closeSuggestions(input);
+      if (doc.activeElement === input) input.blur();
+      dropAdded(doc, before);
+      const near = similar.slice(0, 3).map((o) => o.textContent.trim()).filter(Boolean);
+      throw new Error(t('составной тег сайт принимает только из своих подсказок, а такой не предложил')
+        + (near.length ? '; ' + t('похожие: {list}', { list: near.join(', ') }) : ''));
     }
 
     const after = tagChips(doc);
@@ -7582,6 +7711,57 @@ function core(storedSettings) {
     const hint = similar.slice(0, 3).map((o) => o.textContent.trim()).filter(Boolean);
     throw new Error(hint.length ? t('нет такого тега; похожие: {list}', { list: hint.join(', ') }) : t('нет такого тега'));
   }
+
+  // ---- Правый щелчок: тег из формы в буфер и обратно ----
+  const CHIP_SEL = '[data-testid="tag-chip"], [class*="MuiChip-root"]';
+  // буфер живёт в верхнем окне: у каждой встроенной формы свой экземпляр скрипта
+  function tagClip(value) {
+    try {
+      const top = W.top || W;
+      if (value !== undefined) top.__skqTagClip = value;
+      return top.__skqTagClip || '';
+    } catch { return value === undefined ? '' : value; }
+  }
+
+  const chipTag = (chip) => {
+    const label = chip.querySelector('[class*="MuiChip-label"]') || chip;
+    return normTag(label.textContent).replace(/\s+/g, '_');
+  };
+
+  function frameToast(text, isErr) {
+    if (!FRAME_MODE) { toast(text, isErr); return; }
+    notifyParent({ type: 'toast', message: text, error: !!isErr });
+  }
+
+  function onTagContextMenu(e) {
+    if (!FRAME_MODE && !mass.visible) return;
+    const el = e.target instanceof Element ? e.target : null;
+    if (!el) return;
+    const chip = el.closest(CHIP_SEL);
+    if (chip && !chip.closest('[role="option"]')) {
+      const tag = chipTag(chip);
+      if (!tag) return;
+      e.preventDefault();
+      tagClip(tag);
+      copyText(tag).then((ok) => frameToast(ok ? t('Тег скопирован: {tag}', { tag }) : t('Не удалось скопировать'), !ok));
+      return;
+    }
+    const input = el.closest('input');
+    if (!input || input !== findTagInput(input.ownerDocument)) return;
+    e.preventDefault();
+    pasteTag(input);
+  }
+
+  async function pasteTag(input) {
+    let text = '';
+    try { text = await navigator.clipboard.readText(); } catch { /* доступа нет — свой буфер */ }
+    const tag = underscoreTags(String(text || '').trim()) || tagClip();
+    if (!tag) { frameToast(t('Сначала скопируйте тег правым щелчком'), true); return; }
+    input.focus({ preventScroll: true });
+    setNativeValue(input, tag);
+  }
+
+  document.addEventListener('contextmenu', onTagContextMenu, true);
 
   // Вводит текст в поле тегов и ждёт подсказки сайта
   async function suggest(doc, input, text, key, withFocus) {
@@ -8302,16 +8482,24 @@ function core(storedSettings) {
   }
 
   function findCreateButton(doc) {
-    const text = (b) => (b.textContent || b.value || '').trim();
     const all = [...doc.querySelectorAll('button, [role="button"], input[type="submit"]')];
-    const named = all.filter((b) => CREATE_RE.test(text(b)));
-    const exact = named.find((b) => /^(создать пост|create post)$/i.test(text(b)));
+    // сначала по названию из словаря самого сайта — оно точное на любом языке;
+    // ключи перебираем по порядку: «создать пост» важнее, чем «создать новый пост»
+    for (const key of CREATE_KEYS) {
+      const word = siteWord(key, doc.defaultView).toLowerCase();
+      const hit = word && all.filter((b) => btnText(b).toLowerCase() === word);
+      if (hit && hit.length) return hit[hit.length - 1];
+    }
+    const named = all.filter((b) => CREATE_RE.test(btnText(b)));
+    const exact = named.find((b) => /^(создать пост|create post)$/i.test(btnText(b)));
     if (exact || named.length) return exact || named[0];
-    // язык сайта другой — ищем кнопку отправки формы
+    // словаря нет и слова не те — ищем кнопку отправки формы
     const submit = all.find((b) => b.type === 'submit' && !isDisabled(b));
     if (submit) return submit;
     const filled = all.filter((b) => /MuiButton-contained/i.test(typeof b.className === 'string' ? b.className : ''));
-    return filled[filled.length - 1] || null;
+    if (filled.length) return filled[filled.length - 1];
+    log('create button not found', all.map(btnText));
+    return null;
   }
 
   async function publishOne(item) {
@@ -8404,6 +8592,7 @@ function core(storedSettings) {
     window.addEventListener('message', (e) => {
       if (e.origin !== location.origin || !isObj(e.data) || e.data.skq !== true) return;
       if (e.data.type === 'dragenter') { showDrag(); return; }
+      if (e.data.type === 'toast') { toast(String(e.data.message || ''), !!e.data.error); return; }
       const item = mass.items.find((it) => it.iframe && it.iframe.contentWindow === e.source);
       if (!item) return;
       if (e.data.type === 'armed') {

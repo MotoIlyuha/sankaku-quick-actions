@@ -160,5 +160,9 @@
  "158": "Reputatie onveranderd: {n}",
  "159": "Versie kopiëren",
  "160": "Versie gekopieerd: {v}",
- "161": "Kopiëren mislukt"
+ "161": "Kopiëren mislukt",
+ "162": "een tag uit meerdere woorden neemt de site alleen uit eigen suggesties, en deze bood ze niet aan",
+ "163": "vergelijkbaar: {list}",
+ "164": "Tag gekopieerd: {tag}",
+ "165": "Kopieer eerst een tag met rechtermuisklik"
 }

@@ -160,5 +160,9 @@
  "158": "Reputação sem alteração: {n}",
  "159": "Copiar a versão",
  "160": "Versão copiada: {v}",
- "161": "Não foi possível copiar"
+ "161": "Não foi possível copiar",
+ "162": "uma etiqueta com várias palavras só é aceite a partir das sugestões do site, e esta não apareceu",
+ "163": "semelhantes: {list}",
+ "164": "Etiqueta copiada: {tag}",
+ "165": "Primeiro copie uma etiqueta com o botão direito"
 }

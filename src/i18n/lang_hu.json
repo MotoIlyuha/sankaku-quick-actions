@@ -160,5 +160,9 @@
  "158": "A hírnév nem változott: {n}",
  "159": "Verzió másolása",
  "160": "Verzió másolva: {v}",
- "161": "Nem sikerült másolni"
+ "161": "Nem sikerült másolni",
+ "162": "a többszavas címkét az oldal csak a saját javaslataiból fogadja el, ezt pedig nem ajánlotta fel",
+ "163": "hasonlók: {list}",
+ "164": "Címke másolva: {tag}",
+ "165": "Előbb másoljon egy címkét jobb kattintással"
 }

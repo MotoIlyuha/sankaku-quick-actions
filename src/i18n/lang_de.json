@@ -160,5 +160,9 @@
  "158": "Reputation unverändert: {n}",
  "159": "Version kopieren",
  "160": "Version kopiert: {v}",
- "161": "Kopieren fehlgeschlagen"
+ "161": "Kopieren fehlgeschlagen",
+ "162": "einen mehrteiligen Tag nimmt die Seite nur aus ihren eigenen Vorschlägen, und diesen hat sie nicht angeboten",
+ "163": "ähnlich: {list}",
+ "164": "Tag kopiert: {tag}",
+ "165": "Kopieren Sie zuerst einen Tag mit Rechtsklick"
 }

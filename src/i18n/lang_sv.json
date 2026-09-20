@@ -160,5 +160,9 @@
  "158": "Ryktet oförändrat: {n}",
  "159": "Kopiera versionen",
  "160": "Version kopierad: {v}",
- "161": "Det gick inte att kopiera"
+ "161": "Det gick inte att kopiera",
+ "162": "en tagg med flera ord tas bara från webbplatsens egna förslag, och den föreslogs inte",
+ "163": "liknande: {list}",
+ "164": "Tagg kopierad: {tag}",
+ "165": "Kopiera först en tagg med högerklick"
 }

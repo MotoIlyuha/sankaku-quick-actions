@@ -71,6 +71,20 @@
 <nav id="drawer"><ul class="MuiList-root"><li class=""><a data-test="upload_post" href="/ru/posts/upload"><div><span class="MuiListItemText-primary">Загрузить пост</span></div></a></li><li><a data-test="menu_browse_all" href="/ru"><span class="MuiListItemText-primary">Просмотр постов</span></a></li><li><div class="MuiGrid-root"><div class="MuiGrid-root"><button class="pointsbtn MuiButtonBase-root"><span class="MuiButton-label"><span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><rect width="24" height="24" x="0.5" fill="transparent" rx="12"></rect><path fill="#fff" d="m12.5 4-8 13.177h16l-1.619-2.668H9.138l3.359-5.624 3.06 4.963h2.924z"></path></svg></span><p class="MuiTypography-root">0</p></span></button></div></div></li></ul></nav>
 <div id="app"></div>
 <script>
+  // сайт держит свои надписи в словаре рядом с состоянием страницы
+  const SITE_WORDS = {
+    ru: { 'common-title__create_post': 'Создать пост', 'common-title__add-tags': 'Добавить теги' },
+    nl: { 'common-title__create_post': 'Bericht maken', 'common-title__add-tags': 'Tags toevoegen' },
+  };
+  const siteLang = (new URLSearchParams(location.search).get('sitelang')
+    || sessionStorage.getItem('sitelang') || 'ru');
+  sessionStorage.setItem('sitelang', siteLang);
+  window.__PRELOADED_STATE__ = {
+    initialLanguage: siteLang,
+    initialI18nStore: { [siteLang]: { translation: SITE_WORDS[siteLang] || SITE_WORDS.ru } },
+  };
+  const word = (key) => window.__PRELOADED_STATE__.initialI18nStore[siteLang].translation[key] || key;
+
   const app = document.getElementById('app'), titleEl = document.getElementById('title');
   document.getElementById('menu').onclick = () => document.getElementById('drawer').classList.toggle('open');
   function render() {
@@ -81,11 +95,11 @@
         <p class="ratings">Рейтинг: <button type="button" style="background-color: rgb(38, 217, 56);">G</button><button type="button">R15+</button><button type="button">R18+</button></p>
         <div class="MuiAccordion-root adv"><div role="button" class="MuiAccordionSummary-root"><p>Продвинутый</p></div><div class="advbody"></div></div>
         <div class="MuiAutocomplete-root"><div id="chips"></div>
-          <input id="autocomplete" class="MuiInputBase-input MuiAutocomplete-input" placeholder="Добавить теги"></div>
+          <input id="autocomplete" class="MuiInputBase-input MuiAutocomplete-input" placeholder="${word('common-title__add-tags')}"></div>
         <button type="button" id="autotag">Autotag</button>
         <input type="file" accept="image/*,video/*" id="f" hidden><button type="button" id="pick">Загрузить файл</button>
         <div id="preview">нет файла</div>
-        <button type="button" id="create">Создать пост</button>`;
+        <button type="button" id="create" class="MuiButtonBase-root"><span class="MuiButton-label">${word('common-title__create_post')}</span></button>`;
       document.querySelectorAll('.ratings button').forEach((b) => b.addEventListener('click', () => {
         document.querySelectorAll('.ratings button').forEach((x) => { x.style.backgroundColor = ''; });
         b.style.backgroundColor = b.textContent === 'G' ? 'rgb(38, 217, 56)' : 'rgb(251, 98, 208)';
@@ -160,8 +174,8 @@
         const first = lb && lb.querySelector('[role=option]');
         if (e.key === 'Enter') {
           if (first) { first.click(); return; }
-          // сайт делит введённый текст по пробелам, «_» — часть тега
-          ac.value.split(/\s+/).filter(Boolean).forEach(addChip);
+          // сайт делит введённый текст и по пробелам, и по «_»
+          ac.value.split(/[\s_]+/).filter(Boolean).forEach(addChip);
           ac.value = '';
           closeLb();
         }

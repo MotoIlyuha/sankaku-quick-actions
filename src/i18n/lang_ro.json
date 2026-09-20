@@ -160,5 +160,9 @@
  "158": "Reputația nu s-a schimbat: {n}",
  "159": "Copiază versiunea",
  "160": "Versiune copiată: {v}",
- "161": "Nu s-a putut copia"
+ "161": "Nu s-a putut copia",
+ "162": "o etichetă din mai multe cuvinte este acceptată doar din sugestiile site-ului, iar aceasta nu a apărut",
+ "163": "similare: {list}",
+ "164": "Etichetă copiată: {tag}",
+ "165": "Copiați mai întâi o etichetă cu clic dreapta"
 }

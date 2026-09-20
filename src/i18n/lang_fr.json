@@ -160,5 +160,9 @@
  "158": "Réputation inchangée : {n}",
  "159": "Copier la version",
  "160": "Version copiée : {v}",
- "161": "Impossible de copier"
+ "161": "Impossible de copier",
+ "162": "un tag en plusieurs mots n’est accepté que depuis les suggestions du site, et celle-ci n’a pas été proposée",
+ "163": "similaires : {list}",
+ "164": "Tag copié : {tag}",
+ "165": "Copiez d’abord un tag par clic droit"
 }
