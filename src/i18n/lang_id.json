@@ -201,5 +201,11 @@
  "199": "Hapus aturan",
  "200": "Aturan ditambahkan",
  "201": "Aturan dihapus",
- "202": "Postingan tersembunyi: {n}"
+ "202": "Postingan tersembunyi: {n}",
+ "203": "Tidak ada yang ditemukan",
+ "204": "Sembunyikan postingan",
+ "205": "Postingan disembunyikan: {id}",
+ "206": "Postingan terlihat lagi: {id}",
+ "207": "Postingan yang disembunyikan dengan tombol ({n})",
+ "208": "Tampilkan postingan lagi"
 }

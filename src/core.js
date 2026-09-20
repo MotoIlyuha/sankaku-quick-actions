@@ -50,6 +50,7 @@ function core(storedSettings) {
     commentKey: 'KeyC',
     emotionKey: 'KeyE',
     revealAllKey: 'KeyB',
+    hidePostKey: 'KeyV',
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
@@ -59,6 +60,7 @@ function core(storedSettings) {
     voteStars: false, // свою оценку показывать звёздами, а не числом
     badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
     rules: [], // свои правила видимости: [{ id, tags: [...], user, mode: 'hide' | 'blur' }]
+    hiddenPosts: [], // ID постов, спрятанных по одному
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -1041,7 +1043,8 @@ function core(storedSettings) {
   }
 
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
-  const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
+  const shortCount = (n) => (n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M'
+    : n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
   // ---------------------------------------------------------------------------
   // Свои правила видимости: пост с этими тегами и/или от этого автора
@@ -1070,6 +1073,21 @@ function core(storedSettings) {
       blur = blur || rule;
     }
     return blur;
+  }
+
+  const hiddenList = () => (Array.isArray(settings.hiddenPosts) ? settings.hiddenPosts.map(String) : []);
+  const postHidden = (id) => hiddenList().includes(String(id));
+
+  function hidePost(id) {
+    const key = String(id);
+    if (!key || postHidden(key)) return;
+    saveSettings({ hiddenPosts: [...hiddenList(), key] });
+    toast(t('Пост скрыт: {id}', { id: key }));
+  }
+
+  function unhidePost(id) {
+    saveSettings({ hiddenPosts: hiddenList().filter((x) => x !== String(id)) });
+    toast(t('Пост снова виден: {id}', { id: String(id) }));
   }
 
   const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -1172,7 +1190,7 @@ function core(storedSettings) {
       const post = id ? posts.get(id) : null;
       card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
       const rule = id ? ruleFor(id) : null;
-      const hide = !!rule && rule.mode !== 'blur';
+      const hide = (!!rule && rule.mode !== 'blur') || (!!id && postHidden(id));
       card.classList.toggle('skq-rule-hide', hide);
       // «Показать размытые посты» снимает и наше размытие
       card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
@@ -1809,6 +1827,12 @@ function core(storedSettings) {
     if (digit && !e.shiftKey) {
       e.preventDefault(); e.stopPropagation();
       if (!e.repeat) keyAction(card, 'vote', +digit[1]);
+      return;
+    }
+    if (codeOf(e) === settings.hidePostKey && !e.shiftKey) {
+      e.preventDefault(); e.stopPropagation();
+      const id = cardId(card);
+      if (!e.repeat && id) hidePost(id);
       return;
     }
     if (codeOf(e) === settings.favKey && !e.shiftKey) {
@@ -5515,6 +5539,7 @@ function core(storedSettings) {
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
     { id: 'emotionKey', label: 'Эмоция (на странице поста), затем 1–6' },
     { id: 'revealAllKey', label: 'Показать все скрытые превью / скрыть обратно' },
+    { id: 'hidePostKey', label: 'Скрыть пост' },
   ];
   const hotkeyLabel = (h) => t(h.label);
   const RESERVED_KEY_RE = /^(?:Arrow\w+|Digit[1-5]|Numpad[1-5]|Enter|NumpadEnter|Escape|Tab|Space|(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?|CapsLock|ContextMenu)$/;
@@ -5568,7 +5593,18 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
-    .fld { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .fld { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .acbox {
+      position: absolute; left: 0; right: 0; top: 100%; z-index: 5; display: none;
+      max-height: 220px; overflow: auto; margin-top: 2px; border: 1px solid #555;
+      border-radius: 8px; background: #1f1f1f; box-shadow: 0 8px 24px rgba(0, 0, 0, .6);
+    }
+    .acbox.on { display: block; }
+    .acitem { display: flex; align-items: center; gap: 10px; padding: 7px 10px; cursor: pointer; }
+    .acitem > span:first-child { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .acitem:hover, .acitem.on { background: rgba(255, 140, 0, .25); }
+    .acnote { flex: none; color: #999; font-size: 12px; }
+    .acempty { padding: 7px 10px; color: #999; }
     .fld > span { color: #bbb; }
     .fld input[type=text] {
       padding: 8px 10px; border-radius: 6px; border: 1px solid #555;
@@ -5586,6 +5622,10 @@ function core(storedSettings) {
     .rchip.user { background: #4a6fa5; }
     .rmode { flex: none; color: #bbb; font-size: 13px; }
     .rdel { flex: none; padding: 4px 9px; border-radius: 50%; line-height: 1; }
+    .hlist { margin-bottom: 12px; }
+    .hrow { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hchip { padding: 3px 10px; border-radius: 12px; font-size: 13px; }
+    .hchip:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     .rdel:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     /* превью карточки: метки перетаскиваются по углам */
     .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
@@ -5771,6 +5811,7 @@ function core(storedSettings) {
         </div>
         <div class="page" data-page="rules" hidden>
           <div class="rlist"></div>
+          <div class="hlist"></div>
           <button type="button" class="addrule"
             title="${T('Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.')}">+ ${T('Создать новое правило')}</button>
         </div>
@@ -5902,6 +5943,30 @@ function core(storedSettings) {
       }
     }
 
+    // Посты, спрятанные клавишей: их видно только здесь, отсюда же и возвращаем
+    function renderHidden() {
+      const box = root.querySelector('.hlist');
+      box.replaceChildren();
+      const ids = hiddenList();
+      if (!ids.length) return;
+      const head = document.createElement('p');
+      head.className = 'hint';
+      head.textContent = t('Посты, скрытые клавишей ({n})', { n: ids.length });
+      box.appendChild(head);
+      const row = document.createElement('div');
+      row.className = 'hrow';
+      for (const id of ids) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'hchip';
+        chip.title = t('Вернуть пост');
+        chip.textContent = '#' + id + ' ✕';
+        chip.addEventListener('click', () => { unhidePost(id); renderHidden(); });
+        row.appendChild(chip);
+      }
+      box.appendChild(row);
+    }
+
     root.querySelector('.addrule').addEventListener('click', () => {
       openRuleDialog((rule) => { addRule(rule); renderRules(); });
     });
@@ -5997,6 +6062,7 @@ function core(storedSettings) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       renderRules();
+      renderHidden();
       badgeDraft = { ...DEFAULTS.badges };
       if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
       f('voteStars').value = s.voteStars ? 'stars' : 'num';
@@ -6244,6 +6310,125 @@ function core(storedSettings) {
     .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
+  // ---- Подсказки тегов и пользователей ----
+  // Адреса те же, что у самого сайта: tags/autosuggest?tag=… и users/autosuggest?name=…
+  async function suggestList(kind, q) {
+    const path = kind === 'tag'
+      ? `/tags/autosuggest?tag=${encodeURIComponent(q)}&limit=10`
+      : `/users/autosuggest?name=${encodeURIComponent(q)}&limit=10`;
+    let data = null;
+    try { data = await api('GET', path); } catch (e) { log('autosuggest', path, e.message); return null; }
+    const list = Array.isArray(data) ? data : (isObj(data) && Array.isArray(data.data) ? data.data : []);
+    return list.map((x) => {
+      const name = isObj(x) ? (x.name || x.tagName || x.name_en) : x;
+      if (!name) return null;
+      const count = isObj(x) ? (x.post_count ?? x.count) : null;
+      return kind === 'tag'
+        ? { value: tagKey(name), label: tagKey(name), note: typeof count === 'number' ? shortCount(count) : '' }
+        : { value: String(name), label: String(name), note: '' };
+    }).filter(Boolean).slice(0, 10);
+  }
+
+  function attachSuggest(input, kind) {
+    const box = document.createElement('div');
+    box.className = 'acbox';
+    input.parentElement.appendChild(box);
+    let items = [];
+    let pick = -1;
+    let timer = 0;
+    let seq = 0;
+
+    // у тегов подсказку ищем для последнего слова, у пользователя — для всей строки
+    const term = () => (kind === 'tag' ? input.value.split(/[\s,]+/).pop() : input.value.trim());
+
+    function close() {
+      box.replaceChildren();
+      box.classList.remove('on');
+      items = [];
+      pick = -1;
+    }
+
+    function apply(value) {
+      if (kind === 'tag') {
+        const parts = input.value.split(/[\s,]+/);
+        parts[parts.length - 1] = value;
+        input.value = parts.filter(Boolean).join(' ') + ' ';
+      } else {
+        input.value = value;
+      }
+      close();
+      input.focus();
+    }
+
+    function render(empty) {
+      box.replaceChildren();
+      if (empty) {
+        const none = document.createElement('div');
+        none.className = 'acempty';
+        none.textContent = t('Ничего не найдено');
+        box.appendChild(none);
+        box.classList.add('on');
+        return;
+      }
+      if (!items.length) { box.classList.remove('on'); return; }
+      items.forEach((it, i) => {
+        const row = document.createElement('div');
+        row.className = 'acitem' + (i === pick ? ' on' : '');
+        const name = document.createElement('span');
+        name.textContent = it.label;
+        row.appendChild(name);
+        if (it.note) {
+          const note = document.createElement('span');
+          note.className = 'acnote';
+          note.textContent = it.note;
+          row.appendChild(note);
+        }
+        // mousedown, а не click: иначе поле потеряет фокус раньше выбора
+        row.addEventListener('mousedown', (e) => { e.preventDefault(); apply(it.value); });
+        box.appendChild(row);
+      });
+      box.classList.add('on');
+    }
+
+    async function load() {
+      const q = term();
+      if (q.length < 2) { close(); return; }
+      const my = ++seq;
+      const list = await suggestList(kind, q);
+      if (my !== seq) return; // ответ на прошлый запрос уже никому не нужен
+      if (!list) { close(); return; } // сайт не ответил — молча живём без подсказок
+      items = list;
+      pick = -1;
+      render(!items.length);
+    }
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(load, 250);
+    });
+    input.addEventListener('blur', () => setTimeout(close, 120));
+    input.addEventListener('keydown', (e) => {
+      if (!items.length) {
+        if (e.key === 'Escape' && box.classList.contains('on')) { e.stopPropagation(); close(); }
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        e.stopPropagation();
+        pick = (pick + (e.key === 'ArrowDown' ? 1 : items.length - 1) + (pick < 0 && e.key === 'ArrowUp' ? 1 : 0)) % items.length;
+        render(false);
+      } else if (e.key === 'Enter' && pick >= 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        apply(items[pick].value);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+      }
+    });
+  }
+
   // ---- Окно «Создать новое правило» ----
   function openRuleDialog(onCreate) {
     if (!document.body) return;
@@ -6293,6 +6478,8 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
+    attachSuggest(root.querySelector('.rtags'), 'tag');
+    attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
   }
 

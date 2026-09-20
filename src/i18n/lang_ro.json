@@ -201,5 +201,11 @@
  "199": "Șterge regula",
  "200": "Regulă adăugată",
  "201": "Regulă ștearsă",
- "202": "Postări ascunse: {n}"
+ "202": "Postări ascunse: {n}",
+ "203": "Nu s-a găsit nimic",
+ "204": "Ascunde postarea",
+ "205": "Postare ascunsă: {id}",
+ "206": "Postarea este iar vizibilă: {id}",
+ "207": "Postări ascunse cu tasta ({n})",
+ "208": "Arată din nou postarea"
 }

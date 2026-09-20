@@ -201,5 +201,11 @@
  "199": "Slett regelen",
  "200": "Regelen er lagt til",
  "201": "Regelen er slettet",
- "202": "Skjulte innlegg: {n}"
+ "202": "Skjulte innlegg: {n}",
+ "203": "Ingenting funnet",
+ "204": "Skjul innlegget",
+ "205": "Innlegget er skjult: {id}",
+ "206": "Innlegget vises igjen: {id}",
+ "207": "Innlegg skjult med tasten ({n})",
+ "208": "Vis innlegget igjen"
 }

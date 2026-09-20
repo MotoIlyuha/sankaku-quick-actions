@@ -201,5 +201,11 @@
  "199": "Regel löschen",
  "200": "Regel hinzugefügt",
  "201": "Regel gelöscht",
- "202": "Ausgeblendete Beiträge: {n}"
+ "202": "Ausgeblendete Beiträge: {n}",
+ "203": "Nichts gefunden",
+ "204": "Beitrag ausblenden",
+ "205": "Beitrag ausgeblendet: {id}",
+ "206": "Beitrag wieder sichtbar: {id}",
+ "207": "Mit der Taste ausgeblendete Beiträge ({n})",
+ "208": "Beitrag wieder anzeigen"
 }

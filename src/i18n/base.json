@@ -202,6 +202,12 @@
   "Удалить правило": "Delete the rule",
   "Правило добавлено": "Rule added",
   "Правило удалено": "Rule deleted",
-  "Скрыто постов: {n}": "Posts hidden: {n}"
+  "Скрыто постов: {n}": "Posts hidden: {n}",
+  "Ничего не найдено": "Nothing found",
+  "Скрыть пост": "Hide the post",
+  "Пост скрыт: {id}": "Post hidden: {id}",
+  "Пост снова виден: {id}": "Post shown again: {id}",
+  "Посты, скрытые клавишей ({n})": "Posts hidden with the key ({n})",
+  "Вернуть пост": "Show the post again"
  }
 }

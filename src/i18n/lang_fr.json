@@ -201,5 +201,11 @@
  "199": "Supprimer la règle",
  "200": "Règle ajoutée",
  "201": "Règle supprimée",
- "202": "Posts masqués : {n}"
+ "202": "Posts masqués : {n}",
+ "203": "Aucun résultat",
+ "204": "Masquer le post",
+ "205": "Post masqué : {id}",
+ "206": "Post de nouveau visible : {id}",
+ "207": "Posts masqués avec la touche ({n})",
+ "208": "Réafficher le post"
 }

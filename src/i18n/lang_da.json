@@ -201,5 +201,11 @@
  "199": "Slet reglen",
  "200": "Reglen er tilføjet",
  "201": "Reglen er slettet",
- "202": "Skjulte opslag: {n}"
+ "202": "Skjulte opslag: {n}",
+ "203": "Intet fundet",
+ "204": "Skjul opslaget",
+ "205": "Opslag skjult: {id}",
+ "206": "Opslaget vises igen: {id}",
+ "207": "Opslag skjult med tasten ({n})",
+ "208": "Vis opslaget igen"
 }

@@ -201,5 +201,11 @@
  "199": "Ta bort regeln",
  "200": "Regeln har lagts till",
  "201": "Regeln har tagits bort",
- "202": "Dolda inlägg: {n}"
+ "202": "Dolda inlägg: {n}",
+ "203": "Inget hittades",
+ "204": "Dölj inlägget",
+ "205": "Inlägget är dolt: {id}",
+ "206": "Inlägget syns igen: {id}",
+ "207": "Inlägg som dolts med tangenten ({n})",
+ "208": "Visa inlägget igen"
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.32.0
+// @version      1.33.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -152,6 +152,7 @@ function core(storedSettings) {
     commentKey: 'KeyC',
     emotionKey: 'KeyE',
     revealAllKey: 'KeyB',
+    hidePostKey: 'KeyV',
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
@@ -161,6 +162,7 @@ function core(storedSettings) {
     voteStars: false, // свою оценку показывать звёздами, а не числом
     badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
     rules: [], // свои правила видимости: [{ id, tags: [...], user, mode: 'hide' | 'blur' }]
+    hiddenPosts: [], // ID постов, спрятанных по одному
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -223,7 +225,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.32.0';
+  const SKQ_VERSION = '1.33.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -429,7 +431,13 @@ function core(storedSettings) {
           "Удалить правило": "Delete the rule",
           "Правило добавлено": "Rule added",
           "Правило удалено": "Rule deleted",
-          "Скрыто постов: {n}": "Posts hidden: {n}"
+          "Скрыто постов: {n}": "Posts hidden: {n}",
+          "Ничего не найдено": "Nothing found",
+          "Скрыть пост": "Hide the post",
+          "Пост скрыт: {id}": "Post hidden: {id}",
+          "Пост снова виден: {id}": "Post shown again: {id}",
+          "Посты, скрытые клавишей ({n})": "Posts hidden with the key ({n})",
+          "Вернуть пост": "Show the post again"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -634,7 +642,13 @@ function core(storedSettings) {
           "Удалить правило": "ルールを削除",
           "Правило добавлено": "ルールを追加しました",
           "Правило удалено": "ルールを削除しました",
-          "Скрыто постов: {n}": "非表示の投稿：{n}"
+          "Скрыто постов: {n}": "非表示の投稿：{n}",
+          "Ничего не найдено": "見つかりませんでした",
+          "Скрыть пост": "投稿を非表示にする",
+          "Пост скрыт: {id}": "投稿を非表示にしました：{id}",
+          "Пост снова виден: {id}": "投稿を再び表示しました：{id}",
+          "Посты, скрытые клавишей ({n})": "キーで非表示にした投稿（{n}）",
+          "Вернуть пост": "投稿を再び表示"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -839,7 +853,13 @@ function core(storedSettings) {
           "Удалить правило": "删除规则",
           "Правило добавлено": "已添加规则",
           "Правило удалено": "已删除规则",
-          "Скрыто постов: {n}": "已隐藏帖子：{n}"
+          "Скрыто постов: {n}": "已隐藏帖子：{n}",
+          "Ничего не найдено": "未找到结果",
+          "Скрыть пост": "隐藏该帖子",
+          "Пост скрыт: {id}": "已隐藏帖子：{id}",
+          "Пост снова виден: {id}": "已重新显示帖子：{id}",
+          "Посты, скрытые клавишей ({n})": "用按键隐藏的帖子（{n}）",
+          "Вернуть пост": "重新显示帖子"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1044,7 +1064,13 @@ function core(storedSettings) {
           "Удалить правило": "刪除規則",
           "Правило добавлено": "已新增規則",
           "Правило удалено": "已刪除規則",
-          "Скрыто постов: {n}": "已隱藏貼文：{n}"
+          "Скрыто постов: {n}": "已隱藏貼文：{n}",
+          "Ничего не найдено": "找不到結果",
+          "Скрыть пост": "隱藏該貼文",
+          "Пост скрыт: {id}": "已隱藏貼文：{id}",
+          "Пост снова виден: {id}": "已重新顯示貼文：{id}",
+          "Посты, скрытые клавишей ({n})": "用按鍵隱藏的貼文（{n}）",
+          "Вернуть пост": "重新顯示貼文"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1249,7 +1275,13 @@ function core(storedSettings) {
           "Удалить правило": "규칙 삭제",
           "Правило добавлено": "규칙을 추가했습니다",
           "Правило удалено": "규칙을 삭제했습니다",
-          "Скрыто постов: {n}": "숨긴 게시물: {n}"
+          "Скрыто постов: {n}": "숨긴 게시물: {n}",
+          "Ничего не найдено": "결과가 없습니다",
+          "Скрыть пост": "게시물 숨기기",
+          "Пост скрыт: {id}": "게시물을 숨겼습니다: {id}",
+          "Пост снова виден: {id}": "게시물을 다시 표시했습니다: {id}",
+          "Посты, скрытые клавишей ({n})": "키로 숨긴 게시물 ({n})",
+          "Вернуть пост": "게시물 다시 표시"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1454,7 +1486,13 @@ function core(storedSettings) {
           "Удалить правило": "Regel löschen",
           "Правило добавлено": "Regel hinzugefügt",
           "Правило удалено": "Regel gelöscht",
-          "Скрыто постов: {n}": "Ausgeblendete Beiträge: {n}"
+          "Скрыто постов: {n}": "Ausgeblendete Beiträge: {n}",
+          "Ничего не найдено": "Nichts gefunden",
+          "Скрыть пост": "Beitrag ausblenden",
+          "Пост скрыт: {id}": "Beitrag ausgeblendet: {id}",
+          "Пост снова виден: {id}": "Beitrag wieder sichtbar: {id}",
+          "Посты, скрытые клавишей ({n})": "Mit der Taste ausgeblendete Beiträge ({n})",
+          "Вернуть пост": "Beitrag wieder anzeigen"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1659,7 +1697,13 @@ function core(storedSettings) {
           "Удалить правило": "Supprimer la règle",
           "Правило добавлено": "Règle ajoutée",
           "Правило удалено": "Règle supprimée",
-          "Скрыто постов: {n}": "Posts masqués : {n}"
+          "Скрыто постов: {n}": "Posts masqués : {n}",
+          "Ничего не найдено": "Aucun résultat",
+          "Скрыть пост": "Masquer le post",
+          "Пост скрыт: {id}": "Post masqué : {id}",
+          "Пост снова виден: {id}": "Post de nouveau visible : {id}",
+          "Посты, скрытые клавишей ({n})": "Posts masqués avec la touche ({n})",
+          "Вернуть пост": "Réafficher le post"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1864,7 +1908,13 @@ function core(storedSettings) {
           "Удалить правило": "Eliminar la regla",
           "Правило добавлено": "Regla añadida",
           "Правило удалено": "Regla eliminada",
-          "Скрыто постов: {n}": "Publicaciones ocultas: {n}"
+          "Скрыто постов: {n}": "Publicaciones ocultas: {n}",
+          "Ничего не найдено": "No se ha encontrado nada",
+          "Скрыть пост": "Ocultar la publicación",
+          "Пост скрыт: {id}": "Publicación oculta: {id}",
+          "Пост снова виден: {id}": "La publicación vuelve a verse: {id}",
+          "Посты, скрытые клавишей ({n})": "Publicaciones ocultas con la tecla ({n})",
+          "Вернуть пост": "Volver a mostrar la publicación"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2069,7 +2119,13 @@ function core(storedSettings) {
           "Удалить правило": "Eliminar a regra",
           "Правило добавлено": "Regra adicionada",
           "Правило удалено": "Regra eliminada",
-          "Скрыто постов: {n}": "Publicações ocultas: {n}"
+          "Скрыто постов: {n}": "Publicações ocultas: {n}",
+          "Ничего не найдено": "Nada encontrado",
+          "Скрыть пост": "Ocultar a publicação",
+          "Пост скрыт: {id}": "Publicação ocultada: {id}",
+          "Пост снова виден: {id}": "Publicação visível novamente: {id}",
+          "Посты, скрытые клавишей ({n})": "Publicações ocultadas com a tecla ({n})",
+          "Вернуть пост": "Mostrar a publicação de novo"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2274,7 +2330,13 @@ function core(storedSettings) {
           "Удалить правило": "Elimina la regola",
           "Правило добавлено": "Regola aggiunta",
           "Правило удалено": "Regola eliminata",
-          "Скрыто постов: {n}": "Post nascosti: {n}"
+          "Скрыто постов: {n}": "Post nascosti: {n}",
+          "Ничего не найдено": "Nessun risultato",
+          "Скрыть пост": "Nascondi il post",
+          "Пост скрыт: {id}": "Post nascosto: {id}",
+          "Пост снова виден: {id}": "Post di nuovo visibile: {id}",
+          "Посты, скрытые клавишей ({n})": "Post nascosti con il tasto ({n})",
+          "Вернуть пост": "Mostra di nuovo il post"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2479,7 +2541,13 @@ function core(storedSettings) {
           "Удалить правило": "Regel verwijderen",
           "Правило добавлено": "Regel toegevoegd",
           "Правило удалено": "Regel verwijderd",
-          "Скрыто постов: {n}": "Verborgen posts: {n}"
+          "Скрыто постов: {n}": "Verborgen posts: {n}",
+          "Ничего не найдено": "Niets gevonden",
+          "Скрыть пост": "Post verbergen",
+          "Пост скрыт: {id}": "Post verborgen: {id}",
+          "Пост снова виден: {id}": "Post weer zichtbaar: {id}",
+          "Посты, скрытые клавишей ({n})": "Met de toets verborgen posts ({n})",
+          "Вернуть пост": "Post weer tonen"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2684,7 +2752,13 @@ function core(storedSettings) {
           "Удалить правило": "Usuń regułę",
           "Правило добавлено": "Reguła dodana",
           "Правило удалено": "Reguła usunięta",
-          "Скрыто постов: {n}": "Ukryte posty: {n}"
+          "Скрыто постов: {n}": "Ukryte posty: {n}",
+          "Ничего не найдено": "Nic nie znaleziono",
+          "Скрыть пост": "Ukryj post",
+          "Пост скрыт: {id}": "Post ukryty: {id}",
+          "Пост снова виден: {id}": "Post znów widoczny: {id}",
+          "Посты, скрытые клавишей ({n})": "Posty ukryte klawiszem ({n})",
+          "Вернуть пост": "Pokaż post ponownie"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2889,7 +2963,13 @@ function core(storedSettings) {
           "Удалить правило": "Ta bort regeln",
           "Правило добавлено": "Regeln har lagts till",
           "Правило удалено": "Regeln har tagits bort",
-          "Скрыто постов: {n}": "Dolda inlägg: {n}"
+          "Скрыто постов: {n}": "Dolda inlägg: {n}",
+          "Ничего не найдено": "Inget hittades",
+          "Скрыть пост": "Dölj inlägget",
+          "Пост скрыт: {id}": "Inlägget är dolt: {id}",
+          "Пост снова виден: {id}": "Inlägget syns igen: {id}",
+          "Посты, скрытые клавишей ({n})": "Inlägg som dolts med tangenten ({n})",
+          "Вернуть пост": "Visa inlägget igen"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3094,7 +3174,13 @@ function core(storedSettings) {
           "Удалить правило": "Slet reglen",
           "Правило добавлено": "Reglen er tilføjet",
           "Правило удалено": "Reglen er slettet",
-          "Скрыто постов: {n}": "Skjulte opslag: {n}"
+          "Скрыто постов: {n}": "Skjulte opslag: {n}",
+          "Ничего не найдено": "Intet fundet",
+          "Скрыть пост": "Skjul opslaget",
+          "Пост скрыт: {id}": "Opslag skjult: {id}",
+          "Пост снова виден: {id}": "Opslaget vises igen: {id}",
+          "Посты, скрытые клавишей ({n})": "Opslag skjult med tasten ({n})",
+          "Вернуть пост": "Vis opslaget igen"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3299,7 +3385,13 @@ function core(storedSettings) {
           "Удалить правило": "Slett regelen",
           "Правило добавлено": "Regelen er lagt til",
           "Правило удалено": "Regelen er slettet",
-          "Скрыто постов: {n}": "Skjulte innlegg: {n}"
+          "Скрыто постов: {n}": "Skjulte innlegg: {n}",
+          "Ничего не найдено": "Ingenting funnet",
+          "Скрыть пост": "Skjul innlegget",
+          "Пост скрыт: {id}": "Innlegget er skjult: {id}",
+          "Пост снова виден: {id}": "Innlegget vises igjen: {id}",
+          "Посты, скрытые клавишей ({n})": "Innlegg skjult med tasten ({n})",
+          "Вернуть пост": "Vis innlegget igjen"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3504,7 +3596,13 @@ function core(storedSettings) {
           "Удалить правило": "Poista sääntö",
           "Правило добавлено": "Sääntö lisätty",
           "Правило удалено": "Sääntö poistettu",
-          "Скрыто постов: {n}": "Piilotettuja julkaisuja: {n}"
+          "Скрыто постов: {n}": "Piilotettuja julkaisuja: {n}",
+          "Ничего не найдено": "Ei löytynyt mitään",
+          "Скрыть пост": "Piilota julkaisu",
+          "Пост скрыт: {id}": "Julkaisu piilotettu: {id}",
+          "Пост снова виден: {id}": "Julkaisu näkyy taas: {id}",
+          "Посты, скрытые клавишей ({n})": "Näppäimellä piilotetut julkaisut ({n})",
+          "Вернуть пост": "Näytä julkaisu taas"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3709,7 +3807,13 @@ function core(storedSettings) {
           "Удалить правило": "Szabály törlése",
           "Правило добавлено": "Szabály hozzáadva",
           "Правило удалено": "Szabály törölve",
-          "Скрыто постов: {n}": "Elrejtett bejegyzések: {n}"
+          "Скрыто постов: {n}": "Elrejtett bejegyzések: {n}",
+          "Ничего не найдено": "Nincs találat",
+          "Скрыть пост": "Bejegyzés elrejtése",
+          "Пост скрыт: {id}": "Bejegyzés elrejtve: {id}",
+          "Пост снова виден: {id}": "A bejegyzés ismét látszik: {id}",
+          "Посты, скрытые клавишей ({n})": "A billentyűvel elrejtett bejegyzések ({n})",
+          "Вернуть пост": "Bejegyzés újbóli megjelenítése"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3914,7 +4018,13 @@ function core(storedSettings) {
           "Удалить правило": "Șterge regula",
           "Правило добавлено": "Regulă adăugată",
           "Правило удалено": "Regulă ștearsă",
-          "Скрыто постов: {n}": "Postări ascunse: {n}"
+          "Скрыто постов: {n}": "Postări ascunse: {n}",
+          "Ничего не найдено": "Nu s-a găsit nimic",
+          "Скрыть пост": "Ascunde postarea",
+          "Пост скрыт: {id}": "Postare ascunsă: {id}",
+          "Пост снова виден: {id}": "Postarea este iar vizibilă: {id}",
+          "Посты, скрытые клавишей ({n})": "Postări ascunse cu tasta ({n})",
+          "Вернуть пост": "Arată din nou postarea"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4119,7 +4229,13 @@ function core(storedSettings) {
           "Удалить правило": "Изтриване на правилото",
           "Правило добавлено": "Правилото е добавено",
           "Правило удалено": "Правилото е изтрито",
-          "Скрыто постов: {n}": "Скрити публикации: {n}"
+          "Скрыто постов: {n}": "Скрити публикации: {n}",
+          "Ничего не найдено": "Нищо не е намерено",
+          "Скрыть пост": "Скриване на публикацията",
+          "Пост скрыт: {id}": "Скрита публикация: {id}",
+          "Пост снова виден: {id}": "Публикацията е видима отново: {id}",
+          "Посты, скрытые клавишей ({n})": "Публикации, скрити с клавиша ({n})",
+          "Вернуть пост": "Показване на публикацията отново"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4324,7 +4440,13 @@ function core(storedSettings) {
           "Удалить правило": "Διαγραφή κανόνα",
           "Правило добавлено": "Ο κανόνας προστέθηκε",
           "Правило удалено": "Ο κανόνας διαγράφηκε",
-          "Скрыто постов: {n}": "Κρυμμένες αναρτήσεις: {n}"
+          "Скрыто постов: {n}": "Κρυμμένες αναρτήσεις: {n}",
+          "Ничего не найдено": "Δεν βρέθηκε τίποτα",
+          "Скрыть пост": "Απόκρυψη ανάρτησης",
+          "Пост скрыт: {id}": "Η ανάρτηση κρύφτηκε: {id}",
+          "Пост снова виден: {id}": "Η ανάρτηση εμφανίζεται ξανά: {id}",
+          "Посты, скрытые клавишей ({n})": "Αναρτήσεις κρυμμένες με το πλήκτρο ({n})",
+          "Вернуть пост": "Εμφάνιση της ανάρτησης ξανά"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4529,7 +4651,13 @@ function core(storedSettings) {
           "Удалить правило": "Kuralı sil",
           "Правило добавлено": "Kural eklendi",
           "Правило удалено": "Kural silindi",
-          "Скрыто постов: {n}": "Gizlenen gönderi: {n}"
+          "Скрыто постов: {n}": "Gizlenen gönderi: {n}",
+          "Ничего не найдено": "Hiçbir şey bulunamadı",
+          "Скрыть пост": "Gönderiyi gizle",
+          "Пост скрыт: {id}": "Gönderi gizlendi: {id}",
+          "Пост снова виден: {id}": "Gönderi yeniden görünüyor: {id}",
+          "Посты, скрытые клавишей ({n})": "Tuşla gizlenen gönderiler ({n})",
+          "Вернуть пост": "Gönderiyi yeniden göster"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4734,7 +4862,13 @@ function core(storedSettings) {
           "Удалить правило": "ลบกฎ",
           "Правило добавлено": "เพิ่มกฎแล้ว",
           "Правило удалено": "ลบกฎแล้ว",
-          "Скрыто постов: {n}": "โพสต์ที่ซ่อน: {n}"
+          "Скрыто постов: {n}": "โพสต์ที่ซ่อน: {n}",
+          "Ничего не найдено": "ไม่พบสิ่งใด",
+          "Скрыть пост": "ซ่อนโพสต์",
+          "Пост скрыт: {id}": "ซ่อนโพสต์แล้ว: {id}",
+          "Пост снова виден: {id}": "แสดงโพสต์อีกครั้งแล้ว: {id}",
+          "Посты, скрытые клавишей ({n})": "โพสต์ที่ซ่อนด้วยปุ่ม ({n})",
+          "Вернуть пост": "แสดงโพสต์อีกครั้ง"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4939,7 +5073,13 @@ function core(storedSettings) {
           "Удалить правило": "नियम हटाएँ",
           "Правило добавлено": "नियम जोड़ा गया",
           "Правило удалено": "नियम हटाया गया",
-          "Скрыто постов: {n}": "छिपाई गई पोस्ट: {n}"
+          "Скрыто постов: {n}": "छिपाई गई पोस्ट: {n}",
+          "Ничего не найдено": "कुछ नहीं मिला",
+          "Скрыть пост": "पोस्ट छिपाएँ",
+          "Пост скрыт: {id}": "पोस्ट छिपाई गई: {id}",
+          "Пост снова виден: {id}": "पोस्ट फिर से दिख रही है: {id}",
+          "Посты, скрытые клавишей ({n})": "कुंजी से छिपाई गई पोस्ट ({n})",
+          "Вернуть пост": "पोस्ट फिर दिखाएँ"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5144,7 +5284,13 @@ function core(storedSettings) {
           "Удалить правило": "Hapus aturan",
           "Правило добавлено": "Aturan ditambahkan",
           "Правило удалено": "Aturan dihapus",
-          "Скрыто постов: {n}": "Postingan tersembunyi: {n}"
+          "Скрыто постов: {n}": "Postingan tersembunyi: {n}",
+          "Ничего не найдено": "Tidak ada yang ditemukan",
+          "Скрыть пост": "Sembunyikan postingan",
+          "Пост скрыт: {id}": "Postingan disembunyikan: {id}",
+          "Пост снова виден: {id}": "Postingan terlihat lagi: {id}",
+          "Посты, скрытые клавишей ({n})": "Postingan yang disembunyikan dengan tombol ({n})",
+          "Вернуть пост": "Tampilkan postingan lagi"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5349,7 +5495,13 @@ function core(storedSettings) {
           "Удалить правило": "Padam peraturan",
           "Правило добавлено": "Peraturan ditambah",
           "Правило удалено": "Peraturan dipadam",
-          "Скрыто постов: {n}": "Siaran tersembunyi: {n}"
+          "Скрыто постов: {n}": "Siaran tersembunyi: {n}",
+          "Ничего не найдено": "Tiada apa-apa dijumpai",
+          "Скрыть пост": "Sembunyikan siaran",
+          "Пост скрыт: {id}": "Siaran disembunyikan: {id}",
+          "Пост снова виден: {id}": "Siaran kelihatan semula: {id}",
+          "Посты, скрытые клавишей ({n})": "Siaran yang disembunyikan dengan kekunci ({n})",
+          "Вернуть пост": "Tunjukkan siaran semula"
     },
   } /* SKQ_I18N_END */;
 
@@ -6269,7 +6421,8 @@ function core(storedSettings) {
   }
 
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
-  const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
+  const shortCount = (n) => (n >= 1e6 ? (n / 1e6).toFixed(n >= 1e7 ? 0 : 1).replace(/\.0$/, '') + 'M'
+    : n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
   // ---------------------------------------------------------------------------
   // Свои правила видимости: пост с этими тегами и/или от этого автора
@@ -6298,6 +6451,21 @@ function core(storedSettings) {
       blur = blur || rule;
     }
     return blur;
+  }
+
+  const hiddenList = () => (Array.isArray(settings.hiddenPosts) ? settings.hiddenPosts.map(String) : []);
+  const postHidden = (id) => hiddenList().includes(String(id));
+
+  function hidePost(id) {
+    const key = String(id);
+    if (!key || postHidden(key)) return;
+    saveSettings({ hiddenPosts: [...hiddenList(), key] });
+    toast(t('Пост скрыт: {id}', { id: key }));
+  }
+
+  function unhidePost(id) {
+    saveSettings({ hiddenPosts: hiddenList().filter((x) => x !== String(id)) });
+    toast(t('Пост снова виден: {id}', { id: String(id) }));
   }
 
   const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -6400,7 +6568,7 @@ function core(storedSettings) {
       const post = id ? posts.get(id) : null;
       card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
       const rule = id ? ruleFor(id) : null;
-      const hide = !!rule && rule.mode !== 'blur';
+      const hide = (!!rule && rule.mode !== 'blur') || (!!id && postHidden(id));
       card.classList.toggle('skq-rule-hide', hide);
       // «Показать размытые посты» снимает и наше размытие
       card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
@@ -7037,6 +7205,12 @@ function core(storedSettings) {
     if (digit && !e.shiftKey) {
       e.preventDefault(); e.stopPropagation();
       if (!e.repeat) keyAction(card, 'vote', +digit[1]);
+      return;
+    }
+    if (codeOf(e) === settings.hidePostKey && !e.shiftKey) {
+      e.preventDefault(); e.stopPropagation();
+      const id = cardId(card);
+      if (!e.repeat && id) hidePost(id);
       return;
     }
     if (codeOf(e) === settings.favKey && !e.shiftKey) {
@@ -10743,6 +10917,7 @@ function core(storedSettings) {
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
     { id: 'emotionKey', label: 'Эмоция (на странице поста), затем 1–6' },
     { id: 'revealAllKey', label: 'Показать все скрытые превью / скрыть обратно' },
+    { id: 'hidePostKey', label: 'Скрыть пост' },
   ];
   const hotkeyLabel = (h) => t(h.label);
   const RESERVED_KEY_RE = /^(?:Arrow\w+|Digit[1-5]|Numpad[1-5]|Enter|NumpadEnter|Escape|Tab|Space|(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?|CapsLock|ContextMenu)$/;
@@ -10796,7 +10971,18 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
-    .fld { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .fld { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .acbox {
+      position: absolute; left: 0; right: 0; top: 100%; z-index: 5; display: none;
+      max-height: 220px; overflow: auto; margin-top: 2px; border: 1px solid #555;
+      border-radius: 8px; background: #1f1f1f; box-shadow: 0 8px 24px rgba(0, 0, 0, .6);
+    }
+    .acbox.on { display: block; }
+    .acitem { display: flex; align-items: center; gap: 10px; padding: 7px 10px; cursor: pointer; }
+    .acitem > span:first-child { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .acitem:hover, .acitem.on { background: rgba(255, 140, 0, .25); }
+    .acnote { flex: none; color: #999; font-size: 12px; }
+    .acempty { padding: 7px 10px; color: #999; }
     .fld > span { color: #bbb; }
     .fld input[type=text] {
       padding: 8px 10px; border-radius: 6px; border: 1px solid #555;
@@ -10814,6 +11000,10 @@ function core(storedSettings) {
     .rchip.user { background: #4a6fa5; }
     .rmode { flex: none; color: #bbb; font-size: 13px; }
     .rdel { flex: none; padding: 4px 9px; border-radius: 50%; line-height: 1; }
+    .hlist { margin-bottom: 12px; }
+    .hrow { display: flex; flex-wrap: wrap; gap: 6px; }
+    .hchip { padding: 3px 10px; border-radius: 12px; font-size: 13px; }
+    .hchip:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     .rdel:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     /* превью карточки: метки перетаскиваются по углам */
     .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
@@ -10999,6 +11189,7 @@ function core(storedSettings) {
         </div>
         <div class="page" data-page="rules" hidden>
           <div class="rlist"></div>
+          <div class="hlist"></div>
           <button type="button" class="addrule"
             title="${T('Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.')}">+ ${T('Создать новое правило')}</button>
         </div>
@@ -11130,6 +11321,30 @@ function core(storedSettings) {
       }
     }
 
+    // Посты, спрятанные клавишей: их видно только здесь, отсюда же и возвращаем
+    function renderHidden() {
+      const box = root.querySelector('.hlist');
+      box.replaceChildren();
+      const ids = hiddenList();
+      if (!ids.length) return;
+      const head = document.createElement('p');
+      head.className = 'hint';
+      head.textContent = t('Посты, скрытые клавишей ({n})', { n: ids.length });
+      box.appendChild(head);
+      const row = document.createElement('div');
+      row.className = 'hrow';
+      for (const id of ids) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'hchip';
+        chip.title = t('Вернуть пост');
+        chip.textContent = '#' + id + ' ✕';
+        chip.addEventListener('click', () => { unhidePost(id); renderHidden(); });
+        row.appendChild(chip);
+      }
+      box.appendChild(row);
+    }
+
     root.querySelector('.addrule').addEventListener('click', () => {
       openRuleDialog((rule) => { addRule(rule); renderRules(); });
     });
@@ -11225,6 +11440,7 @@ function core(storedSettings) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       renderRules();
+      renderHidden();
       badgeDraft = { ...DEFAULTS.badges };
       if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
       f('voteStars').value = s.voteStars ? 'stars' : 'num';
@@ -11472,6 +11688,125 @@ function core(storedSettings) {
     .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
+  // ---- Подсказки тегов и пользователей ----
+  // Адреса те же, что у самого сайта: tags/autosuggest?tag=… и users/autosuggest?name=…
+  async function suggestList(kind, q) {
+    const path = kind === 'tag'
+      ? `/tags/autosuggest?tag=${encodeURIComponent(q)}&limit=10`
+      : `/users/autosuggest?name=${encodeURIComponent(q)}&limit=10`;
+    let data = null;
+    try { data = await api('GET', path); } catch (e) { log('autosuggest', path, e.message); return null; }
+    const list = Array.isArray(data) ? data : (isObj(data) && Array.isArray(data.data) ? data.data : []);
+    return list.map((x) => {
+      const name = isObj(x) ? (x.name || x.tagName || x.name_en) : x;
+      if (!name) return null;
+      const count = isObj(x) ? (x.post_count ?? x.count) : null;
+      return kind === 'tag'
+        ? { value: tagKey(name), label: tagKey(name), note: typeof count === 'number' ? shortCount(count) : '' }
+        : { value: String(name), label: String(name), note: '' };
+    }).filter(Boolean).slice(0, 10);
+  }
+
+  function attachSuggest(input, kind) {
+    const box = document.createElement('div');
+    box.className = 'acbox';
+    input.parentElement.appendChild(box);
+    let items = [];
+    let pick = -1;
+    let timer = 0;
+    let seq = 0;
+
+    // у тегов подсказку ищем для последнего слова, у пользователя — для всей строки
+    const term = () => (kind === 'tag' ? input.value.split(/[\s,]+/).pop() : input.value.trim());
+
+    function close() {
+      box.replaceChildren();
+      box.classList.remove('on');
+      items = [];
+      pick = -1;
+    }
+
+    function apply(value) {
+      if (kind === 'tag') {
+        const parts = input.value.split(/[\s,]+/);
+        parts[parts.length - 1] = value;
+        input.value = parts.filter(Boolean).join(' ') + ' ';
+      } else {
+        input.value = value;
+      }
+      close();
+      input.focus();
+    }
+
+    function render(empty) {
+      box.replaceChildren();
+      if (empty) {
+        const none = document.createElement('div');
+        none.className = 'acempty';
+        none.textContent = t('Ничего не найдено');
+        box.appendChild(none);
+        box.classList.add('on');
+        return;
+      }
+      if (!items.length) { box.classList.remove('on'); return; }
+      items.forEach((it, i) => {
+        const row = document.createElement('div');
+        row.className = 'acitem' + (i === pick ? ' on' : '');
+        const name = document.createElement('span');
+        name.textContent = it.label;
+        row.appendChild(name);
+        if (it.note) {
+          const note = document.createElement('span');
+          note.className = 'acnote';
+          note.textContent = it.note;
+          row.appendChild(note);
+        }
+        // mousedown, а не click: иначе поле потеряет фокус раньше выбора
+        row.addEventListener('mousedown', (e) => { e.preventDefault(); apply(it.value); });
+        box.appendChild(row);
+      });
+      box.classList.add('on');
+    }
+
+    async function load() {
+      const q = term();
+      if (q.length < 2) { close(); return; }
+      const my = ++seq;
+      const list = await suggestList(kind, q);
+      if (my !== seq) return; // ответ на прошлый запрос уже никому не нужен
+      if (!list) { close(); return; } // сайт не ответил — молча живём без подсказок
+      items = list;
+      pick = -1;
+      render(!items.length);
+    }
+
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(load, 250);
+    });
+    input.addEventListener('blur', () => setTimeout(close, 120));
+    input.addEventListener('keydown', (e) => {
+      if (!items.length) {
+        if (e.key === 'Escape' && box.classList.contains('on')) { e.stopPropagation(); close(); }
+        return;
+      }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        e.stopPropagation();
+        pick = (pick + (e.key === 'ArrowDown' ? 1 : items.length - 1) + (pick < 0 && e.key === 'ArrowUp' ? 1 : 0)) % items.length;
+        render(false);
+      } else if (e.key === 'Enter' && pick >= 0) {
+        e.preventDefault();
+        e.stopPropagation();
+        apply(items[pick].value);
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        close();
+      }
+    });
+  }
+
   // ---- Окно «Создать новое правило» ----
   function openRuleDialog(onCreate) {
     if (!document.body) return;
@@ -11521,6 +11856,8 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
+    attachSuggest(root.querySelector('.rtags'), 'tag');
+    attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
   }
 

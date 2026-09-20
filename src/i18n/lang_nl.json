@@ -201,5 +201,11 @@
  "199": "Regel verwijderen",
  "200": "Regel toegevoegd",
  "201": "Regel verwijderd",
- "202": "Verborgen posts: {n}"
+ "202": "Verborgen posts: {n}",
+ "203": "Niets gevonden",
+ "204": "Post verbergen",
+ "205": "Post verborgen: {id}",
+ "206": "Post weer zichtbaar: {id}",
+ "207": "Met de toets verborgen posts ({n})",
+ "208": "Post weer tonen"
 }

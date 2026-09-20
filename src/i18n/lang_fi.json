@@ -201,5 +201,11 @@
  "199": "Poista sääntö",
  "200": "Sääntö lisätty",
  "201": "Sääntö poistettu",
- "202": "Piilotettuja julkaisuja: {n}"
+ "202": "Piilotettuja julkaisuja: {n}",
+ "203": "Ei löytynyt mitään",
+ "204": "Piilota julkaisu",
+ "205": "Julkaisu piilotettu: {id}",
+ "206": "Julkaisu näkyy taas: {id}",
+ "207": "Näppäimellä piilotetut julkaisut ({n})",
+ "208": "Näytä julkaisu taas"
 }

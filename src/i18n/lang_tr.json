@@ -201,5 +201,11 @@
  "199": "Kuralı sil",
  "200": "Kural eklendi",
  "201": "Kural silindi",
- "202": "Gizlenen gönderi: {n}"
+ "202": "Gizlenen gönderi: {n}",
+ "203": "Hiçbir şey bulunamadı",
+ "204": "Gönderiyi gizle",
+ "205": "Gönderi gizlendi: {id}",
+ "206": "Gönderi yeniden görünüyor: {id}",
+ "207": "Tuşla gizlenen gönderiler ({n})",
+ "208": "Gönderiyi yeniden göster"
 }

@@ -201,5 +201,11 @@
  "199": "Padam peraturan",
  "200": "Peraturan ditambah",
  "201": "Peraturan dipadam",
- "202": "Siaran tersembunyi: {n}"
+ "202": "Siaran tersembunyi: {n}",
+ "203": "Tiada apa-apa dijumpai",
+ "204": "Sembunyikan siaran",
+ "205": "Siaran disembunyikan: {id}",
+ "206": "Siaran kelihatan semula: {id}",
+ "207": "Siaran yang disembunyikan dengan kekunci ({n})",
+ "208": "Tunjukkan siaran semula"
 }

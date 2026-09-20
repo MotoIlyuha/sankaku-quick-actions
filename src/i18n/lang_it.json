@@ -201,5 +201,11 @@
  "199": "Elimina la regola",
  "200": "Regola aggiunta",
  "201": "Regola eliminata",
- "202": "Post nascosti: {n}"
+ "202": "Post nascosti: {n}",
+ "203": "Nessun risultato",
+ "204": "Nascondi il post",
+ "205": "Post nascosto: {id}",
+ "206": "Post di nuovo visibile: {id}",
+ "207": "Post nascosti con il tasto ({n})",
+ "208": "Mostra di nuovo il post"
 }

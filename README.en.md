@@ -127,15 +127,17 @@ can hold several). Your own vote shows as a number or as stars.
 A favorited post gets a pink outline.
 
 The crossed-out eye button next to the filters hides or blurs posts by your own
-rules: a tag and/or a user, «Hide» or «Blur». Its menu holds the «Show blurred
-posts» switch, and the add-on settings get a «Visibility settings» tab with the
-list of rules. The button carries a counter of the hidden posts.
+rules: a tag and/or a user, «Hide» or «Blur». Tags and users are suggested as
+you type, through the same requests the site itself makes. Its menu holds the
+«Show blurred posts» switch, and the add-on settings get a «Visibility
+settings» tab with the rules and the posts hidden with the «V» key. The button
+carries a counter of the hidden posts.
 
 The «B» key reveals every hidden preview on the page at once and hides them
 again on the next press. The card under the mouse gets the same outline as the
 one selected with the arrow keys.
 
-Not available on a phone: the hotkeys (1–5, F, C, E, B), selecting cards with
+Not available on a phone: the hotkeys (1–5, F, C, E, B, V), selecting cards with
 the arrow keys, and revealing previews on hover.
 
 ## Cutting a release

@@ -201,5 +201,11 @@
  "199": "Eliminar a regra",
  "200": "Regra adicionada",
  "201": "Regra eliminada",
- "202": "Publicações ocultas: {n}"
+ "202": "Publicações ocultas: {n}",
+ "203": "Nada encontrado",
+ "204": "Ocultar a publicação",
+ "205": "Publicação ocultada: {id}",
+ "206": "Publicação visível novamente: {id}",
+ "207": "Publicações ocultadas com a tecla ({n})",
+ "208": "Mostrar a publicação de novo"
 }

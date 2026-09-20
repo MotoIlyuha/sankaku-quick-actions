@@ -201,5 +201,11 @@
  "199": "Szabály törlése",
  "200": "Szabály hozzáadva",
  "201": "Szabály törölve",
- "202": "Elrejtett bejegyzések: {n}"
+ "202": "Elrejtett bejegyzések: {n}",
+ "203": "Nincs találat",
+ "204": "Bejegyzés elrejtése",
+ "205": "Bejegyzés elrejtve: {id}",
+ "206": "A bejegyzés ismét látszik: {id}",
+ "207": "A billentyűvel elrejtett bejegyzések ({n})",
+ "208": "Bejegyzés újbóli megjelenítése"
 }

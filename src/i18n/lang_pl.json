@@ -201,5 +201,11 @@
  "199": "Usuń regułę",
  "200": "Reguła dodana",
  "201": "Reguła usunięta",
- "202": "Ukryte posty: {n}"
+ "202": "Ukryte posty: {n}",
+ "203": "Nic nie znaleziono",
+ "204": "Ukryj post",
+ "205": "Post ukryty: {id}",
+ "206": "Post znów widoczny: {id}",
+ "207": "Posty ukryte klawiszem ({n})",
+ "208": "Pokaż post ponownie"
 }
