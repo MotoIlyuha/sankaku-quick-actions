@@ -124,6 +124,13 @@ the top-right one the number of likes; each badge can be switched off, and the
 preview next to the settings lets you drag the badges into any corner (a corner
 can hold several). Your own vote shows as a number or as stars.
 
+A favorited post gets a pink outline.
+
+The crossed-out eye button next to the filters hides or blurs posts by your own
+rules: a tag and/or a user, «Hide» or «Blur». Its menu holds the «Show blurred
+posts» switch, and the add-on settings get a «Visibility settings» tab with the
+list of rules. The button carries a counter of the hidden posts.
+
 The «B» key reveals every hidden preview on the page at once and hides them
 again on the next press. The card under the mouse gets the same outline as the
 one selected with the arrow keys.

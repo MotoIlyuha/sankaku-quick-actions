@@ -58,6 +58,7 @@ function core(storedSettings) {
     showFavCount: true, // количество лайков в углу карточки
     voteStars: false, // свою оценку показывать звёздами, а не числом
     badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
+    rules: [], // свои правила видимости: [{ id, tags: [...], user, mode: 'hide' | 'blur' }]
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -226,10 +227,22 @@ function core(storedSettings) {
     (typeof o.id === 'number' || typeof o.id === 'string') &&
     ('fav_count' in o || 'total_score' in o || 'vote_count' in o);
 
+  // Сайт зовёт тег по-разному в зависимости от ответа, а нам нужно одно написание
+  const tagKey = (v) => String(v == null ? '' : v).trim().toLowerCase().replace(/\s+/g, '_');
+  const tagNames = (list) => (Array.isArray(list)
+    ? list.map((x) => tagKey(isObj(x) ? (x.name || x.tagName || x.name_en || x.name_ja) : x)).filter(Boolean)
+    : undefined);
+  const ownerName = (src) => {
+    for (const o of [src.author, src.user, src.uploader]) if (isObj(o) && o.name) return String(o.name);
+    return undefined;
+  };
+
   function remember(src, soft) {
     const id = String(src.id);
     const p = posts.get(id) || { id };
     const vals = {
+      tags: tagNames(src.tags),
+      owner: ownerName(src),
       md5: src.md5,
       total_score: src.total_score,
       vote_count: src.vote_count,
@@ -818,6 +831,7 @@ function core(storedSettings) {
       injectMassMenuItem();
       syncMassRoute();
       injectHeaderLinks();
+      injectEyeButton();
     }
 
     for (const svg of document.querySelectorAll('svg[data-test$="stars"]:not(.skq-star)')) {
@@ -1029,6 +1043,47 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
+  // ---------------------------------------------------------------------------
+  // Свои правила видимости: пост с этими тегами и/или от этого автора
+  // прячется совсем или показывается размытым
+  // ---------------------------------------------------------------------------
+  const ruleList = () => (Array.isArray(settings.rules) ? settings.rules : []);
+
+  function ruleHit(rule, post) {
+    if (!isObj(rule) || !isObj(post)) return false;
+    const tags = Array.isArray(rule.tags) ? rule.tags : [];
+    if (!tags.length && !rule.user) return false;
+    if (rule.user && tagKey(post.owner) !== tagKey(rule.user)) return false;
+    // теги перечислены через «и», как в правилах самого сайта
+    const have = Array.isArray(post.tags) ? post.tags : [];
+    return tags.every((tag) => have.includes(tag));
+  }
+
+  // «Скрыть» сильнее «Размытия»: одно правило прячет, даже если другое лишь размывает
+  function ruleFor(id) {
+    const post = posts.get(String(id));
+    if (!post) return null;
+    let blur = null;
+    for (const rule of ruleList()) {
+      if (!ruleHit(rule, post)) continue;
+      if (rule.mode !== 'blur') return rule;
+      blur = blur || rule;
+    }
+    return blur;
+  }
+
+  const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  function addRule(rule) {
+    saveSettings({ rules: [...ruleList(), { id: ruleId(), ...rule }] });
+    toast(t('Правило добавлено'));
+  }
+
+  function dropRule(id) {
+    saveSettings({ rules: ruleList().filter((r) => r.id !== id) });
+    toast(t('Правило удалено'));
+  }
+
   // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
   const CORNERS = ['tl', 'tr', 'bl', 'br'];
   const BADGES = [
@@ -1091,8 +1146,10 @@ function core(storedSettings) {
   function markCards() {
     if (FRAME_MODE || !document.body) return;
     const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
+    let hidden = 0;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = wantVote || wantFavs || wantScore ? cardId(card) : null;
+      // теги и автор нужны правилам, поэтому ID берём всегда
+      const id = cardId(card);
       // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
@@ -1111,7 +1168,18 @@ function core(storedSettings) {
       cardBadge(card, BADGES[2], favs ? `♥ ${shortCount(favs)}` : null,
         favs ? t('Лайков: {n}', { n: favs }) : '', badgeCorner('favs'));
       tidyCorners(card);
+
+      const post = id ? posts.get(id) : null;
+      card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
+      const rule = id ? ruleFor(id) : null;
+      const hide = !!rule && rule.mode !== 'blur';
+      card.classList.toggle('skq-rule-hide', hide);
+      // «Показать размытые посты» снимает и наше размытие
+      card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
+      if (hide) hidden++;
     }
+    ruleHidden = hidden;
+    updateEyeCount();
   }
 
   // ---- Скрытые превью ----
@@ -5191,6 +5259,104 @@ function core(storedSettings) {
   }
 
   // ---------------------------------------------------------------------------
+  // Кнопка-глаз рядом с фильтрами: показать размытое и завести своё правило
+  // ---------------------------------------------------------------------------
+  const FILTER_ICON = 'M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z';
+  const EYE_ON_ICON = 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s10.27-3.11 12-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z';
+  const EYE_OFF_ICON = 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z';
+
+  let ruleHidden = 0; // сколько постов на странице спрятано нашими правилами
+  let eyeMenu = null;
+
+  const filterButton = () => {
+    for (const path of document.querySelectorAll('button svg path')) {
+      if (path.getAttribute('d') === FILTER_ICON) return path.closest('button');
+    }
+    return null;
+  };
+
+  const eyeButton = () => document.querySelector('.skq-eyebtn');
+
+  function updateEyeCount() {
+    const btn = eyeButton();
+    if (!btn) return;
+    const badge = btn.querySelector('.skq-eyecount');
+    const text = ruleHidden > 0 ? shortCount(ruleHidden) : '';
+    if (badge && badge.textContent !== text) {
+      badge.textContent = text;
+      badge.title = ruleHidden > 0 ? t('Скрыто постов: {n}', { n: ruleHidden }) : '';
+    }
+    const icon = btn.querySelector('svg path');
+    if (icon) icon.setAttribute('d', revealAll ? EYE_ON_ICON : EYE_OFF_ICON);
+  }
+
+  function injectEyeButton() {
+    const near = filterButton();
+    if (!near) { closeEyeMenu(); return; }
+    const anchor = near.closest('[class*="MuiBadge-root"]') || near;
+    const holder = anchor.parentElement;
+    if (!holder || holder.querySelector(':scope > .skq-eyebtn')) { updateEyeCount(); return; }
+    const btn = near.cloneNode(true);
+    btn.removeAttribute('id');
+    btn.classList.add('skq-eyebtn');
+    btn.setAttribute('aria-label', t('Настройки видимости'));
+    btn.title = t('Настройки видимости');
+    btn.querySelectorAll('svg path').forEach((path) => path.setAttribute('d', EYE_OFF_ICON));
+    const badge = document.createElement('span');
+    badge.className = 'skq-eyecount';
+    btn.appendChild(badge);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (eyeMenu) closeEyeMenu();
+      else openEyeMenu(btn);
+    });
+    holder.insertBefore(btn, anchor);
+    updateEyeCount();
+  }
+
+  function closeEyeMenu() {
+    if (!eyeMenu) return;
+    eyeMenu.remove();
+    eyeMenu = null;
+  }
+
+  function openEyeMenu(btn) {
+    const menu = document.createElement('div');
+    menu.className = 'skq-eyemenu';
+    menu.innerHTML = `
+      <label class="skq-eyerow"><span>${T('Показать размытые посты')}</span>
+        <input type="checkbox" class="skq-eyesw"></label>
+      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>`;
+    const row = menu.querySelector('.skq-eyerow');
+    row.title = t('То же самое делает клавиша {key}', { key: keyLabel(settings.revealAllKey) });
+    const sw = menu.querySelector('.skq-eyesw');
+    sw.checked = revealAll;
+    sw.addEventListener('change', () => {
+      if (sw.checked !== revealAll) toggleRevealAll();
+      sw.checked = revealAll;
+      updateEyeCount();
+    });
+    menu.querySelector('.skq-eyeadd').addEventListener('click', () => {
+      closeEyeMenu();
+      openRuleDialog(addRule);
+    });
+    document.body.appendChild(menu);
+    const r = btn.getBoundingClientRect();
+    const width = menu.getBoundingClientRect().width;
+    menu.style.top = Math.round(r.bottom + 6) + 'px';
+    menu.style.left = Math.round(Math.max(8, Math.min(r.right - width, innerWidth - width - 8))) + 'px';
+    eyeMenu = menu;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!eyeMenu) return;
+    const node = e.composedPath ? e.composedPath()[0] : e.target;
+    if (node instanceof Node && (eyeMenu.contains(node) || (eyeButton() && eyeButton().contains(node)))) return;
+    closeEyeMenu();
+  }, true);
+
+  // ---------------------------------------------------------------------------
   // Кнопки в шапке: со страницы своих постов — к загрузке и обратно.
   // Рисуются по образцу кнопки самого сайта, чтобы не выбиваться из шапки.
   // ---------------------------------------------------------------------------
@@ -5402,6 +5568,25 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    .fld { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .fld > span { color: #bbb; }
+    .fld input[type=text] {
+      padding: 8px 10px; border-radius: 6px; border: 1px solid #555;
+      background: #1f1f1f; color: #fff; font-size: 14px;
+    }
+    .fld input[type=text]:focus { outline: 2px solid #ff8c00; outline-offset: 1px; }
+    .picks { display: flex; gap: 20px; }
+    .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .rrow {
+      display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+      border: 1px solid #444; border-radius: 8px;
+    }
+    .rchips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; min-width: 0; }
+    .rchip { padding: 2px 10px; border-radius: 12px; background: #ff8c00; color: #fff; font-size: 13px; }
+    .rchip.user { background: #4a6fa5; }
+    .rmode { flex: none; color: #bbb; font-size: 13px; }
+    .rdel { flex: none; padding: 4px 9px; border-radius: 50%; line-height: 1; }
+    .rdel:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     /* превью карточки: метки перетаскиваются по углам */
     .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
     .cardsopts { flex: 1 1 auto; min-width: 0; }
@@ -5515,6 +5700,7 @@ function core(storedSettings) {
         <div class="tabs" role="tablist">
           <button type="button" class="tab on" data-page="main" role="tab">${T('Основное')}</button>
           <button type="button" class="tab" data-page="menu" role="tab">${T('Меню сайта')}</button>
+          <button type="button" class="tab" data-page="rules" role="tab">${T('Настройки видимости')}</button>
         </div>
         <div class="page" data-page="main">
         <fieldset>
@@ -5582,6 +5768,11 @@ function core(storedSettings) {
           </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
+        </div>
+        <div class="page" data-page="rules" hidden>
+          <div class="rlist"></div>
+          <button type="button" class="addrule"
+            title="${T('Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.')}">+ ${T('Создать новое правило')}</button>
         </div>
         <div class="actions">
           <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
@@ -5668,6 +5859,52 @@ function core(storedSettings) {
       );
       return head;
     }
+
+    function renderRules() {
+      const list = root.querySelector('.rlist');
+      list.replaceChildren();
+      const rules = ruleList();
+      if (!rules.length) {
+        const empty = document.createElement('p');
+        empty.className = 'hint';
+        empty.textContent = t('Правил пока нет');
+        list.appendChild(empty);
+        return;
+      }
+      for (const rule of rules) {
+        const row = document.createElement('div');
+        row.className = 'rrow';
+        const chips = document.createElement('div');
+        chips.className = 'rchips';
+        for (const tag of rule.tags || []) {
+          const chip = document.createElement('span');
+          chip.className = 'rchip';
+          chip.textContent = tag;
+          chips.appendChild(chip);
+        }
+        if (rule.user) {
+          const chip = document.createElement('span');
+          chip.className = 'rchip user';
+          chip.textContent = '@' + rule.user;
+          chips.appendChild(chip);
+        }
+        const mode = document.createElement('span');
+        mode.className = 'rmode';
+        mode.textContent = rule.mode === 'blur' ? t('Размытие') : t('Скрыть');
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'rdel';
+        del.title = t('Удалить правило');
+        del.textContent = '✕';
+        del.addEventListener('click', () => { dropRule(rule.id); renderRules(); });
+        row.append(chips, mode, del);
+        list.appendChild(row);
+      }
+    }
+
+    root.querySelector('.addrule').addEventListener('click', () => {
+      openRuleDialog((rule) => { addRule(rule); renderRules(); });
+    });
 
     function renderMenuRows() {
       const list = root.querySelector('.mlist');
@@ -5759,6 +5996,7 @@ function core(storedSettings) {
     function fill(s) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      renderRules();
       badgeDraft = { ...DEFAULTS.badges };
       if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
       f('voteStars').value = s.voteStars ? 'stars' : 'num';
@@ -6006,6 +6244,58 @@ function core(storedSettings) {
     .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
+  // ---- Окно «Создать новое правило» ----
+  function openRuleDialog(onCreate) {
+    if (!document.body) return;
+    const wasOpen = settingsOpen;
+    settingsOpen = true;
+    const host = document.createElement('div');
+    host.className = 'skq-settings';
+    host.style.cssText = 'position:fixed;inset:0;z-index:2147483647;';
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <style>${SETTINGS_CSS}</style>
+      <div class="backdrop"></div>
+      <form class="dlg" tabindex="-1" role="dialog" aria-modal="true" aria-label="${T('Создать новое правило')}">
+        <h2>${T('Создать новое правило')}</h2>
+        <div class="fld"><span>${T('Теги')}</span>
+          <input type="text" class="rtags" placeholder="${T('Через пробел или запятую')}"></div>
+        <div class="fld"><span>${T('Пользователь')}</span><input type="text" class="ruser"></div>
+        <div class="fld"><span>${T('Видимость')}</span>
+          <div class="picks">
+            <label class="pick"><input type="radio" name="mode" value="hide" checked> ${T('Скрыть')}</label>
+            <label class="pick"><input type="radio" name="mode" value="blur"> ${T('Размытие')}</label>
+          </div></div>
+        <p class="hint">${T('Правило сработает у постов, где есть все указанные теги и совпадает автор.')}</p>
+        <div class="actions"><span class="spacer"></span>
+          <button type="button" class="cancel2">${T('Отмена')}</button>
+          <button type="submit" class="save">${T('Создать')}</button></div>
+      </form>`;
+    document.body.appendChild(host);
+
+    const form = root.querySelector('form');
+    const close = () => {
+      host.remove();
+      settingsOpen = wasOpen;
+    };
+    root.querySelector('.backdrop').addEventListener('click', close);
+    root.querySelector('.cancel2').addEventListener('click', close);
+    form.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Escape') close();
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const tags = root.querySelector('.rtags').value.split(/[\s,]+/).map(tagKey).filter(Boolean);
+      const user = root.querySelector('.ruser').value.trim();
+      if (!tags.length && !user) { toast(t('Укажите хотя бы один тег или пользователя'), true); return; }
+      const mode = root.querySelector('input[name="mode"]:checked').value;
+      close();
+      onCreate({ tags, user, mode });
+    });
+    root.querySelector('.rtags').focus();
+  }
+
   // ---- Вкладка «Плагин» на странице настроек сайта ----
   const TABLIST_SEL = '[role="tablist"][aria-label="User Settings"], [role="tablist"][aria-label*="settings" i]';
   const settingsTab = { tab: null, panel: null, ui: null, active: false };
@@ -6201,6 +6491,29 @@ function core(storedSettings) {
     .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
+    ${CARD_SEL}.skq-rule-hide { display: none !important; }
+    ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video { filter: blur(20px); }
+    ${CARD_SEL}.skq-favcard > *:not(.skq-corner) { box-shadow: 0 0 0 2px #ff4f70; border-radius: 6px; }
+    .skq-eyebtn { position: relative; }
+    .skq-eyecount {
+      position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 9px; background: #ff8c00; color: #fff; pointer-events: none;
+      font: 700 11px/18px Roboto, "Helvetica Neue", Arial, sans-serif; text-align: center;
+    }
+    .skq-eyecount:empty { display: none; }
+    .skq-eyemenu {
+      position: fixed; z-index: 2147483000; min-width: 268px; padding: 6px; border-radius: 10px;
+      background: #2b2b2b; color: #eee; box-shadow: 0 12px 40px rgba(0, 0, 0, .6);
+      font: 14px/1.4 Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .skq-eyerow {
+      display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; margin: 0;
+      border: 0; border-radius: 8px; background: none; color: inherit; font: inherit;
+      text-align: left; cursor: pointer;
+    }
+    .skq-eyerow:hover { background: rgba(255, 255, 255, .1); }
+    .skq-eyerow span { flex: 1 1 auto; }
+    .skq-eyerow input[type=checkbox] { width: 18px; height: 18px; margin: 0; accent-color: #ff8c00; }
     .skq-hdr-btn {
       display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; padding: 6px 16px;
       border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer;

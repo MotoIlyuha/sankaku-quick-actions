@@ -183,6 +183,25 @@
   "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}",
   "Числом": "As a number",
   "Звёздами": "As stars",
-  "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too."
+  "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too.",
+  "Настройки видимости": "Visibility settings",
+  "Показать размытые посты": "Show blurred posts",
+  "Создать новое правило": "Create a new rule",
+  "То же самое делает клавиша {key}": "The {key} key does the same",
+  "Теги": "Tags",
+  "Через пробел или запятую": "Separated by spaces or commas",
+  "Пользователь": "User",
+  "Видимость": "Visibility",
+  "Скрыть": "Hide",
+  "Размытие": "Blur",
+  "Создать": "Create",
+  "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "The rule applies to posts that have all the listed tags and match the user.",
+  "Укажите хотя бы один тег или пользователя": "Enter at least one tag or a user",
+  "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "A rule hides or blurs posts with the given tags and user. Rules are saved right away — the Save button is not needed for them.",
+  "Правил пока нет": "No rules yet",
+  "Удалить правило": "Delete the rule",
+  "Правило добавлено": "Rule added",
+  "Правило удалено": "Rule deleted",
+  "Скрыто постов: {n}": "Posts hidden: {n}"
  }
 }

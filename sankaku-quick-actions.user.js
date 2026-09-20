@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.31.0
+// @version      1.32.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -160,6 +160,7 @@ function core(storedSettings) {
     showFavCount: true, // количество лайков в углу карточки
     voteStars: false, // свою оценку показывать звёздами, а не числом
     badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
+    rules: [], // свои правила видимости: [{ id, tags: [...], user, mode: 'hide' | 'blur' }]
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -222,7 +223,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.31.0';
+  const SKQ_VERSION = '1.32.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -409,7 +410,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}",
           "Числом": "As a number",
           "Звёздами": "As stars",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too.",
+          "Настройки видимости": "Visibility settings",
+          "Показать размытые посты": "Show blurred posts",
+          "Создать новое правило": "Create a new rule",
+          "То же самое делает клавиша {key}": "The {key} key does the same",
+          "Теги": "Tags",
+          "Через пробел или запятую": "Separated by spaces or commas",
+          "Пользователь": "User",
+          "Видимость": "Visibility",
+          "Скрыть": "Hide",
+          "Размытие": "Blur",
+          "Создать": "Create",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "The rule applies to posts that have all the listed tags and match the user.",
+          "Укажите хотя бы один тег или пользователя": "Enter at least one tag or a user",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "A rule hides or blurs posts with the given tags and user. Rules are saved right away — the Save button is not needed for them.",
+          "Правил пока нет": "No rules yet",
+          "Удалить правило": "Delete the rule",
+          "Правило добавлено": "Rule added",
+          "Правило удалено": "Rule deleted",
+          "Скрыто постов: {n}": "Posts hidden: {n}"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -595,7 +615,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "平均評価：5点中{n}点、投票数{m}",
           "Числом": "数字で",
           "Звёздами": "星で",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "プレビューの角にラベルをドラッグしてください。1つの角に複数置けます。クリックでも移動します。"
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "プレビューの角にラベルをドラッグしてください。1つの角に複数置けます。クリックでも移動します。",
+          "Настройки видимости": "表示設定",
+          "Показать размытые посты": "ぼかされた投稿を表示",
+          "Создать новое правило": "新しいルールを作成",
+          "То же самое делает клавиша {key}": "{key} キーでも同じことができます",
+          "Теги": "タグ",
+          "Через пробел или запятую": "スペースまたはカンマ区切り",
+          "Пользователь": "ユーザー",
+          "Видимость": "表示",
+          "Скрыть": "非表示",
+          "Размытие": "ぼかし",
+          "Создать": "作成",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "このルールは、指定したタグをすべて持ち、ユーザーが一致する投稿に適用されます。",
+          "Укажите хотя бы один тег или пользователя": "タグかユーザーを少なくとも1つ指定してください",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "ルールは指定したタグとユーザーの投稿を非表示またはぼかします。ルールはすぐに保存され、「保存」ボタンは不要です。",
+          "Правил пока нет": "まだルールがありません",
+          "Удалить правило": "ルールを削除",
+          "Правило добавлено": "ルールを追加しました",
+          "Правило удалено": "ルールを削除しました",
+          "Скрыто постов: {n}": "非表示の投稿：{n}"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -781,7 +820,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "平均评分：{n}/5，投票 {m}",
           "Числом": "用数字",
           "Звёздами": "用星星",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把标签拖到预览的各个角落，一个角可以放多个；点击标签也会移动它。"
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把标签拖到预览的各个角落，一个角可以放多个；点击标签也会移动它。",
+          "Настройки видимости": "可见性设置",
+          "Показать размытые посты": "显示模糊的帖子",
+          "Создать новое правило": "创建新规则",
+          "То же самое делает клавиша {key}": "{key} 键的作用相同",
+          "Теги": "标签",
+          "Через пробел или запятую": "用空格或逗号分隔",
+          "Пользователь": "用户",
+          "Видимость": "可见性",
+          "Скрыть": "隐藏",
+          "Размытие": "模糊",
+          "Создать": "创建",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "该规则适用于同时含有所有所列标签且用户匹配的帖子。",
+          "Укажите хотя бы один тег или пользователя": "请至少填写一个标签或用户",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "规则会隐藏或模糊带有指定标签和用户的帖子。规则会立即保存，无需点击“保存”。",
+          "Правил пока нет": "暂时没有规则",
+          "Удалить правило": "删除规则",
+          "Правило добавлено": "已添加规则",
+          "Правило удалено": "已删除规则",
+          "Скрыто постов: {n}": "已隐藏帖子：{n}"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -967,7 +1025,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "平均評分：{n}/5，投票 {m}",
           "Числом": "用數字",
           "Звёздами": "用星星",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把標籤拖到預覽的各個角落，一個角可以放多個；點擊標籤也會移動它。"
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把標籤拖到預覽的各個角落，一個角可以放多個；點擊標籤也會移動它。",
+          "Настройки видимости": "可見性設定",
+          "Показать размытые посты": "顯示模糊的貼文",
+          "Создать новое правило": "建立新規則",
+          "То же самое делает клавиша {key}": "{key} 鍵的作用相同",
+          "Теги": "標籤",
+          "Через пробел или запятую": "用空格或逗號分隔",
+          "Пользователь": "使用者",
+          "Видимость": "可見性",
+          "Скрыть": "隱藏",
+          "Размытие": "模糊",
+          "Создать": "建立",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "此規則適用於同時含有所有所列標籤且使用者相符的貼文。",
+          "Укажите хотя бы один тег или пользователя": "請至少填寫一個標籤或使用者",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "規則會隱藏或模糊帶有指定標籤和使用者的貼文。規則會立即儲存，無需點擊「儲存」。",
+          "Правил пока нет": "暫時沒有規則",
+          "Удалить правило": "刪除規則",
+          "Правило добавлено": "已新增規則",
+          "Правило удалено": "已刪除規則",
+          "Скрыто постов: {n}": "已隱藏貼文：{n}"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1153,7 +1230,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "평균 평점: 5점 만점에 {n}점, 투표 {m}",
           "Числом": "숫자로",
           "Звёздами": "별로",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "미리보기의 모서리로 배지를 끌어다 놓으세요. 한 모서리에 여러 개를 둘 수 있고, 클릭해도 옮겨집니다."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "미리보기의 모서리로 배지를 끌어다 놓으세요. 한 모서리에 여러 개를 둘 수 있고, 클릭해도 옮겨집니다.",
+          "Настройки видимости": "표시 설정",
+          "Показать размытые посты": "흐리게 처리된 게시물 표시",
+          "Создать новое правило": "새 규칙 만들기",
+          "То же самое делает клавиша {key}": "{key} 키도 같은 일을 합니다",
+          "Теги": "태그",
+          "Через пробел или запятую": "공백 또는 쉼표로 구분",
+          "Пользователь": "사용자",
+          "Видимость": "표시 방식",
+          "Скрыть": "숨기기",
+          "Размытие": "흐리게",
+          "Создать": "만들기",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "이 규칙은 나열된 태그를 모두 가지고 사용자가 일치하는 게시물에 적용됩니다.",
+          "Укажите хотя бы один тег или пользователя": "태그나 사용자를 하나 이상 입력하세요",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "규칙은 지정한 태그와 사용자의 게시물을 숨기거나 흐리게 합니다. 규칙은 곧바로 저장되며 «저장» 버튼은 필요하지 않습니다.",
+          "Правил пока нет": "아직 규칙이 없습니다",
+          "Удалить правило": "규칙 삭제",
+          "Правило добавлено": "규칙을 추가했습니다",
+          "Правило удалено": "규칙을 삭제했습니다",
+          "Скрыто постов: {n}": "숨긴 게시물: {n}"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1339,7 +1435,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Durchschnitt: {n} von 5, Stimmen: {m}",
           "Числом": "Als Zahl",
           "Звёздами": "Als Sterne",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Ziehen Sie die Marken in die Ecken der Vorschau — eine Ecke kann mehrere aufnehmen. Ein Klick verschiebt sie ebenfalls."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Ziehen Sie die Marken in die Ecken der Vorschau — eine Ecke kann mehrere aufnehmen. Ein Klick verschiebt sie ebenfalls.",
+          "Настройки видимости": "Sichtbarkeitseinstellungen",
+          "Показать размытые посты": "Unscharfe Beiträge anzeigen",
+          "Создать новое правило": "Neue Regel erstellen",
+          "То же самое делает клавиша {key}": "Die Taste {key} macht dasselbe",
+          "Теги": "Tags",
+          "Через пробел или запятую": "Durch Leerzeichen oder Komma getrennt",
+          "Пользователь": "Benutzer",
+          "Видимость": "Sichtbarkeit",
+          "Скрыть": "Ausblenden",
+          "Размытие": "Unschärfe",
+          "Создать": "Erstellen",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Die Regel gilt für Beiträge mit allen angegebenen Tags und dem angegebenen Benutzer.",
+          "Укажите хотя бы один тег или пользователя": "Geben Sie mindestens ein Tag oder einen Benutzer an",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Eine Regel blendet Beiträge mit den angegebenen Tags und dem Benutzer aus oder macht sie unscharf. Regeln werden sofort gespeichert, die Schaltfläche «Speichern» wird dafür nicht gebraucht.",
+          "Правил пока нет": "Noch keine Regeln",
+          "Удалить правило": "Regel löschen",
+          "Правило добавлено": "Regel hinzugefügt",
+          "Правило удалено": "Regel gelöscht",
+          "Скрыто постов: {n}": "Ausgeblendete Beiträge: {n}"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1525,7 +1640,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Note moyenne : {n} sur 5, votes : {m}",
           "Числом": "En chiffre",
           "Звёздами": "En étoiles",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Faites glisser les étiquettes dans les coins de l’aperçu : un coin peut en contenir plusieurs. Un clic les déplace aussi."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Faites glisser les étiquettes dans les coins de l’aperçu : un coin peut en contenir plusieurs. Un clic les déplace aussi.",
+          "Настройки видимости": "Paramètres de visibilité",
+          "Показать размытые посты": "Afficher les posts floutés",
+          "Создать новое правило": "Créer une nouvelle règle",
+          "То же самое делает клавиша {key}": "La touche {key} fait la même chose",
+          "Теги": "Tags",
+          "Через пробел или запятую": "Séparés par des espaces ou des virgules",
+          "Пользователь": "Utilisateur",
+          "Видимость": "Visibilité",
+          "Скрыть": "Masquer",
+          "Размытие": "Flou",
+          "Создать": "Créer",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "La règle s’applique aux posts qui ont tous les tags indiqués et le même utilisateur.",
+          "Укажите хотя бы один тег или пользователя": "Indiquez au moins un tag ou un utilisateur",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Une règle masque ou floute les posts avec ces tags et cet utilisateur. Les règles sont enregistrées aussitôt : le bouton « Enregistrer » est inutile pour elles.",
+          "Правил пока нет": "Pas encore de règles",
+          "Удалить правило": "Supprimer la règle",
+          "Правило добавлено": "Règle ajoutée",
+          "Правило удалено": "Règle supprimée",
+          "Скрыто постов: {n}": "Posts masqués : {n}"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1711,7 +1845,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Valoración media: {n} de 5, votos: {m}",
           "Числом": "Con un número",
           "Звёздами": "Con estrellas",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arrastre las etiquetas a las esquinas de la vista previa: una esquina admite varias. Al hacer clic también se mueven."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arrastre las etiquetas a las esquinas de la vista previa: una esquina admite varias. Al hacer clic también se mueven.",
+          "Настройки видимости": "Ajustes de visibilidad",
+          "Показать размытые посты": "Mostrar las publicaciones difuminadas",
+          "Создать новое правило": "Crear una regla nueva",
+          "То же самое делает клавиша {key}": "La tecla {key} hace lo mismo",
+          "Теги": "Etiquetas",
+          "Через пробел или запятую": "Separadas por espacios o comas",
+          "Пользователь": "Usuario",
+          "Видимость": "Visibilidad",
+          "Скрыть": "Ocultar",
+          "Размытие": "Difuminar",
+          "Создать": "Crear",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "La regla se aplica a las publicaciones con todas las etiquetas indicadas y del usuario indicado.",
+          "Укажите хотя бы один тег или пользователя": "Indique al menos una etiqueta o un usuario",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Una regla oculta o difumina las publicaciones con esas etiquetas y ese usuario. Las reglas se guardan al instante: el botón «Guardar» no hace falta.",
+          "Правил пока нет": "Todavía no hay reglas",
+          "Удалить правило": "Eliminar la regla",
+          "Правило добавлено": "Regla añadida",
+          "Правило удалено": "Regla eliminada",
+          "Скрыто постов: {n}": "Publicaciones ocultas: {n}"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1897,7 +2050,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Avaliação média: {n} de 5, votos: {m}",
           "Числом": "Como número",
           "Звёздами": "Como estrelas",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arraste as etiquetas para os cantos da pré-visualização — um canto aceita várias. Clicar também as move."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arraste as etiquetas para os cantos da pré-visualização — um canto aceita várias. Clicar também as move.",
+          "Настройки видимости": "Definições de visibilidade",
+          "Показать размытые посты": "Mostrar publicações desfocadas",
+          "Создать новое правило": "Criar uma nova regra",
+          "То же самое делает клавиша {key}": "A tecla {key} faz o mesmo",
+          "Теги": "Etiquetas",
+          "Через пробел или запятую": "Separadas por espaços ou vírgulas",
+          "Пользователь": "Utilizador",
+          "Видимость": "Visibilidade",
+          "Скрыть": "Ocultar",
+          "Размытие": "Desfocar",
+          "Создать": "Criar",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "A regra aplica-se a publicações com todas as etiquetas indicadas e do utilizador indicado.",
+          "Укажите хотя бы один тег или пользователя": "Indique pelo menos uma etiqueta ou um utilizador",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Uma regra oculta ou desfoca publicações com essas etiquetas e esse utilizador. As regras são guardadas de imediato — o botão «Guardar» não é preciso.",
+          "Правил пока нет": "Ainda não há regras",
+          "Удалить правило": "Eliminar a regra",
+          "Правило добавлено": "Regra adicionada",
+          "Правило удалено": "Regra eliminada",
+          "Скрыто постов: {n}": "Publicações ocultas: {n}"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2083,7 +2255,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Voto medio: {n} su 5, voti: {m}",
           "Числом": "Con un numero",
           "Звёздами": "Con le stelle",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trascina le etichette negli angoli dell’anteprima: un angolo può contenerne più di una. Anche il clic le sposta."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trascina le etichette negli angoli dell’anteprima: un angolo può contenerne più di una. Anche il clic le sposta.",
+          "Настройки видимости": "Impostazioni di visibilità",
+          "Показать размытые посты": "Mostra i post sfocati",
+          "Создать новое правило": "Crea una nuova regola",
+          "То же самое делает клавиша {key}": "Il tasto {key} fa la stessa cosa",
+          "Теги": "Tag",
+          "Через пробел или запятую": "Separati da spazi o virgole",
+          "Пользователь": "Utente",
+          "Видимость": "Visibilità",
+          "Скрыть": "Nascondi",
+          "Размытие": "Sfocatura",
+          "Создать": "Crea",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "La regola vale per i post che hanno tutti i tag indicati e lo stesso utente.",
+          "Укажите хотя бы один тег или пользователя": "Indica almeno un tag o un utente",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Una regola nasconde o sfoca i post con quei tag e quell’utente. Le regole vengono salvate subito: il pulsante «Salva» non serve.",
+          "Правил пока нет": "Ancora nessuna regola",
+          "Удалить правило": "Elimina la regola",
+          "Правило добавлено": "Regola aggiunta",
+          "Правило удалено": "Regola eliminata",
+          "Скрыто постов: {n}": "Post nascosti: {n}"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2269,7 +2460,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Gemiddelde beoordeling: {n} van 5, stemmen: {m}",
           "Числом": "Als getal",
           "Звёздами": "Als sterren",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Sleep de labels naar de hoeken van het voorbeeld — in één hoek passen er meerdere. Klikken verplaatst ze ook."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Sleep de labels naar de hoeken van het voorbeeld — in één hoek passen er meerdere. Klikken verplaatst ze ook.",
+          "Настройки видимости": "Zichtbaarheidsinstellingen",
+          "Показать размытые посты": "Vervaagde posts tonen",
+          "Создать новое правило": "Nieuwe regel maken",
+          "То же самое делает клавиша {key}": "De toets {key} doet hetzelfde",
+          "Теги": "Tags",
+          "Через пробел или запятую": "Gescheiden door spaties of komma’s",
+          "Пользователь": "Gebruiker",
+          "Видимость": "Zichtbaarheid",
+          "Скрыть": "Verbergen",
+          "Размытие": "Vervagen",
+          "Создать": "Maken",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "De regel geldt voor posts met alle genoemde tags en dezelfde gebruiker.",
+          "Укажите хотя бы один тег или пользователя": "Geef minstens één tag of gebruiker op",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Een regel verbergt of vervaagt posts met die tags en gebruiker. Regels worden meteen opgeslagen — de knop «Opslaan» is er niet voor nodig.",
+          "Правил пока нет": "Nog geen regels",
+          "Удалить правило": "Regel verwijderen",
+          "Правило добавлено": "Regel toegevoegd",
+          "Правило удалено": "Regel verwijderd",
+          "Скрыто постов: {n}": "Verborgen posts: {n}"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2455,7 +2665,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Średnia ocena: {n} z 5, głosów: {m}",
           "Числом": "Liczbą",
           "Звёздами": "Gwiazdkami",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Przeciągnij etykiety w rogi podglądu — w jednym rogu może być kilka. Kliknięcie również je przenosi."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Przeciągnij etykiety w rogi podglądu — w jednym rogu może być kilka. Kliknięcie również je przenosi.",
+          "Настройки видимости": "Ustawienia widoczności",
+          "Показать размытые посты": "Pokaż rozmyte posty",
+          "Создать новое правило": "Utwórz nową regułę",
+          "То же самое делает клавиша {key}": "Klawisz {key} robi to samo",
+          "Теги": "Tagi",
+          "Через пробел или запятую": "Oddzielone spacją lub przecinkiem",
+          "Пользователь": "Użytkownik",
+          "Видимость": "Widoczność",
+          "Скрыть": "Ukryj",
+          "Размытие": "Rozmycie",
+          "Создать": "Utwórz",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Reguła działa dla postów, które mają wszystkie podane tagi i tego użytkownika.",
+          "Укажите хотя бы один тег или пользователя": "Podaj przynajmniej jeden tag lub użytkownika",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Reguła ukrywa lub rozmywa posty z podanymi tagami i użytkownikiem. Reguły zapisują się od razu, przycisk «Zapisz» nie jest potrzebny.",
+          "Правил пока нет": "Nie ma jeszcze reguł",
+          "Удалить правило": "Usuń regułę",
+          "Правило добавлено": "Reguła dodana",
+          "Правило удалено": "Reguła usunięta",
+          "Скрыто постов: {n}": "Ukryte posty: {n}"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2641,7 +2870,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Medelbetyg: {n} av 5, röster: {m}",
           "Числом": "Som siffra",
           "Звёздами": "Som stjärnor",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra märkena till förhandsvisningens hörn — ett hörn rymmer flera. Ett klick flyttar dem också."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra märkena till förhandsvisningens hörn — ett hörn rymmer flera. Ett klick flyttar dem också.",
+          "Настройки видимости": "Synlighetsinställningar",
+          "Показать размытые посты": "Visa suddiga inlägg",
+          "Создать новое правило": "Skapa en ny regel",
+          "То же самое делает клавиша {key}": "Tangenten {key} gör samma sak",
+          "Теги": "Taggar",
+          "Через пробел или запятую": "Åtskilda med mellanslag eller kommatecken",
+          "Пользователь": "Användare",
+          "Видимость": "Synlighet",
+          "Скрыть": "Dölj",
+          "Размытие": "Suddigt",
+          "Создать": "Skapa",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Regeln gäller inlägg som har alla angivna taggar och samma användare.",
+          "Укажите хотя бы один тег или пользователя": "Ange minst en tagg eller en användare",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "En regel döljer eller gör inlägg med de angivna taggarna och användaren suddiga. Regler sparas direkt — knappen «Spara» behövs inte.",
+          "Правил пока нет": "Inga regler än",
+          "Удалить правило": "Ta bort regeln",
+          "Правило добавлено": "Regeln har lagts till",
+          "Правило удалено": "Regeln har tagits bort",
+          "Скрыто постов: {n}": "Dolda inlägg: {n}"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2827,7 +3075,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Gennemsnit: {n} ud af 5, stemmer: {m}",
           "Числом": "Som tal",
           "Звёздами": "Som stjerner",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Træk mærkaterne hen i hjørnerne af forhåndsvisningen — et hjørne kan rumme flere. Et klik flytter dem også."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Træk mærkaterne hen i hjørnerne af forhåndsvisningen — et hjørne kan rumme flere. Et klik flytter dem også.",
+          "Настройки видимости": "Synlighedsindstillinger",
+          "Показать размытые посты": "Vis slørede opslag",
+          "Создать новое правило": "Opret en ny regel",
+          "То же самое делает клавиша {key}": "Tasten {key} gør det samme",
+          "Теги": "Tags",
+          "Через пробел или запятую": "Adskilt med mellemrum eller komma",
+          "Пользователь": "Bruger",
+          "Видимость": "Synlighed",
+          "Скрыть": "Skjul",
+          "Размытие": "Slør",
+          "Создать": "Opret",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Reglen gælder opslag med alle de angivne tags og den angivne bruger.",
+          "Укажите хотя бы один тег или пользователя": "Angiv mindst ét tag eller en bruger",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "En regel skjuler eller slører opslag med de angivne tags og bruger. Regler gemmes med det samme — knappen «Gem» er ikke nødvendig.",
+          "Правил пока нет": "Ingen regler endnu",
+          "Удалить правило": "Slet reglen",
+          "Правило добавлено": "Reglen er tilføjet",
+          "Правило удалено": "Reglen er slettet",
+          "Скрыто постов: {n}": "Skjulte opslag: {n}"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3013,7 +3280,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Gjennomsnitt: {n} av 5, stemmer: {m}",
           "Числом": "Som tall",
           "Звёздами": "Som stjerner",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra merkene til hjørnene i forhåndsvisningen — ett hjørne kan ha flere. Et klikk flytter dem også."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra merkene til hjørnene i forhåndsvisningen — ett hjørne kan ha flere. Et klikk flytter dem også.",
+          "Настройки видимости": "Synlighetsinnstillinger",
+          "Показать размытые посты": "Vis uskarpe innlegg",
+          "Создать новое правило": "Opprett en ny regel",
+          "То же самое делает клавиша {key}": "Tasten {key} gjør det samme",
+          "Теги": "Tagger",
+          "Через пробел или запятую": "Atskilt med mellomrom eller komma",
+          "Пользователь": "Bruker",
+          "Видимость": "Synlighet",
+          "Скрыть": "Skjul",
+          "Размытие": "Uskarphet",
+          "Создать": "Opprett",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Regelen gjelder innlegg som har alle de oppgitte taggene og samme bruker.",
+          "Укажите хотя бы один тег или пользователя": "Oppgi minst én tagg eller bruker",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "En regel skjuler eller gjør innlegg med de oppgitte taggene og brukeren uskarpe. Regler lagres med én gang, «Lagre»-knappen trengs ikke.",
+          "Правил пока нет": "Ingen regler ennå",
+          "Удалить правило": "Slett regelen",
+          "Правило добавлено": "Regelen er lagt til",
+          "Правило удалено": "Regelen er slettet",
+          "Скрыто постов: {n}": "Skjulte innlegg: {n}"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3199,7 +3485,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Keskiarvo: {n}/5, ääniä: {m}",
           "Числом": "Numerona",
           "Звёздами": "Tähtinä",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Vedä merkit esikatselun kulmiin — yhteen kulmaan mahtuu useita. Myös napsautus siirtää merkin."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Vedä merkit esikatselun kulmiin — yhteen kulmaan mahtuu useita. Myös napsautus siirtää merkin.",
+          "Настройки видимости": "Näkyvyysasetukset",
+          "Показать размытые посты": "Näytä sumennetut julkaisut",
+          "Создать новое правило": "Luo uusi sääntö",
+          "То же самое делает клавиша {key}": "Näppäin {key} tekee saman",
+          "Теги": "Tunnisteet",
+          "Через пробел или запятую": "Välilyönnillä tai pilkulla eroteltuna",
+          "Пользователь": "Käyttäjä",
+          "Видимость": "Näkyvyys",
+          "Скрыть": "Piilota",
+          "Размытие": "Sumennus",
+          "Создать": "Luo",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Sääntö koskee julkaisuja, joissa on kaikki annetut tunnisteet ja annettu käyttäjä.",
+          "Укажите хотя бы один тег или пользователя": "Anna vähintään yksi tunniste tai käyttäjä",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Sääntö piilottaa tai sumentaa julkaisut, joissa on annetut tunnisteet ja käyttäjä. Säännöt tallentuvat heti, «Tallenna»-painiketta ei tarvita.",
+          "Правил пока нет": "Ei vielä sääntöjä",
+          "Удалить правило": "Poista sääntö",
+          "Правило добавлено": "Sääntö lisätty",
+          "Правило удалено": "Sääntö poistettu",
+          "Скрыто постов: {n}": "Piilotettuja julkaisuja: {n}"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3385,7 +3690,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}",
           "Числом": "Számmal",
           "Звёздами": "Csillagokkal",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Húzza a címkéket az előnézet sarkaiba — egy sarokban több is elfér. Kattintásra is átkerülnek."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Húzza a címkéket az előnézet sarkaiba — egy sarokban több is elfér. Kattintásra is átkerülnek.",
+          "Настройки видимости": "Láthatósági beállítások",
+          "Показать размытые посты": "Elmosott bejegyzések mutatása",
+          "Создать новое правило": "Új szabály létrehozása",
+          "То же самое делает клавиша {key}": "A(z) {key} billentyű ugyanezt teszi",
+          "Теги": "Címkék",
+          "Через пробел или запятую": "Szóközzel vagy vesszővel elválasztva",
+          "Пользователь": "Felhasználó",
+          "Видимость": "Láthatóság",
+          "Скрыть": "Elrejtés",
+          "Размытие": "Elmosás",
+          "Создать": "Létrehozás",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "A szabály azokra a bejegyzésekre vonatkozik, amelyeken minden megadott címke szerepel és a felhasználó egyezik.",
+          "Укажите хотя бы один тег или пользователя": "Adjon meg legalább egy címkét vagy felhasználót",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "A szabály elrejti vagy elmossa a megadott címkékkel és felhasználóval rendelkező bejegyzéseket. A szabályok azonnal mentődnek, a «Mentés» gomb nem kell hozzájuk.",
+          "Правил пока нет": "Még nincsenek szabályok",
+          "Удалить правило": "Szabály törlése",
+          "Правило добавлено": "Szabály hozzáadva",
+          "Правило удалено": "Szabály törölve",
+          "Скрыто постов: {n}": "Elrejtett bejegyzések: {n}"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3571,7 +3895,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Nota medie: {n} din 5, voturi: {m}",
           "Числом": "Ca număr",
           "Звёздами": "Ca stele",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trageți etichetele în colțurile previzualizării — într-un colț încap mai multe. Clicul le mută de asemenea."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trageți etichetele în colțurile previzualizării — într-un colț încap mai multe. Clicul le mută de asemenea.",
+          "Настройки видимости": "Setări de vizibilitate",
+          "Показать размытые посты": "Arată postările neclare",
+          "Создать новое правило": "Creați o regulă nouă",
+          "То же самое делает клавиша {key}": "Tasta {key} face același lucru",
+          "Теги": "Etichete",
+          "Через пробел или запятую": "Separate prin spații sau virgule",
+          "Пользователь": "Utilizator",
+          "Видимость": "Vizibilitate",
+          "Скрыть": "Ascunde",
+          "Размытие": "Neclaritate",
+          "Создать": "Creează",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Regula se aplică postărilor care au toate etichetele indicate și același utilizator.",
+          "Укажите хотя бы один тег или пользователя": "Indicați cel puțin o etichetă sau un utilizator",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "O regulă ascunde sau estompează postările cu etichetele și utilizatorul indicați. Regulile se salvează imediat, butonul «Salvează» nu este necesar.",
+          "Правил пока нет": "Încă nu există reguli",
+          "Удалить правило": "Șterge regula",
+          "Правило добавлено": "Regulă adăugată",
+          "Правило удалено": "Regulă ștearsă",
+          "Скрыто постов: {n}": "Postări ascunse: {n}"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3757,7 +4100,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Средна оценка: {n} от 5, гласове: {m}",
           "Числом": "С число",
           "Звёздами": "Със звезди",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Плъзнете етикетите по ъглите на визуализацията — в един ъгъл може да има няколко. Кликването също ги мести."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Плъзнете етикетите по ъглите на визуализацията — в един ъгъл може да има няколко. Кликването също ги мести.",
+          "Настройки видимости": "Настройки за видимост",
+          "Показать размытые посты": "Показване на размитите публикации",
+          "Создать новое правило": "Създаване на ново правило",
+          "То же самое делает клавиша {key}": "Клавишът {key} прави същото",
+          "Теги": "Тагове",
+          "Через пробел или запятую": "Разделени с интервал или запетая",
+          "Пользователь": "Потребител",
+          "Видимость": "Видимост",
+          "Скрыть": "Скриване",
+          "Размытие": "Размиване",
+          "Создать": "Създаване",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Правилото важи за публикации с всички изброени тагове и от посочения потребител.",
+          "Укажите хотя бы один тег или пользователя": "Посочете поне един таг или потребител",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Правилото скрива или размива публикации с посочените тагове и потребител. Правилата се запазват веднага, бутонът «Запази» не е нужен.",
+          "Правил пока нет": "Още няма правила",
+          "Удалить правило": "Изтриване на правилото",
+          "Правило добавлено": "Правилото е добавено",
+          "Правило удалено": "Правилото е изтрито",
+          "Скрыто постов: {n}": "Скрити публикации: {n}"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3943,7 +4305,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Μέση βαθμολογία: {n} στα 5, ψήφοι: {m}",
           "Числом": "Ως αριθμός",
           "Звёздами": "Ως αστέρια",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Σύρετε τις ετικέτες στις γωνίες της προεπισκόπησης — μια γωνία χωράει πολλές. Το κλικ τις μετακινεί επίσης."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Σύρετε τις ετικέτες στις γωνίες της προεπισκόπησης — μια γωνία χωράει πολλές. Το κλικ τις μετακινεί επίσης.",
+          "Настройки видимости": "Ρυθμίσεις ορατότητας",
+          "Показать размытые посты": "Εμφάνιση θολωμένων αναρτήσεων",
+          "Создать новое правило": "Δημιουργία νέου κανόνα",
+          "То же самое делает клавиша {key}": "Το πλήκτρο {key} κάνει το ίδιο",
+          "Теги": "Ετικέτες",
+          "Через пробел или запятую": "Χωρισμένα με κενό ή κόμμα",
+          "Пользователь": "Χρήστης",
+          "Видимость": "Ορατότητα",
+          "Скрыть": "Απόκρυψη",
+          "Размытие": "Θόλωμα",
+          "Создать": "Δημιουργία",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Ο κανόνας ισχύει για αναρτήσεις με όλες τις ετικέτες και τον συγκεκριμένο χρήστη.",
+          "Укажите хотя бы один тег или пользователя": "Δώστε τουλάχιστον μία ετικέτα ή έναν χρήστη",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Ο κανόνας κρύβει ή θολώνει αναρτήσεις με τις ετικέτες και τον χρήστη. Οι κανόνες αποθηκεύονται αμέσως — το κουμπί «Αποθήκευση» δεν χρειάζεται.",
+          "Правил пока нет": "Δεν υπάρχουν κανόνες ακόμη",
+          "Удалить правило": "Διαγραφή κανόνα",
+          "Правило добавлено": "Ο κανόνας προστέθηκε",
+          "Правило удалено": "Ο κανόνας διαγράφηκε",
+          "Скрыто постов: {n}": "Κρυμμένες αναρτήσεις: {n}"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4129,7 +4510,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Ortalama puan: 5 üzerinden {n}, oy: {m}",
           "Числом": "Sayı olarak",
           "Звёздами": "Yıldız olarak",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Etiketleri önizlemenin köşelerine sürükleyin — bir köşede birden fazla olabilir. Tıklamak da taşır."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Etiketleri önizlemenin köşelerine sürükleyin — bir köşede birden fazla olabilir. Tıklamak da taşır.",
+          "Настройки видимости": "Görünürlük ayarları",
+          "Показать размытые посты": "Bulanık gönderileri göster",
+          "Создать новое правило": "Yeni kural oluştur",
+          "То же самое делает клавиша {key}": "{key} tuşu da aynısını yapar",
+          "Теги": "Etiketler",
+          "Через пробел или запятую": "Boşluk veya virgülle ayırın",
+          "Пользователь": "Kullanıcı",
+          "Видимость": "Görünürlük",
+          "Скрыть": "Gizle",
+          "Размытие": "Bulanıklaştır",
+          "Создать": "Oluştur",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Kural, belirtilen etiketlerin tümüne sahip olan ve kullanıcısı eşleşen gönderilerde çalışır.",
+          "Укажите хотя бы один тег или пользователя": "En az bir etiket veya kullanıcı belirtin",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Kural, belirtilen etiketlere ve kullanıcıya sahip gönderileri gizler veya bulanıklaştırır. Kurallar hemen kaydedilir, «Kaydet» düğmesi gerekmez.",
+          "Правил пока нет": "Henüz kural yok",
+          "Удалить правило": "Kuralı sil",
+          "Правило добавлено": "Kural eklendi",
+          "Правило удалено": "Kural silindi",
+          "Скрыто постов: {n}": "Gizlenen gönderi: {n}"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4315,7 +4715,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "คะแนนเฉลี่ย: {n} จาก 5, โหวต: {m}",
           "Числом": "เป็นตัวเลข",
           "Звёздами": "เป็นดาว",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "ลากป้ายไปยังมุมของตัวอย่าง — มุมเดียวใส่ได้หลายป้าย คลิกที่ป้ายก็ย้ายได้เช่นกัน"
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "ลากป้ายไปยังมุมของตัวอย่าง — มุมเดียวใส่ได้หลายป้าย คลิกที่ป้ายก็ย้ายได้เช่นกัน",
+          "Настройки видимости": "การตั้งค่าการมองเห็น",
+          "Показать размытые посты": "แสดงโพสต์ที่เบลอ",
+          "Создать новое правило": "สร้างกฎใหม่",
+          "То же самое делает клавиша {key}": "ปุ่ม {key} ทำสิ่งเดียวกัน",
+          "Теги": "แท็ก",
+          "Через пробел или запятую": "คั่นด้วยช่องว่างหรือจุลภาค",
+          "Пользователь": "ผู้ใช้",
+          "Видимость": "การมองเห็น",
+          "Скрыть": "ซ่อน",
+          "Размытие": "เบลอ",
+          "Создать": "สร้าง",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "กฎนี้ใช้กับโพสต์ที่มีแท็กครบทุกแท็กและผู้ใช้ตรงกัน",
+          "Укажите хотя бы один тег или пользователя": "ระบุแท็กหรือผู้ใช้อย่างน้อยหนึ่งอย่าง",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "กฎจะซ่อนหรือเบลอโพสต์ที่มีแท็กและผู้ใช้ที่ระบุ กฎจะถูกบันทึกทันที ไม่ต้องกดปุ่ม «บันทึก»",
+          "Правил пока нет": "ยังไม่มีกฎ",
+          "Удалить правило": "ลบกฎ",
+          "Правило добавлено": "เพิ่มกฎแล้ว",
+          "Правило удалено": "ลบกฎแล้ว",
+          "Скрыто постов: {n}": "โพสต์ที่ซ่อน: {n}"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4501,7 +4920,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "औसत रेटिंग: 5 में से {n}, वोट: {m}",
           "Числом": "संख्या में",
           "Звёздами": "तारों में",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "लेबल को प्रीव्यू के कोनों में खींचें — एक कोने में कई हो सकते हैं। क्लिक करने पर भी वे खिसकते हैं।"
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "लेबल को प्रीव्यू के कोनों में खींचें — एक कोने में कई हो सकते हैं। क्लिक करने पर भी वे खिसकते हैं।",
+          "Настройки видимости": "दृश्यता सेटिंग्स",
+          "Показать размытые посты": "धुंधली पोस्ट दिखाएँ",
+          "Создать новое правило": "नया नियम बनाएँ",
+          "То же самое делает клавиша {key}": "{key} कुंजी भी यही करती है",
+          "Теги": "टैग",
+          "Через пробел или запятую": "स्पेस या अल्पविराम से अलग करें",
+          "Пользователь": "उपयोगकर्ता",
+          "Видимость": "दृश्यता",
+          "Скрыть": "छिपाएँ",
+          "Размытие": "धुंधला",
+          "Создать": "बनाएँ",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "नियम उन पोस्ट पर लागू होता है जिनमें सभी बताए गए टैग हों और उपयोगकर्ता मेल खाता हो।",
+          "Укажите хотя бы один тег или пользователя": "कम से कम एक टैग या उपयोगकर्ता बताएँ",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "नियम बताए गए टैग और उपयोगकर्ता वाली पोस्ट को छिपाता या धुंधला करता है। नियम तुरंत सहेजे जाते हैं, «सहेजें» बटन की ज़रूरत नहीं।",
+          "Правил пока нет": "अभी कोई नियम नहीं",
+          "Удалить правило": "नियम हटाएँ",
+          "Правило добавлено": "नियम जोड़ा गया",
+          "Правило удалено": "नियम हटाया गया",
+          "Скрыто постов: {n}": "छिपाई गई पोस्ट: {n}"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4687,7 +5125,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Rating rata-rata: {n} dari 5, suara: {m}",
           "Числом": "Sebagai angka",
           "Звёздами": "Sebagai bintang",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratinjau — satu sudut bisa memuat beberapa. Mengklik label juga memindahkannya."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratinjau — satu sudut bisa memuat beberapa. Mengklik label juga memindahkannya.",
+          "Настройки видимости": "Pengaturan visibilitas",
+          "Показать размытые посты": "Tampilkan postingan yang diburamkan",
+          "Создать новое правило": "Buat aturan baru",
+          "То же самое делает клавиша {key}": "Tombol {key} melakukan hal yang sama",
+          "Теги": "Tag",
+          "Через пробел или запятую": "Dipisahkan dengan spasi atau koma",
+          "Пользователь": "Pengguna",
+          "Видимость": "Visibilitas",
+          "Скрыть": "Sembunyikan",
+          "Размытие": "Buramkan",
+          "Создать": "Buat",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Aturan berlaku untuk postingan yang memiliki semua tag tersebut dan pengguna yang cocok.",
+          "Укажите хотя бы один тег или пользователя": "Masukkan setidaknya satu tag atau pengguna",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Aturan menyembunyikan atau memburamkan postingan dengan tag dan pengguna tersebut. Aturan langsung tersimpan, tombol «Simpan» tidak diperlukan.",
+          "Правил пока нет": "Belum ada aturan",
+          "Удалить правило": "Hapus aturan",
+          "Правило добавлено": "Aturan ditambahkan",
+          "Правило удалено": "Aturan dihapus",
+          "Скрыто постов: {n}": "Postingan tersembunyi: {n}"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4873,7 +5330,26 @@ function core(storedSettings) {
           "Средняя оценка: {n} из 5, голосов: {m}": "Penilaian purata: {n} daripada 5, undian: {m}",
           "Числом": "Sebagai nombor",
           "Звёздами": "Sebagai bintang",
-          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratonton — satu sudut boleh memuatkan beberapa. Klik juga memindahkannya."
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratonton — satu sudut boleh memuatkan beberapa. Klik juga memindahkannya.",
+          "Настройки видимости": "Tetapan keterlihatan",
+          "Показать размытые посты": "Tunjukkan siaran yang dikaburkan",
+          "Создать новое правило": "Cipta peraturan baharu",
+          "То же самое делает клавиша {key}": "Kekunci {key} melakukan perkara yang sama",
+          "Теги": "Tag",
+          "Через пробел или запятую": "Dipisahkan dengan ruang atau koma",
+          "Пользователь": "Pengguna",
+          "Видимость": "Keterlihatan",
+          "Скрыть": "Sembunyikan",
+          "Размытие": "Kaburkan",
+          "Создать": "Cipta",
+          "Правило сработает у постов, где есть все указанные теги и совпадает автор.": "Peraturan ini terpakai pada siaran yang mempunyai semua tag tersebut dan pengguna yang sepadan.",
+          "Укажите хотя бы один тег или пользователя": "Masukkan sekurang-kurangnya satu tag atau pengguna",
+          "Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.": "Peraturan menyembunyikan atau mengaburkan siaran dengan tag dan pengguna tersebut. Peraturan disimpan serta-merta, butang «Simpan» tidak diperlukan.",
+          "Правил пока нет": "Belum ada peraturan",
+          "Удалить правило": "Padam peraturan",
+          "Правило добавлено": "Peraturan ditambah",
+          "Правило удалено": "Peraturan dipadam",
+          "Скрыто постов: {n}": "Siaran tersembunyi: {n}"
     },
   } /* SKQ_I18N_END */;
 
@@ -4979,10 +5455,22 @@ function core(storedSettings) {
     (typeof o.id === 'number' || typeof o.id === 'string') &&
     ('fav_count' in o || 'total_score' in o || 'vote_count' in o);
 
+  // Сайт зовёт тег по-разному в зависимости от ответа, а нам нужно одно написание
+  const tagKey = (v) => String(v == null ? '' : v).trim().toLowerCase().replace(/\s+/g, '_');
+  const tagNames = (list) => (Array.isArray(list)
+    ? list.map((x) => tagKey(isObj(x) ? (x.name || x.tagName || x.name_en || x.name_ja) : x)).filter(Boolean)
+    : undefined);
+  const ownerName = (src) => {
+    for (const o of [src.author, src.user, src.uploader]) if (isObj(o) && o.name) return String(o.name);
+    return undefined;
+  };
+
   function remember(src, soft) {
     const id = String(src.id);
     const p = posts.get(id) || { id };
     const vals = {
+      tags: tagNames(src.tags),
+      owner: ownerName(src),
       md5: src.md5,
       total_score: src.total_score,
       vote_count: src.vote_count,
@@ -5571,6 +6059,7 @@ function core(storedSettings) {
       injectMassMenuItem();
       syncMassRoute();
       injectHeaderLinks();
+      injectEyeButton();
     }
 
     for (const svg of document.querySelectorAll('svg[data-test$="stars"]:not(.skq-star)')) {
@@ -5782,6 +6271,47 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
+  // ---------------------------------------------------------------------------
+  // Свои правила видимости: пост с этими тегами и/или от этого автора
+  // прячется совсем или показывается размытым
+  // ---------------------------------------------------------------------------
+  const ruleList = () => (Array.isArray(settings.rules) ? settings.rules : []);
+
+  function ruleHit(rule, post) {
+    if (!isObj(rule) || !isObj(post)) return false;
+    const tags = Array.isArray(rule.tags) ? rule.tags : [];
+    if (!tags.length && !rule.user) return false;
+    if (rule.user && tagKey(post.owner) !== tagKey(rule.user)) return false;
+    // теги перечислены через «и», как в правилах самого сайта
+    const have = Array.isArray(post.tags) ? post.tags : [];
+    return tags.every((tag) => have.includes(tag));
+  }
+
+  // «Скрыть» сильнее «Размытия»: одно правило прячет, даже если другое лишь размывает
+  function ruleFor(id) {
+    const post = posts.get(String(id));
+    if (!post) return null;
+    let blur = null;
+    for (const rule of ruleList()) {
+      if (!ruleHit(rule, post)) continue;
+      if (rule.mode !== 'blur') return rule;
+      blur = blur || rule;
+    }
+    return blur;
+  }
+
+  const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  function addRule(rule) {
+    saveSettings({ rules: [...ruleList(), { id: ruleId(), ...rule }] });
+    toast(t('Правило добавлено'));
+  }
+
+  function dropRule(id) {
+    saveSettings({ rules: ruleList().filter((r) => r.id !== id) });
+    toast(t('Правило удалено'));
+  }
+
   // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
   const CORNERS = ['tl', 'tr', 'bl', 'br'];
   const BADGES = [
@@ -5844,8 +6374,10 @@ function core(storedSettings) {
   function markCards() {
     if (FRAME_MODE || !document.body) return;
     const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
+    let hidden = 0;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = wantVote || wantFavs || wantScore ? cardId(card) : null;
+      // теги и автор нужны правилам, поэтому ID берём всегда
+      const id = cardId(card);
       // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
@@ -5864,7 +6396,18 @@ function core(storedSettings) {
       cardBadge(card, BADGES[2], favs ? `♥ ${shortCount(favs)}` : null,
         favs ? t('Лайков: {n}', { n: favs }) : '', badgeCorner('favs'));
       tidyCorners(card);
+
+      const post = id ? posts.get(id) : null;
+      card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
+      const rule = id ? ruleFor(id) : null;
+      const hide = !!rule && rule.mode !== 'blur';
+      card.classList.toggle('skq-rule-hide', hide);
+      // «Показать размытые посты» снимает и наше размытие
+      card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
+      if (hide) hidden++;
     }
+    ruleHidden = hidden;
+    updateEyeCount();
   }
 
   // ---- Скрытые превью ----
@@ -9944,6 +10487,104 @@ function core(storedSettings) {
   }
 
   // ---------------------------------------------------------------------------
+  // Кнопка-глаз рядом с фильтрами: показать размытое и завести своё правило
+  // ---------------------------------------------------------------------------
+  const FILTER_ICON = 'M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z';
+  const EYE_ON_ICON = 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s10.27-3.11 12-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z';
+  const EYE_OFF_ICON = 'M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z';
+
+  let ruleHidden = 0; // сколько постов на странице спрятано нашими правилами
+  let eyeMenu = null;
+
+  const filterButton = () => {
+    for (const path of document.querySelectorAll('button svg path')) {
+      if (path.getAttribute('d') === FILTER_ICON) return path.closest('button');
+    }
+    return null;
+  };
+
+  const eyeButton = () => document.querySelector('.skq-eyebtn');
+
+  function updateEyeCount() {
+    const btn = eyeButton();
+    if (!btn) return;
+    const badge = btn.querySelector('.skq-eyecount');
+    const text = ruleHidden > 0 ? shortCount(ruleHidden) : '';
+    if (badge && badge.textContent !== text) {
+      badge.textContent = text;
+      badge.title = ruleHidden > 0 ? t('Скрыто постов: {n}', { n: ruleHidden }) : '';
+    }
+    const icon = btn.querySelector('svg path');
+    if (icon) icon.setAttribute('d', revealAll ? EYE_ON_ICON : EYE_OFF_ICON);
+  }
+
+  function injectEyeButton() {
+    const near = filterButton();
+    if (!near) { closeEyeMenu(); return; }
+    const anchor = near.closest('[class*="MuiBadge-root"]') || near;
+    const holder = anchor.parentElement;
+    if (!holder || holder.querySelector(':scope > .skq-eyebtn')) { updateEyeCount(); return; }
+    const btn = near.cloneNode(true);
+    btn.removeAttribute('id');
+    btn.classList.add('skq-eyebtn');
+    btn.setAttribute('aria-label', t('Настройки видимости'));
+    btn.title = t('Настройки видимости');
+    btn.querySelectorAll('svg path').forEach((path) => path.setAttribute('d', EYE_OFF_ICON));
+    const badge = document.createElement('span');
+    badge.className = 'skq-eyecount';
+    btn.appendChild(badge);
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (eyeMenu) closeEyeMenu();
+      else openEyeMenu(btn);
+    });
+    holder.insertBefore(btn, anchor);
+    updateEyeCount();
+  }
+
+  function closeEyeMenu() {
+    if (!eyeMenu) return;
+    eyeMenu.remove();
+    eyeMenu = null;
+  }
+
+  function openEyeMenu(btn) {
+    const menu = document.createElement('div');
+    menu.className = 'skq-eyemenu';
+    menu.innerHTML = `
+      <label class="skq-eyerow"><span>${T('Показать размытые посты')}</span>
+        <input type="checkbox" class="skq-eyesw"></label>
+      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>`;
+    const row = menu.querySelector('.skq-eyerow');
+    row.title = t('То же самое делает клавиша {key}', { key: keyLabel(settings.revealAllKey) });
+    const sw = menu.querySelector('.skq-eyesw');
+    sw.checked = revealAll;
+    sw.addEventListener('change', () => {
+      if (sw.checked !== revealAll) toggleRevealAll();
+      sw.checked = revealAll;
+      updateEyeCount();
+    });
+    menu.querySelector('.skq-eyeadd').addEventListener('click', () => {
+      closeEyeMenu();
+      openRuleDialog(addRule);
+    });
+    document.body.appendChild(menu);
+    const r = btn.getBoundingClientRect();
+    const width = menu.getBoundingClientRect().width;
+    menu.style.top = Math.round(r.bottom + 6) + 'px';
+    menu.style.left = Math.round(Math.max(8, Math.min(r.right - width, innerWidth - width - 8))) + 'px';
+    eyeMenu = menu;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (!eyeMenu) return;
+    const node = e.composedPath ? e.composedPath()[0] : e.target;
+    if (node instanceof Node && (eyeMenu.contains(node) || (eyeButton() && eyeButton().contains(node)))) return;
+    closeEyeMenu();
+  }, true);
+
+  // ---------------------------------------------------------------------------
   // Кнопки в шапке: со страницы своих постов — к загрузке и обратно.
   // Рисуются по образцу кнопки самого сайта, чтобы не выбиваться из шапки.
   // ---------------------------------------------------------------------------
@@ -10155,6 +10796,25 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    .fld { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+    .fld > span { color: #bbb; }
+    .fld input[type=text] {
+      padding: 8px 10px; border-radius: 6px; border: 1px solid #555;
+      background: #1f1f1f; color: #fff; font-size: 14px;
+    }
+    .fld input[type=text]:focus { outline: 2px solid #ff8c00; outline-offset: 1px; }
+    .picks { display: flex; gap: 20px; }
+    .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .rrow {
+      display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+      border: 1px solid #444; border-radius: 8px;
+    }
+    .rchips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; min-width: 0; }
+    .rchip { padding: 2px 10px; border-radius: 12px; background: #ff8c00; color: #fff; font-size: 13px; }
+    .rchip.user { background: #4a6fa5; }
+    .rmode { flex: none; color: #bbb; font-size: 13px; }
+    .rdel { flex: none; padding: 4px 9px; border-radius: 50%; line-height: 1; }
+    .rdel:hover { background: #b3261e; border-color: #b3261e; color: #fff; }
     /* превью карточки: метки перетаскиваются по углам */
     .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
     .cardsopts { flex: 1 1 auto; min-width: 0; }
@@ -10268,6 +10928,7 @@ function core(storedSettings) {
         <div class="tabs" role="tablist">
           <button type="button" class="tab on" data-page="main" role="tab">${T('Основное')}</button>
           <button type="button" class="tab" data-page="menu" role="tab">${T('Меню сайта')}</button>
+          <button type="button" class="tab" data-page="rules" role="tab">${T('Настройки видимости')}</button>
         </div>
         <div class="page" data-page="main">
         <fieldset>
@@ -10335,6 +10996,11 @@ function core(storedSettings) {
           </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
+        </div>
+        <div class="page" data-page="rules" hidden>
+          <div class="rlist"></div>
+          <button type="button" class="addrule"
+            title="${T('Правило прячет или размывает посты с указанными тегами и автором. Правила сохраняются сразу, кнопка «Сохранить» им не нужна.')}">+ ${T('Создать новое правило')}</button>
         </div>
         <div class="actions">
           <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
@@ -10421,6 +11087,52 @@ function core(storedSettings) {
       );
       return head;
     }
+
+    function renderRules() {
+      const list = root.querySelector('.rlist');
+      list.replaceChildren();
+      const rules = ruleList();
+      if (!rules.length) {
+        const empty = document.createElement('p');
+        empty.className = 'hint';
+        empty.textContent = t('Правил пока нет');
+        list.appendChild(empty);
+        return;
+      }
+      for (const rule of rules) {
+        const row = document.createElement('div');
+        row.className = 'rrow';
+        const chips = document.createElement('div');
+        chips.className = 'rchips';
+        for (const tag of rule.tags || []) {
+          const chip = document.createElement('span');
+          chip.className = 'rchip';
+          chip.textContent = tag;
+          chips.appendChild(chip);
+        }
+        if (rule.user) {
+          const chip = document.createElement('span');
+          chip.className = 'rchip user';
+          chip.textContent = '@' + rule.user;
+          chips.appendChild(chip);
+        }
+        const mode = document.createElement('span');
+        mode.className = 'rmode';
+        mode.textContent = rule.mode === 'blur' ? t('Размытие') : t('Скрыть');
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'rdel';
+        del.title = t('Удалить правило');
+        del.textContent = '✕';
+        del.addEventListener('click', () => { dropRule(rule.id); renderRules(); });
+        row.append(chips, mode, del);
+        list.appendChild(row);
+      }
+    }
+
+    root.querySelector('.addrule').addEventListener('click', () => {
+      openRuleDialog((rule) => { addRule(rule); renderRules(); });
+    });
 
     function renderMenuRows() {
       const list = root.querySelector('.mlist');
@@ -10512,6 +11224,7 @@ function core(storedSettings) {
     function fill(s) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      renderRules();
       badgeDraft = { ...DEFAULTS.badges };
       if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
       f('voteStars').value = s.voteStars ? 'stars' : 'num';
@@ -10759,6 +11472,58 @@ function core(storedSettings) {
     .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
+  // ---- Окно «Создать новое правило» ----
+  function openRuleDialog(onCreate) {
+    if (!document.body) return;
+    const wasOpen = settingsOpen;
+    settingsOpen = true;
+    const host = document.createElement('div');
+    host.className = 'skq-settings';
+    host.style.cssText = 'position:fixed;inset:0;z-index:2147483647;';
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = `
+      <style>${SETTINGS_CSS}</style>
+      <div class="backdrop"></div>
+      <form class="dlg" tabindex="-1" role="dialog" aria-modal="true" aria-label="${T('Создать новое правило')}">
+        <h2>${T('Создать новое правило')}</h2>
+        <div class="fld"><span>${T('Теги')}</span>
+          <input type="text" class="rtags" placeholder="${T('Через пробел или запятую')}"></div>
+        <div class="fld"><span>${T('Пользователь')}</span><input type="text" class="ruser"></div>
+        <div class="fld"><span>${T('Видимость')}</span>
+          <div class="picks">
+            <label class="pick"><input type="radio" name="mode" value="hide" checked> ${T('Скрыть')}</label>
+            <label class="pick"><input type="radio" name="mode" value="blur"> ${T('Размытие')}</label>
+          </div></div>
+        <p class="hint">${T('Правило сработает у постов, где есть все указанные теги и совпадает автор.')}</p>
+        <div class="actions"><span class="spacer"></span>
+          <button type="button" class="cancel2">${T('Отмена')}</button>
+          <button type="submit" class="save">${T('Создать')}</button></div>
+      </form>`;
+    document.body.appendChild(host);
+
+    const form = root.querySelector('form');
+    const close = () => {
+      host.remove();
+      settingsOpen = wasOpen;
+    };
+    root.querySelector('.backdrop').addEventListener('click', close);
+    root.querySelector('.cancel2').addEventListener('click', close);
+    form.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Escape') close();
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const tags = root.querySelector('.rtags').value.split(/[\s,]+/).map(tagKey).filter(Boolean);
+      const user = root.querySelector('.ruser').value.trim();
+      if (!tags.length && !user) { toast(t('Укажите хотя бы один тег или пользователя'), true); return; }
+      const mode = root.querySelector('input[name="mode"]:checked').value;
+      close();
+      onCreate({ tags, user, mode });
+    });
+    root.querySelector('.rtags').focus();
+  }
+
   // ---- Вкладка «Плагин» на странице настроек сайта ----
   const TABLIST_SEL = '[role="tablist"][aria-label="User Settings"], [role="tablist"][aria-label*="settings" i]';
   const settingsTab = { tab: null, panel: null, ui: null, active: false };
@@ -10954,6 +11719,29 @@ function core(storedSettings) {
     .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
+    ${CARD_SEL}.skq-rule-hide { display: none !important; }
+    ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video { filter: blur(20px); }
+    ${CARD_SEL}.skq-favcard > *:not(.skq-corner) { box-shadow: 0 0 0 2px #ff4f70; border-radius: 6px; }
+    .skq-eyebtn { position: relative; }
+    .skq-eyecount {
+      position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 9px; background: #ff8c00; color: #fff; pointer-events: none;
+      font: 700 11px/18px Roboto, "Helvetica Neue", Arial, sans-serif; text-align: center;
+    }
+    .skq-eyecount:empty { display: none; }
+    .skq-eyemenu {
+      position: fixed; z-index: 2147483000; min-width: 268px; padding: 6px; border-radius: 10px;
+      background: #2b2b2b; color: #eee; box-shadow: 0 12px 40px rgba(0, 0, 0, .6);
+      font: 14px/1.4 Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .skq-eyerow {
+      display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; margin: 0;
+      border: 0; border-radius: 8px; background: none; color: inherit; font: inherit;
+      text-align: left; cursor: pointer;
+    }
+    .skq-eyerow:hover { background: rgba(255, 255, 255, .1); }
+    .skq-eyerow span { flex: 1 1 auto; }
+    .skq-eyerow input[type=checkbox] { width: 18px; height: 18px; margin: 0; accent-color: #ff8c00; }
     .skq-hdr-btn {
       display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; padding: 6px 16px;
       border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer;
