@@ -119,8 +119,12 @@ version 142 and newer). On a touch screen:
 - bulk upload keeps at most two forms open at once even if the setting says
   more: every form is a full copy of the site's page.
 
-Not available on a phone: the hotkeys (1–5, F, C, E), selecting cards with the
-arrow keys, and revealing previews on hover.
+The «B» key reveals every hidden preview on the page at once and hides them
+again on the next press. The card under the mouse gets the same outline as the
+one selected with the arrow keys.
+
+Not available on a phone: the hotkeys (1–5, F, C, E, B), selecting cards with
+the arrow keys, and revealing previews on hover.
 
 ## Cutting a release
 

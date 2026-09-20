@@ -65,6 +65,9 @@
 .pcard { width: 160px; }
 .pinner { background: #444; }
 .pcard img { width: 160px; height: 160px; display: block; }
+.pinner.blurred { position: relative; }
+.pinner.blurred img { filter: blur(12px); }
+.pinner .eyeoff { position: absolute; left: 68px; top: 68px; fill: #fff; }
 </style>
 </head><body>
 <header class="MuiAppBar-root"><button id="menu" data-test="hamburger-menu">☰</button><div id="portal-title"><h2 id="title" class="MuiTypography-root MuiTypography-h6"></h2></div><div id="portal-buttons"></div></header>
@@ -383,7 +386,7 @@
       titleEl.textContent = tags === 'user:ilyuxa3211'
         ? word(books ? 'common-title__my-books' : 'common-title__my-posts')
         : books ? word('common-title__browse_books') : 'Просмотр';
-      app.innerHTML = `<div class="grid"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/100"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/101"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/102"><img src="http://127.0.0.1:8766/PreviewUnavailable.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/103"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/104"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/105"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div>`;
+      app.innerHTML = `<div class="grid"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/100"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/101"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/102"><img src="http://127.0.0.1:8766/PreviewUnavailable.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner blurred"><a href="/ru/posts/103"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a><svg class="eyeoff" width="24" height="24" viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7"/></svg></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/104"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/105"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div>`;
       fetch('http://127.0.0.1:8766/posts?lang=ru&page=1&limit=6', { headers: { Authorization: 'Bearer test-token' } });
     }
   }

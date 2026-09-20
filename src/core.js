@@ -49,6 +49,7 @@ function core(storedSettings) {
     favKey: 'KeyF',
     commentKey: 'KeyC',
     emotionKey: 'KeyE',
+    revealAllKey: 'KeyB',
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
@@ -803,6 +804,8 @@ function core(storedSettings) {
 
   function scan() {
     hideJunk();
+    markHover();
+    if (revealAll) revealEveryCard();
     mountSettingsTab();
     scanReputationDom();
     mountReputation();
@@ -1125,6 +1128,35 @@ function core(storedSettings) {
     if (activeId() !== id) cardLeft(target || card);
   }
 
+  // ---- Все скрытые превью разом ----
+  let revealAll = false;
+  let revealAllBusy = false;
+
+  // по нескольку карточек за раз: за частью превью приходится ходить в API
+  async function revealEveryCard() {
+    if (revealAllBusy) return;
+    revealAllBusy = true;
+    try {
+      const cards = allCards().filter(isHidden);
+      for (let i = 0; i < cards.length && revealAll; i += 4) {
+        await Promise.all(cards.slice(i, i + 4).map((card) => reveal(card).catch(() => {})));
+      }
+    } finally {
+      revealAllBusy = false;
+    }
+  }
+
+  function toggleRevealAll() {
+    revealAll = !revealAll;
+    if (revealAll) {
+      toast(t('Все скрытые превью показаны'));
+      revealEveryCard();
+      return;
+    }
+    for (const id of [...revealed.keys()]) unreveal(id);
+    toast(t('Превью снова скрыты'));
+  }
+
   // ---- Повторное скрытие после потери фокуса ----
   const rehideTimers = new Map();
 
@@ -1154,7 +1186,7 @@ function core(storedSettings) {
   }
 
   function cardLeft(card) {
-    if (!card || !settings.rehideOnBlur) return;
+    if (!card || !settings.rehideOnBlur || revealAll) return;
     const id = cardId(card);
     if (!id) return;
     cancelRehide(id);
@@ -1178,6 +1210,15 @@ function core(storedSettings) {
   }
 
   const activeCard = () => (kb.mode ? currentCard() : hoverCard && hoverCard.isConnected ? hoverCard : null);
+
+  // Карточка под мышью обводится так же, как выбранная стрелками
+  function markHover() {
+    const card = kb.mode || !hoverCard || !hoverCard.isConnected ? null : hoverCard;
+    for (const el of document.querySelectorAll('.skq-hover-active')) {
+      if (el !== card) el.classList.remove('skq-hover-active');
+    }
+    if (card) card.classList.add('skq-hover-active');
+  }
 
   function isOverlay(el) {
     for (let n = el; n && n !== document.body; n = n.parentElement) {
@@ -1621,6 +1662,14 @@ function core(storedSettings) {
       return;
     }
 
+    // показать всё скрытое можно и просто со страницы, без карточки под курсором;
+    // когда всё уже показано, та же клавиша возвращает как было
+    if (codeOf(e) === settings.revealAllKey && !e.shiftKey && (revealAll || allCards().some(isHidden))) {
+      e.preventDefault(); e.stopPropagation();
+      if (!e.repeat) toggleRevealAll();
+      return;
+    }
+
     const card = activeCard();
     if (!card) {
       handlePostHotkey(e);
@@ -1655,6 +1704,7 @@ function core(storedSettings) {
           if (card !== hoverCard) {
             cardLeft(hoverCard);
             hoverCard = card;
+            markHover();
             scheduleReveal(card, settings.revealHoverMs);
           }
         } else if (!closestEl(e.target, POPPER_SEL) && hoverCard) {
@@ -1710,6 +1760,7 @@ function core(storedSettings) {
     const prev = currentCard();
     deactivate(under);
     hoverCard = closestEl(under, CARD_SEL) || (closestEl(under, POPPER_SEL) ? prev : null);
+    markHover();
     scheduleReveal(hoverCard, settings.revealHoverMs);
     if (under && !(prev && prev.contains(under)) && !closestEl(under, POPPER_SEL)) fire(under, 'over', null);
   }, true);
@@ -5236,6 +5287,7 @@ function core(storedSettings) {
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
     { id: 'emotionKey', label: 'Эмоция (на странице поста), затем 1–6' },
+    { id: 'revealAllKey', label: 'Показать все скрытые превью / скрыть обратно' },
   ];
   const hotkeyLabel = (h) => t(h.label);
   const RESERVED_KEY_RE = /^(?:Arrow\w+|Digit[1-5]|Numpad[1-5]|Enter|NumpadEnter|Escape|Tab|Space|(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?|CapsLock|ContextMenu)$/;
@@ -5906,7 +5958,10 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > * { outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px; }
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-myvote):not(.skq-favs),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-myvote):not(.skq-favs) {
+      outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
+    }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
     ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
       position: absolute; top: 6px; z-index: 3; pointer-events: none;

@@ -175,6 +175,9 @@
   "Редактировать": "Edit",
   "Заголовок изменён: {name}": "Heading changed: {name}",
   "Название вернулось к исходному": "The name is back to the original",
-  "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press"
+  "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press",
+  "Показать все скрытые превью / скрыть обратно": "Show all hidden previews / hide them again",
+  "Все скрытые превью показаны": "All hidden previews are shown",
+  "Превью снова скрыты": "Previews are hidden again"
  }
 }

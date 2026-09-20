@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.28.0
+// @version      1.29.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -151,6 +151,7 @@ function core(storedSettings) {
     favKey: 'KeyF',
     commentKey: 'KeyC',
     emotionKey: 'KeyE',
+    revealAllKey: 'KeyB',
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
@@ -218,7 +219,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.28.0';
+  const SKQ_VERSION = '1.29.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -397,7 +398,10 @@ function core(storedSettings) {
           "Редактировать": "Edit",
           "Заголовок изменён: {name}": "Heading changed: {name}",
           "Название вернулось к исходному": "The name is back to the original",
-          "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press"
+          "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press",
+          "Показать все скрытые превью / скрыть обратно": "Show all hidden previews / hide them again",
+          "Все скрытые превью показаны": "All hidden previews are shown",
+          "Превью снова скрыты": "Previews are hidden again"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -575,7 +579,10 @@ function core(storedSettings) {
           "Редактировать": "編集",
           "Заголовок изменён: {name}": "見出しを変更しました: {name}",
           "Название вернулось к исходному": "名前を元に戻しました",
-          "И подсказывать в меню, какую клавишу нажать": "メニューに押すキーも表示する"
+          "И подсказывать в меню, какую клавишу нажать": "メニューに押すキーも表示する",
+          "Показать все скрытые превью / скрыть обратно": "非表示のプレビューをすべて表示／再び隠す",
+          "Все скрытые превью показаны": "非表示のプレビューをすべて表示しました",
+          "Превью снова скрыты": "プレビューを再び隠しました"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -753,7 +760,10 @@ function core(storedSettings) {
           "Редактировать": "编辑",
           "Заголовок изменён: {name}": "标题已改为：{name}",
           "Название вернулось к исходному": "名称已恢复为原来的",
-          "И подсказывать в меню, какую клавишу нажать": "并在菜单里提示还要按哪个键"
+          "И подсказывать в меню, какую клавишу нажать": "并在菜单里提示还要按哪个键",
+          "Показать все скрытые превью / скрыть обратно": "显示所有隐藏预览／重新隐藏",
+          "Все скрытые превью показаны": "已显示所有隐藏预览",
+          "Превью снова скрыты": "已重新隐藏预览"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -931,7 +941,10 @@ function core(storedSettings) {
           "Редактировать": "編輯",
           "Заголовок изменён: {name}": "標題已改為：{name}",
           "Название вернулось к исходному": "名稱已恢復為原來的",
-          "И подсказывать в меню, какую клавишу нажать": "並在選單裡提示還要按哪個鍵"
+          "И подсказывать в меню, какую клавишу нажать": "並在選單裡提示還要按哪個鍵",
+          "Показать все скрытые превью / скрыть обратно": "顯示所有隱藏預覽／重新隱藏",
+          "Все скрытые превью показаны": "已顯示所有隱藏預覽",
+          "Превью снова скрыты": "已重新隱藏預覽"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1109,7 +1122,10 @@ function core(storedSettings) {
           "Редактировать": "편집",
           "Заголовок изменён: {name}": "제목을 바꿨습니다: {name}",
           "Название вернулось к исходному": "이름을 원래대로 되돌렸습니다",
-          "И подсказывать в меню, какую клавишу нажать": "그리고 메뉴에 어떤 키를 누를지 표시"
+          "И подсказывать в меню, какую клавишу нажать": "그리고 메뉴에 어떤 키를 누를지 표시",
+          "Показать все скрытые превью / скрыть обратно": "숨겨진 미리보기 모두 표시 / 다시 숨기기",
+          "Все скрытые превью показаны": "숨겨진 미리보기를 모두 표시했습니다",
+          "Превью снова скрыты": "미리보기를 다시 숨겼습니다"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1287,7 +1303,10 @@ function core(storedSettings) {
           "Редактировать": "Bearbeiten",
           "Заголовок изменён: {name}": "Überschrift geändert: {name}",
           "Название вернулось к исходному": "Der Name ist wieder der ursprüngliche",
-          "И подсказывать в меню, какую клавишу нажать": "Und im Menü zeigen, welche Taste zu drücken ist"
+          "И подсказывать в меню, какую клавишу нажать": "Und im Menü zeigen, welche Taste zu drücken ist",
+          "Показать все скрытые превью / скрыть обратно": "Alle ausgeblendeten Vorschauen anzeigen / wieder ausblenden",
+          "Все скрытые превью показаны": "Alle ausgeblendeten Vorschauen werden angezeigt",
+          "Превью снова скрыты": "Vorschauen sind wieder ausgeblendet"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1465,7 +1484,10 @@ function core(storedSettings) {
           "Редактировать": "Modifier",
           "Заголовок изменён: {name}": "Titre modifié : {name}",
           "Название вернулось к исходному": "Le nom est revenu à l’original",
-          "И подсказывать в меню, какую клавишу нажать": "Et indiquer dans le menu quelle touche presser"
+          "И подсказывать в меню, какую клавишу нажать": "Et indiquer dans le menu quelle touche presser",
+          "Показать все скрытые превью / скрыть обратно": "Afficher tous les aperçus masqués / les masquer",
+          "Все скрытые превью показаны": "Tous les aperçus masqués sont affichés",
+          "Превью снова скрыты": "Les aperçus sont de nouveau masqués"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1643,7 +1665,10 @@ function core(storedSettings) {
           "Редактировать": "Editar",
           "Заголовок изменён: {name}": "Título cambiado: {name}",
           "Название вернулось к исходному": "El nombre volvió al original",
-          "И подсказывать в меню, какую клавишу нажать": "Y mostrar en el menú qué tecla pulsar"
+          "И подсказывать в меню, какую клавишу нажать": "Y mostrar en el menú qué tecla pulsar",
+          "Показать все скрытые превью / скрыть обратно": "Mostrar todas las vistas previas ocultas / ocultarlas",
+          "Все скрытые превью показаны": "Se muestran todas las vistas previas ocultas",
+          "Превью снова скрыты": "Las vistas previas están ocultas de nuevo"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1821,7 +1846,10 @@ function core(storedSettings) {
           "Редактировать": "Editar",
           "Заголовок изменён: {name}": "Título alterado: {name}",
           "Название вернулось к исходному": "O nome voltou ao original",
-          "И подсказывать в меню, какую клавишу нажать": "E mostrar no menu que tecla premir"
+          "И подсказывать в меню, какую клавишу нажать": "E mostrar no menu que tecla premir",
+          "Показать все скрытые превью / скрыть обратно": "Mostrar todas as pré-visualizações ocultas / ocultar novamente",
+          "Все скрытые превью показаны": "Todas as pré-visualizações ocultas estão visíveis",
+          "Превью снова скрыты": "As pré-visualizações estão ocultas novamente"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1999,7 +2027,10 @@ function core(storedSettings) {
           "Редактировать": "Modifica",
           "Заголовок изменён: {name}": "Titolo cambiato: {name}",
           "Название вернулось к исходному": "Il nome è tornato all’originale",
-          "И подсказывать в меню, какую клавишу нажать": "E mostrare nel menu quale tasto premere"
+          "И подсказывать в меню, какую клавишу нажать": "E mostrare nel menu quale tasto premere",
+          "Показать все скрытые превью / скрыть обратно": "Mostra tutte le anteprime nascoste / nascondile di nuovo",
+          "Все скрытые превью показаны": "Tutte le anteprime nascoste sono visibili",
+          "Превью снова скрыты": "Le anteprime sono di nuovo nascoste"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2177,7 +2208,10 @@ function core(storedSettings) {
           "Редактировать": "Bewerken",
           "Заголовок изменён: {name}": "Kop gewijzigd: {name}",
           "Название вернулось к исходному": "De naam is weer de oorspronkelijke",
-          "И подсказывать в меню, какую клавишу нажать": "En in het menu tonen welke toets je moet indrukken"
+          "И подсказывать в меню, какую клавишу нажать": "En in het menu tonen welke toets je moet indrukken",
+          "Показать все скрытые превью / скрыть обратно": "Alle verborgen voorbeelden tonen / weer verbergen",
+          "Все скрытые превью показаны": "Alle verborgen voorbeelden zijn zichtbaar",
+          "Превью снова скрыты": "Voorbeelden zijn weer verborgen"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2355,7 +2389,10 @@ function core(storedSettings) {
           "Редактировать": "Edytuj",
           "Заголовок изменён: {name}": "Nagłówek zmieniony: {name}",
           "Название вернулось к исходному": "Nazwa wróciła do pierwotnej",
-          "И подсказывать в меню, какую клавишу нажать": "I podpowiadaj w menu, który klawisz nacisnąć"
+          "И подсказывать в меню, какую клавишу нажать": "I podpowiadaj w menu, który klawisz nacisnąć",
+          "Показать все скрытые превью / скрыть обратно": "Pokaż wszystkie ukryte podglądy / ukryj ponownie",
+          "Все скрытые превью показаны": "Wszystkie ukryte podglądy są widoczne",
+          "Превью снова скрыты": "Podglądy są znów ukryte"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2533,7 +2570,10 @@ function core(storedSettings) {
           "Редактировать": "Redigera",
           "Заголовок изменён: {name}": "Rubriken ändrad: {name}",
           "Название вернулось к исходному": "Namnet är tillbaka till det ursprungliga",
-          "И подсказывать в меню, какую клавишу нажать": "Och visa i menyn vilken tangent som ska tryckas"
+          "И подсказывать в меню, какую клавишу нажать": "Och visa i menyn vilken tangent som ska tryckas",
+          "Показать все скрытые превью / скрыть обратно": "Visa alla dolda förhandsvisningar / dölj igen",
+          "Все скрытые превью показаны": "Alla dolda förhandsvisningar visas",
+          "Превью снова скрыты": "Förhandsvisningarna är dolda igen"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2711,7 +2751,10 @@ function core(storedSettings) {
           "Редактировать": "Rediger",
           "Заголовок изменён: {name}": "Overskriften er ændret: {name}",
           "Название вернулось к исходному": "Navnet er tilbage til det oprindelige",
-          "И подсказывать в меню, какую клавишу нажать": "Og vis i menuen, hvilken tast der skal trykkes"
+          "И подсказывать в меню, какую клавишу нажать": "Og vis i menuen, hvilken tast der skal trykkes",
+          "Показать все скрытые превью / скрыть обратно": "Vis alle skjulte forhåndsvisninger / skjul igen",
+          "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
+          "Превью снова скрыты": "Forhåndsvisningerne er skjult igen"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2889,7 +2932,10 @@ function core(storedSettings) {
           "Редактировать": "Rediger",
           "Заголовок изменён: {name}": "Overskriften er endret: {name}",
           "Название вернулось к исходному": "Navnet er tilbake til det opprinnelige",
-          "И подсказывать в меню, какую клавишу нажать": "Og vis i menyen hvilken tast som skal trykkes"
+          "И подсказывать в меню, какую клавишу нажать": "Og vis i menyen hvilken tast som skal trykkes",
+          "Показать все скрытые превью / скрыть обратно": "Vis alle skjulte forhåndsvisninger / skjul igjen",
+          "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
+          "Превью снова скрыты": "Forhåndsvisningene er skjult igjen"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3067,7 +3113,10 @@ function core(storedSettings) {
           "Редактировать": "Muokkaa",
           "Заголовок изменён: {name}": "Otsikko vaihdettu: {name}",
           "Название вернулось к исходному": "Nimi palasi alkuperäiseen",
-          "И подсказывать в меню, какую клавишу нажать": "Ja näytä valikossa, mitä näppäintä painaa"
+          "И подсказывать в меню, какую клавишу нажать": "Ja näytä valikossa, mitä näppäintä painaa",
+          "Показать все скрытые превью / скрыть обратно": "Näytä kaikki piilotetut esikatselut / piilota uudelleen",
+          "Все скрытые превью показаны": "Kaikki piilotetut esikatselut näkyvät",
+          "Превью снова скрыты": "Esikatselut on piilotettu uudelleen"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3245,7 +3294,10 @@ function core(storedSettings) {
           "Редактировать": "Szerkesztés",
           "Заголовок изменён: {name}": "A cím megváltozott: {name}",
           "Название вернулось к исходному": "A név visszaállt az eredetire",
-          "И подсказывать в меню, какую клавишу нажать": "És mutassa a menüben, melyik billentyűt kell megnyomni"
+          "И подсказывать в меню, какую клавишу нажать": "És mutassa a menüben, melyik billentyűt kell megnyomni",
+          "Показать все скрытые превью / скрыть обратно": "Az összes rejtett előnézet megjelenítése / újra elrejtés",
+          "Все скрытые превью показаны": "Minden rejtett előnézet látszik",
+          "Превью снова скрыты": "Az előnézetek ismét rejtve vannak"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3423,7 +3475,10 @@ function core(storedSettings) {
           "Редактировать": "Editează",
           "Заголовок изменён: {name}": "Titlul a fost schimbat: {name}",
           "Название вернулось к исходному": "Numele a revenit la cel inițial",
-          "И подсказывать в меню, какую клавишу нажать": "Și arată în meniu ce tastă să apeși"
+          "И подсказывать в меню, какую клавишу нажать": "Și arată în meniu ce tastă să apeși",
+          "Показать все скрытые превью / скрыть обратно": "Arată toate previzualizările ascunse / ascunde-le din nou",
+          "Все скрытые превью показаны": "Toate previzualizările ascunse sunt afișate",
+          "Превью снова скрыты": "Previzualizările sunt ascunse din nou"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3601,7 +3656,10 @@ function core(storedSettings) {
           "Редактировать": "Редактиране",
           "Заголовок изменён: {name}": "Заглавието е променено: {name}",
           "Название вернулось к исходному": "Името се върна към изходното",
-          "И подсказывать в меню, какую клавишу нажать": "И да подсказва в менюто кой клавиш да се натисне"
+          "И подсказывать в меню, какую клавишу нажать": "И да подсказва в менюто кой клавиш да се натисне",
+          "Показать все скрытые превью / скрыть обратно": "Показване на всички скрити визуализации / скриване",
+          "Все скрытые превью показаны": "Всички скрити визуализации са показани",
+          "Превью снова скрыты": "Визуализациите отново са скрити"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3779,7 +3837,10 @@ function core(storedSettings) {
           "Редактировать": "Επεξεργασία",
           "Заголовок изменён: {name}": "Ο τίτλος άλλαξε: {name}",
           "Название вернулось к исходному": "Το όνομα επανήλθε στο αρχικό",
-          "И подсказывать в меню, какую клавишу нажать": "Και να δείχνει στο μενού ποιο πλήκτρο να πατήσετε"
+          "И подсказывать в меню, какую клавишу нажать": "Και να δείχνει στο μενού ποιο πλήκτρο να πατήσετε",
+          "Показать все скрытые превью / скрыть обратно": "Εμφάνιση όλων των κρυφών προεπισκοπήσεων / απόκρυψη",
+          "Все скрытые превью показаны": "Όλες οι κρυφές προεπισκοπήσεις εμφανίζονται",
+          "Превью снова скрыты": "Οι προεπισκοπήσεις κρύφτηκαν ξανά"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3957,7 +4018,10 @@ function core(storedSettings) {
           "Редактировать": "Düzenle",
           "Заголовок изменён: {name}": "Başlık değişti: {name}",
           "Название вернулось к исходному": "Ad özgün haline döndü",
-          "И подсказывать в меню, какую клавишу нажать": "Ve menüde hangi tuşa basılacağını göster"
+          "И подсказывать в меню, какую клавишу нажать": "Ve menüde hangi tuşa basılacağını göster",
+          "Показать все скрытые превью / скрыть обратно": "Tüm gizli önizlemeleri göster / yeniden gizle",
+          "Все скрытые превью показаны": "Tüm gizli önizlemeler gösteriliyor",
+          "Превью снова скрыты": "Önizlemeler yeniden gizlendi"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4135,7 +4199,10 @@ function core(storedSettings) {
           "Редактировать": "แก้ไข",
           "Заголовок изменён: {name}": "เปลี่ยนหัวข้อแล้ว: {name}",
           "Название вернулось к исходному": "ชื่อกลับเป็นค่าเดิมแล้ว",
-          "И подсказывать в меню, какую клавишу нажать": "และบอกในเมนูว่าต้องกดปุ่มใด"
+          "И подсказывать в меню, какую клавишу нажать": "และบอกในเมนูว่าต้องกดปุ่มใด",
+          "Показать все скрытые превью / скрыть обратно": "แสดงตัวอย่างที่ซ่อนไว้ทั้งหมด / ซ่อนอีกครั้ง",
+          "Все скрытые превью показаны": "แสดงตัวอย่างที่ซ่อนไว้ทั้งหมดแล้ว",
+          "Превью снова скрыты": "ซ่อนตัวอย่างอีกครั้งแล้ว"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4313,7 +4380,10 @@ function core(storedSettings) {
           "Редактировать": "संपादित करें",
           "Заголовок изменён: {name}": "शीर्षक बदला गया: {name}",
           "Название вернулось к исходному": "नाम मूल पर लौट आया",
-          "И подсказывать в меню, какую клавишу нажать": "और मेन्यू में बताएँ कि कौन-सी कुंजी दबानी है"
+          "И подсказывать в меню, какую клавишу нажать": "और मेन्यू में बताएँ कि कौन-सी कुंजी दबानी है",
+          "Показать все скрытые превью / скрыть обратно": "सभी छिपे हुए प्रीव्यू दिखाएँ / फिर से छिपाएँ",
+          "Все скрытые превью показаны": "सभी छिपे हुए प्रीव्यू दिख रहे हैं",
+          "Превью снова скрыты": "प्रीव्यू फिर से छिपा दिए गए"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4491,7 +4561,10 @@ function core(storedSettings) {
           "Редактировать": "Ubah",
           "Заголовок изменён: {name}": "Judul diubah: {name}",
           "Название вернулось к исходному": "Nama kembali ke aslinya",
-          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan di menu tombol mana yang harus ditekan"
+          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan di menu tombol mana yang harus ditekan",
+          "Показать все скрытые превью / скрыть обратно": "Tampilkan semua pratinjau tersembunyi / sembunyikan lagi",
+          "Все скрытые превью показаны": "Semua pratinjau tersembunyi ditampilkan",
+          "Превью снова скрыты": "Pratinjau disembunyikan lagi"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4669,7 +4742,10 @@ function core(storedSettings) {
           "Редактировать": "Sunting",
           "Заголовок изменён: {name}": "Tajuk ditukar: {name}",
           "Название вернулось к исходному": "Nama kembali kepada asal",
-          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan dalam menu kekunci mana perlu ditekan"
+          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan dalam menu kekunci mana perlu ditekan",
+          "Показать все скрытые превью / скрыть обратно": "Tunjukkan semua pratonton tersembunyi / sembunyikan semula",
+          "Все скрытые превью показаны": "Semua pratonton tersembunyi ditunjukkan",
+          "Превью снова скрыты": "Pratonton disembunyikan semula"
     },
   } /* SKQ_I18N_END */;
 
@@ -5356,6 +5432,8 @@ function core(storedSettings) {
 
   function scan() {
     hideJunk();
+    markHover();
+    if (revealAll) revealEveryCard();
     mountSettingsTab();
     scanReputationDom();
     mountReputation();
@@ -5678,6 +5756,35 @@ function core(storedSettings) {
     if (activeId() !== id) cardLeft(target || card);
   }
 
+  // ---- Все скрытые превью разом ----
+  let revealAll = false;
+  let revealAllBusy = false;
+
+  // по нескольку карточек за раз: за частью превью приходится ходить в API
+  async function revealEveryCard() {
+    if (revealAllBusy) return;
+    revealAllBusy = true;
+    try {
+      const cards = allCards().filter(isHidden);
+      for (let i = 0; i < cards.length && revealAll; i += 4) {
+        await Promise.all(cards.slice(i, i + 4).map((card) => reveal(card).catch(() => {})));
+      }
+    } finally {
+      revealAllBusy = false;
+    }
+  }
+
+  function toggleRevealAll() {
+    revealAll = !revealAll;
+    if (revealAll) {
+      toast(t('Все скрытые превью показаны'));
+      revealEveryCard();
+      return;
+    }
+    for (const id of [...revealed.keys()]) unreveal(id);
+    toast(t('Превью снова скрыты'));
+  }
+
   // ---- Повторное скрытие после потери фокуса ----
   const rehideTimers = new Map();
 
@@ -5707,7 +5814,7 @@ function core(storedSettings) {
   }
 
   function cardLeft(card) {
-    if (!card || !settings.rehideOnBlur) return;
+    if (!card || !settings.rehideOnBlur || revealAll) return;
     const id = cardId(card);
     if (!id) return;
     cancelRehide(id);
@@ -5731,6 +5838,15 @@ function core(storedSettings) {
   }
 
   const activeCard = () => (kb.mode ? currentCard() : hoverCard && hoverCard.isConnected ? hoverCard : null);
+
+  // Карточка под мышью обводится так же, как выбранная стрелками
+  function markHover() {
+    const card = kb.mode || !hoverCard || !hoverCard.isConnected ? null : hoverCard;
+    for (const el of document.querySelectorAll('.skq-hover-active')) {
+      if (el !== card) el.classList.remove('skq-hover-active');
+    }
+    if (card) card.classList.add('skq-hover-active');
+  }
 
   function isOverlay(el) {
     for (let n = el; n && n !== document.body; n = n.parentElement) {
@@ -6174,6 +6290,14 @@ function core(storedSettings) {
       return;
     }
 
+    // показать всё скрытое можно и просто со страницы, без карточки под курсором;
+    // когда всё уже показано, та же клавиша возвращает как было
+    if (codeOf(e) === settings.revealAllKey && !e.shiftKey && (revealAll || allCards().some(isHidden))) {
+      e.preventDefault(); e.stopPropagation();
+      if (!e.repeat) toggleRevealAll();
+      return;
+    }
+
     const card = activeCard();
     if (!card) {
       handlePostHotkey(e);
@@ -6208,6 +6332,7 @@ function core(storedSettings) {
           if (card !== hoverCard) {
             cardLeft(hoverCard);
             hoverCard = card;
+            markHover();
             scheduleReveal(card, settings.revealHoverMs);
           }
         } else if (!closestEl(e.target, POPPER_SEL) && hoverCard) {
@@ -6263,6 +6388,7 @@ function core(storedSettings) {
     const prev = currentCard();
     deactivate(under);
     hoverCard = closestEl(under, CARD_SEL) || (closestEl(under, POPPER_SEL) ? prev : null);
+    markHover();
     scheduleReveal(hoverCard, settings.revealHoverMs);
     if (under && !(prev && prev.contains(under)) && !closestEl(under, POPPER_SEL)) fire(under, 'over', null);
   }, true);
@@ -9789,6 +9915,7 @@ function core(storedSettings) {
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
     { id: 'emotionKey', label: 'Эмоция (на странице поста), затем 1–6' },
+    { id: 'revealAllKey', label: 'Показать все скрытые превью / скрыть обратно' },
   ];
   const hotkeyLabel = (h) => t(h.label);
   const RESERVED_KEY_RE = /^(?:Arrow\w+|Digit[1-5]|Numpad[1-5]|Enter|NumpadEnter|Escape|Tab|Space|(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?|CapsLock|ContextMenu)$/;
@@ -10459,7 +10586,10 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > * { outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px; }
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-myvote):not(.skq-favs),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-myvote):not(.skq-favs) {
+      outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
+    }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
     ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
       position: absolute; top: 6px; z-index: 3; pointer-events: none;

@@ -61,8 +61,10 @@ class H(http.server.BaseHTTPRequestHandler):
                  'user_vote': {1: 5, 3: 2}.get(i, 0)}
                 for i in range(6)
             ]
-            if 'id_range:' in self.path:
-                want = self.path.split('id_range:')[1].split('&')[0]
+            import urllib.parse
+            raw = urllib.parse.unquote(self.path)
+            if 'id_range:' in raw:
+                want = raw.split('id_range:')[1].split('&')[0]
                 posts = [x for x in posts if x['id'] == want]
             return self._send(200, json.dumps(posts), 'application/json')
         if path.startswith('/api/me'):
