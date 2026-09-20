@@ -165,6 +165,14 @@
   "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a multi-word tag can only be taken from the site’s own suggestions, and it did not offer this one",
   "похожие: {list}": "similar: {list}",
   "Тег скопирован: {tag}": "Tag copied: {tag}",
-  "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first"
+  "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first",
+  "Основное": "General",
+  "Меню сайта": "Site menu",
+  "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Items of the site’s side menu: your own name, visibility, counter and a key to open the page. Counters refresh when the menu opens.",
+  "Показывать пункт": "Show the item",
+  "Своё название": "Your own name",
+  "Показывать счётчик": "Show the counter",
+  "Переход по клавише": "Open by key",
+  "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu"
  }
 }

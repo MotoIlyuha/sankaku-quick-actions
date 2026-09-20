@@ -164,5 +164,13 @@
  "162": "tag z kilku słów strona przyjmuje tylko z własnych podpowiedzi, a tego nie zaproponowała",
  "163": "podobne: {list}",
  "164": "Skopiowano tag: {tag}",
- "165": "Najpierw skopiuj tag prawym przyciskiem"
+ "165": "Najpierw skopiuj tag prawym przyciskiem",
+ "166": "Ogólne",
+ "167": "Menu serwisu",
+ "168": "Pozycje menu bocznego: własna nazwa, widoczność, licznik i klawisz otwierający stronę. Liczniki odświeżają się przy otwarciu menu.",
+ "169": "Pokaż pozycję",
+ "170": "Własna nazwa",
+ "171": "Pokaż licznik",
+ "172": "Otwieranie klawiszem",
+ "173": "Nie wiem, dokąd prowadzi ta pozycja — otwórz menu"
 }

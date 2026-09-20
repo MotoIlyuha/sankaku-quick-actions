@@ -164,5 +164,13 @@
  "162": "un tag di più parole viene accettato solo dai suggerimenti del sito, e questo non è stato proposto",
  "163": "simili: {list}",
  "164": "Tag copiato: {tag}",
- "165": "Prima copia un tag con il tasto destro"
+ "165": "Prima copia un tag con il tasto destro",
+ "166": "Generale",
+ "167": "Menu del sito",
+ "168": "Voci del menu laterale: nome personalizzato, visibilità, contatore e tasto per aprire la pagina. I contatori si aggiornano all’apertura del menu.",
+ "169": "Mostra la voce",
+ "170": "Nome personalizzato",
+ "171": "Mostra il contatore",
+ "172": "Apri con un tasto",
+ "173": "Non so dove porta questa voce: apri il menu"
 }

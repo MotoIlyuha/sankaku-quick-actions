@@ -164,5 +164,13 @@
  "162": "birden çok kelimeli etiket yalnızca sitenin kendi önerilerinden eklenir, bu ise önerilmedi",
  "163": "benzerleri: {list}",
  "164": "Etiket kopyalandı: {tag}",
- "165": "Önce sağ tıklayarak bir etiket kopyalayın"
+ "165": "Önce sağ tıklayarak bir etiket kopyalayın",
+ "166": "Genel",
+ "167": "Sitenin menüsü",
+ "168": "Yan menü ögeleri: kendi adınız, görünürlük, sayaç ve sayfayı açan tuş. Sayaçlar menü açıldığında yenilenir.",
+ "169": "Ögeyi göster",
+ "170": "Kendi adınız",
+ "171": "Sayacı göster",
+ "172": "Tuşla aç",
+ "173": "Bu ögenin nereye gittiğini bilmiyorum — menüyü açın"
 }

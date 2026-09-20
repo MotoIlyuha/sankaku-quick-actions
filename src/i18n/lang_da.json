@@ -164,5 +164,13 @@
  "162": "et tag med flere ord kan kun tages fra sidens egne forslag, og det blev ikke foreslået",
  "163": "lignende: {list}",
  "164": "Tag kopieret: {tag}",
- "165": "Kopiér først et tag med højreklik"
+ "165": "Kopiér først et tag med højreklik",
+ "166": "Generelt",
+ "167": "Sidens menu",
+ "168": "Punkter i sidens sidemenu: eget navn, synlighed, tæller og en tast til at åbne siden. Tællere opdateres, når menuen åbnes.",
+ "169": "Vis punktet",
+ "170": "Eget navn",
+ "171": "Vis tælleren",
+ "172": "Åbn med tast",
+ "173": "Jeg ved ikke, hvor punktet fører hen — åbn menuen"
 }

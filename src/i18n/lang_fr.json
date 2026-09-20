@@ -164,5 +164,13 @@
  "162": "un tag en plusieurs mots n’est accepté que depuis les suggestions du site, et celle-ci n’a pas été proposée",
  "163": "similaires : {list}",
  "164": "Tag copié : {tag}",
- "165": "Copiez d’abord un tag par clic droit"
+ "165": "Copiez d’abord un tag par clic droit",
+ "166": "Général",
+ "167": "Menu du site",
+ "168": "Éléments du menu latéral : nom personnalisé, visibilité, compteur et touche d’ouverture. Les compteurs se mettent à jour à l’ouverture du menu.",
+ "169": "Afficher l’élément",
+ "170": "Nom personnalisé",
+ "171": "Afficher le compteur",
+ "172": "Ouvrir par une touche",
+ "173": "Je ne sais pas où mène cet élément — ouvrez le menu"
 }

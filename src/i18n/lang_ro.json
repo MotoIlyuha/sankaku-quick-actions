@@ -164,5 +164,13 @@
  "162": "o etichetă din mai multe cuvinte este acceptată doar din sugestiile site-ului, iar aceasta nu a apărut",
  "163": "similare: {list}",
  "164": "Etichetă copiată: {tag}",
- "165": "Copiați mai întâi o etichetă cu clic dreapta"
+ "165": "Copiați mai întâi o etichetă cu clic dreapta",
+ "166": "General",
+ "167": "Meniul site-ului",
+ "168": "Elementele meniului lateral: nume propriu, vizibilitate, contor și o tastă pentru deschidere. Contoarele se actualizează la deschiderea meniului.",
+ "169": "Afișează elementul",
+ "170": "Nume propriu",
+ "171": "Afișează contorul",
+ "172": "Deschide cu o tastă",
+ "173": "Nu știu unde duce acest element — deschideți meniul"
 }

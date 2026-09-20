@@ -164,5 +164,13 @@
  "162": "monisanaisen tagin sivusto hyväksyy vain omista ehdotuksistaan, eikä se ehdottanut tätä",
  "163": "samankaltaiset: {list}",
  "164": "Tagi kopioitu: {tag}",
- "165": "Kopioi ensin tagi hiiren oikealla painikkeella"
+ "165": "Kopioi ensin tagi hiiren oikealla painikkeella",
+ "166": "Yleiset",
+ "167": "Sivuston valikko",
+ "168": "Sivuvalikon kohdat: oma nimi, näkyvyys, laskuri ja näppäin sivun avaamiseen. Laskurit päivittyvät, kun valikko avataan.",
+ "169": "Näytä kohta",
+ "170": "Oma nimi",
+ "171": "Näytä laskuri",
+ "172": "Avaa näppäimellä",
+ "173": "En tiedä, mihin tämä kohta vie — avaa valikko"
 }

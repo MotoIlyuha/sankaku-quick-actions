@@ -164,5 +164,13 @@
  "162": "una etiqueta de varias palabras solo se acepta desde las sugerencias del sitio, y esta no apareció",
  "163": "similares: {list}",
  "164": "Etiqueta copiada: {tag}",
- "165": "Primero copie una etiqueta con el botón derecho"
+ "165": "Primero copie una etiqueta con el botón derecho",
+ "166": "General",
+ "167": "Menú del sitio",
+ "168": "Elementos del menú lateral: nombre propio, visibilidad, contador y tecla para abrir la página. Los contadores se actualizan al abrir el menú.",
+ "169": "Mostrar el elemento",
+ "170": "Nombre propio",
+ "171": "Mostrar el contador",
+ "172": "Abrir con una tecla",
+ "173": "No sé adónde lleva este elemento: abra el menú"
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.24.0
+// @version      1.25.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -156,6 +156,7 @@ function core(storedSettings) {
     showReputation: true,
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
+    menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
   };
   const settings = {
     ...DEFAULTS,
@@ -212,7 +213,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.24.0';
+  const SKQ_VERSION = '1.25.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -381,7 +382,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a multi-word tag can only be taken from the site’s own suggestions, and it did not offer this one",
           "похожие: {list}": "similar: {list}",
           "Тег скопирован: {tag}": "Tag copied: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first"
+          "Сначала скопируйте тег правым щелчком": "Copy a tag with a right click first",
+          "Основное": "General",
+          "Меню сайта": "Site menu",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Items of the site’s side menu: your own name, visibility, counter and a key to open the page. Counters refresh when the menu opens.",
+          "Показывать пункт": "Show the item",
+          "Своё название": "Your own name",
+          "Показывать счётчик": "Show the counter",
+          "Переход по клавише": "Open by key",
+          "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -549,7 +558,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "複数語のタグはサイトの候補からしか追加できません。この候補は出ませんでした",
           "похожие: {list}": "似たもの: {list}",
           "Тег скопирован: {tag}": "タグをコピーしました: {tag}",
-          "Сначала скопируйте тег правым щелчком": "まず右クリックでタグをコピーしてください"
+          "Сначала скопируйте тег правым щелчком": "まず右クリックでタグをコピーしてください",
+          "Основное": "基本",
+          "Меню сайта": "サイトのメニュー",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "サイドメニューの項目: 独自の名前、表示、カウンター、ページを開くキー。カウンターはメニューを開いたときに更新されます。",
+          "Показывать пункт": "項目を表示",
+          "Своё название": "独自の名前",
+          "Показывать счётчик": "カウンターを表示",
+          "Переход по клавише": "キーで開く",
+          "Не знаю, куда вести этот пункт — откройте меню": "この項目の行き先が分かりません。メニューを開いてください"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -717,7 +734,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "多词标签只能从站点的候选里添加，而它没有给出这个候选",
           "похожие: {list}": "相近：{list}",
           "Тег скопирован: {tag}": "已复制标签：{tag}",
-          "Сначала скопируйте тег правым щелчком": "请先用右键复制一个标签"
+          "Сначала скопируйте тег правым щелчком": "请先用右键复制一个标签",
+          "Основное": "常规",
+          "Меню сайта": "站点菜单",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "侧边菜单的条目：自定义名称、显示与否、计数和打开页面的按键。打开菜单时计数会刷新。",
+          "Показывать пункт": "显示条目",
+          "Своё название": "自定义名称",
+          "Показывать счётчик": "显示计数",
+          "Переход по клавише": "用按键打开",
+          "Не знаю, куда вести этот пункт — откройте меню": "不知道这个条目通向哪里，请先打开菜单"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -885,7 +910,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "多詞標籤只能從站點的候選裡新增，而它沒有給出這個候選",
           "похожие: {list}": "相近：{list}",
           "Тег скопирован: {tag}": "已複製標籤：{tag}",
-          "Сначала скопируйте тег правым щелчком": "請先用右鍵複製一個標籤"
+          "Сначала скопируйте тег правым щелчком": "請先用右鍵複製一個標籤",
+          "Основное": "一般",
+          "Меню сайта": "站點選單",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "側邊選單的項目：自訂名稱、顯示與否、計數和開啟頁面的按鍵。開啟選單時計數會重新整理。",
+          "Показывать пункт": "顯示項目",
+          "Своё название": "自訂名稱",
+          "Показывать счётчик": "顯示計數",
+          "Переход по клавише": "用按鍵開啟",
+          "Не знаю, куда вести этот пункт — откройте меню": "不知道這個項目通向哪裡，請先開啟選單"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1053,7 +1086,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "여러 단어로 된 태그는 사이트 추천에서만 추가할 수 있는데, 이 태그는 추천되지 않았습니다",
           "похожие: {list}": "비슷한 것: {list}",
           "Тег скопирован: {tag}": "태그를 복사했습니다: {tag}",
-          "Сначала скопируйте тег правым щелчком": "먼저 오른쪽 클릭으로 태그를 복사하세요"
+          "Сначала скопируйте тег правым щелчком": "먼저 오른쪽 클릭으로 태그를 복사하세요",
+          "Основное": "일반",
+          "Меню сайта": "사이트 메뉴",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "사이드 메뉴 항목: 직접 지은 이름, 표시 여부, 카운터, 페이지를 여는 키. 카운터는 메뉴를 열 때 갱신됩니다.",
+          "Показывать пункт": "항목 표시",
+          "Своё название": "직접 지은 이름",
+          "Показывать счётчик": "카운터 표시",
+          "Переход по клавише": "키로 열기",
+          "Не знаю, куда вести этот пункт — откройте меню": "이 항목이 어디로 가는지 모릅니다 — 메뉴를 열어 주세요"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1221,7 +1262,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "einen mehrteiligen Tag nimmt die Seite nur aus ihren eigenen Vorschlägen, und diesen hat sie nicht angeboten",
           "похожие: {list}": "ähnlich: {list}",
           "Тег скопирован: {tag}": "Tag kopiert: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopieren Sie zuerst einen Tag mit Rechtsklick"
+          "Сначала скопируйте тег правым щелчком": "Kopieren Sie zuerst einen Tag mit Rechtsklick",
+          "Основное": "Allgemein",
+          "Меню сайта": "Seitenmenü",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Einträge im Seitenmenü: eigener Name, Sichtbarkeit, Zähler und Taste zum Öffnen. Zähler werden beim Öffnen des Menüs aktualisiert.",
+          "Показывать пункт": "Eintrag anzeigen",
+          "Своё название": "Eigener Name",
+          "Показывать счётчик": "Zähler anzeigen",
+          "Переход по клавише": "Mit Taste öffnen",
+          "Не знаю, куда вести этот пункт — откройте меню": "Ich weiß nicht, wohin dieser Eintrag führt — öffnen Sie das Menü"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1389,7 +1438,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "un tag en plusieurs mots n’est accepté que depuis les suggestions du site, et celle-ci n’a pas été proposée",
           "похожие: {list}": "similaires : {list}",
           "Тег скопирован: {tag}": "Tag copié : {tag}",
-          "Сначала скопируйте тег правым щелчком": "Copiez d’abord un tag par clic droit"
+          "Сначала скопируйте тег правым щелчком": "Copiez d’abord un tag par clic droit",
+          "Основное": "Général",
+          "Меню сайта": "Menu du site",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Éléments du menu latéral : nom personnalisé, visibilité, compteur et touche d’ouverture. Les compteurs se mettent à jour à l’ouverture du menu.",
+          "Показывать пункт": "Afficher l’élément",
+          "Своё название": "Nom personnalisé",
+          "Показывать счётчик": "Afficher le compteur",
+          "Переход по клавише": "Ouvrir par une touche",
+          "Не знаю, куда вести этот пункт — откройте меню": "Je ne sais pas où mène cet élément — ouvrez le menu"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1557,7 +1614,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "una etiqueta de varias palabras solo se acepta desde las sugerencias del sitio, y esta no apareció",
           "похожие: {list}": "similares: {list}",
           "Тег скопирован: {tag}": "Etiqueta copiada: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Primero copie una etiqueta con el botón derecho"
+          "Сначала скопируйте тег правым щелчком": "Primero copie una etiqueta con el botón derecho",
+          "Основное": "General",
+          "Меню сайта": "Menú del sitio",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Elementos del menú lateral: nombre propio, visibilidad, contador y tecla para abrir la página. Los contadores se actualizan al abrir el menú.",
+          "Показывать пункт": "Mostrar el elemento",
+          "Своё название": "Nombre propio",
+          "Показывать счётчик": "Mostrar el contador",
+          "Переход по клавише": "Abrir con una tecla",
+          "Не знаю, куда вести этот пункт — откройте меню": "No sé adónde lleva este elemento: abra el menú"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1725,7 +1790,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "uma etiqueta com várias palavras só é aceite a partir das sugestões do site, e esta não apareceu",
           "похожие: {list}": "semelhantes: {list}",
           "Тег скопирован: {tag}": "Etiqueta copiada: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Primeiro copie uma etiqueta com o botão direito"
+          "Сначала скопируйте тег правым щелчком": "Primeiro copie uma etiqueta com o botão direito",
+          "Основное": "Geral",
+          "Меню сайта": "Menu do site",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Itens do menu lateral: nome próprio, visibilidade, contador e tecla para abrir a página. Os contadores atualizam ao abrir o menu.",
+          "Показывать пункт": "Mostrar o item",
+          "Своё название": "Nome próprio",
+          "Показывать счётчик": "Mostrar o contador",
+          "Переход по клавише": "Abrir por tecla",
+          "Не знаю, куда вести этот пункт — откройте меню": "Não sei para onde leva este item — abra o menu"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1893,7 +1966,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "un tag di più parole viene accettato solo dai suggerimenti del sito, e questo non è stato proposto",
           "похожие: {list}": "simili: {list}",
           "Тег скопирован: {tag}": "Tag copiato: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Prima copia un tag con il tasto destro"
+          "Сначала скопируйте тег правым щелчком": "Prima copia un tag con il tasto destro",
+          "Основное": "Generale",
+          "Меню сайта": "Menu del sito",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Voci del menu laterale: nome personalizzato, visibilità, contatore e tasto per aprire la pagina. I contatori si aggiornano all’apertura del menu.",
+          "Показывать пункт": "Mostra la voce",
+          "Своё название": "Nome personalizzato",
+          "Показывать счётчик": "Mostra il contatore",
+          "Переход по клавише": "Apri con un tasto",
+          "Не знаю, куда вести этот пункт — откройте меню": "Non so dove porta questa voce: apri il menu"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2061,7 +2142,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "een tag uit meerdere woorden neemt de site alleen uit eigen suggesties, en deze bood ze niet aan",
           "похожие: {list}": "vergelijkbaar: {list}",
           "Тег скопирован: {tag}": "Tag gekopieerd: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopieer eerst een tag met rechtermuisklik"
+          "Сначала скопируйте тег правым щелчком": "Kopieer eerst een tag met rechtermuisklik",
+          "Основное": "Algemeen",
+          "Меню сайта": "Menu van de site",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Items van het zijmenu: eigen naam, zichtbaarheid, teller en een toets om de pagina te openen. Tellers worden bijgewerkt als het menu opengaat.",
+          "Показывать пункт": "Item tonen",
+          "Своё название": "Eigen naam",
+          "Показывать счётчик": "Teller tonen",
+          "Переход по клавише": "Openen met een toets",
+          "Не знаю, куда вести этот пункт — откройте меню": "Ik weet niet waar dit item heen gaat — open het menu"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2229,7 +2318,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag z kilku słów strona przyjmuje tylko z własnych podpowiedzi, a tego nie zaproponowała",
           "похожие: {list}": "podobne: {list}",
           "Тег скопирован: {tag}": "Skopiowano tag: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Najpierw skopiuj tag prawym przyciskiem"
+          "Сначала скопируйте тег правым щелчком": "Najpierw skopiuj tag prawym przyciskiem",
+          "Основное": "Ogólne",
+          "Меню сайта": "Menu serwisu",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Pozycje menu bocznego: własna nazwa, widoczność, licznik i klawisz otwierający stronę. Liczniki odświeżają się przy otwarciu menu.",
+          "Показывать пункт": "Pokaż pozycję",
+          "Своё название": "Własna nazwa",
+          "Показывать счётчик": "Pokaż licznik",
+          "Переход по клавише": "Otwieranie klawiszem",
+          "Не знаю, куда вести этот пункт — откройте меню": "Nie wiem, dokąd prowadzi ta pozycja — otwórz menu"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2397,7 +2494,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "en tagg med flera ord tas bara från webbplatsens egna förslag, och den föreslogs inte",
           "похожие: {list}": "liknande: {list}",
           "Тег скопирован: {tag}": "Tagg kopierad: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopiera först en tagg med högerklick"
+          "Сначала скопируйте тег правым щелчком": "Kopiera först en tagg med högerklick",
+          "Основное": "Allmänt",
+          "Меню сайта": "Webbplatsens meny",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Poster i sidomenyn: eget namn, synlighet, räknare och en tangent som öppnar sidan. Räknarna uppdateras när menyn öppnas.",
+          "Показывать пункт": "Visa posten",
+          "Своё название": "Eget namn",
+          "Показывать счётчик": "Visa räknaren",
+          "Переход по клавише": "Öppna med tangent",
+          "Не знаю, куда вести этот пункт — откройте меню": "Jag vet inte vart posten leder — öppna menyn"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2565,7 +2670,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "et tag med flere ord kan kun tages fra sidens egne forslag, og det blev ikke foreslået",
           "похожие: {list}": "lignende: {list}",
           "Тег скопирован: {tag}": "Tag kopieret: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopiér først et tag med højreklik"
+          "Сначала скопируйте тег правым щелчком": "Kopiér først et tag med højreklik",
+          "Основное": "Generelt",
+          "Меню сайта": "Sidens menu",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Punkter i sidens sidemenu: eget navn, synlighed, tæller og en tast til at åbne siden. Tællere opdateres, når menuen åbnes.",
+          "Показывать пункт": "Vis punktet",
+          "Своё название": "Eget navn",
+          "Показывать счётчик": "Vis tælleren",
+          "Переход по клавише": "Åbn med tast",
+          "Не знаю, куда вести этот пункт — откройте меню": "Jeg ved ikke, hvor punktet fører hen — åbn menuen"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2733,7 +2846,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "en tagg med flere ord godtas bare fra nettstedets egne forslag, og denne ble ikke foreslått",
           "похожие: {list}": "lignende: {list}",
           "Тег скопирован: {tag}": "Tagg kopiert: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopier først en tagg med høyreklikk"
+          "Сначала скопируйте тег правым щелчком": "Kopier først en tagg med høyreklikk",
+          "Основное": "Generelt",
+          "Меню сайта": "Nettstedets meny",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Punkter i sidemenyen: eget navn, synlighet, teller og en tast for å åpne siden. Tellere oppdateres når menyen åpnes.",
+          "Показывать пункт": "Vis punktet",
+          "Своё название": "Eget navn",
+          "Показывать счётчик": "Vis telleren",
+          "Переход по клавише": "Åpne med tast",
+          "Не знаю, куда вести этот пункт — откройте меню": "Jeg vet ikke hvor dette punktet fører — åpne menyen"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -2901,7 +3022,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "monisanaisen tagin sivusto hyväksyy vain omista ehdotuksistaan, eikä se ehdottanut tätä",
           "похожие: {list}": "samankaltaiset: {list}",
           "Тег скопирован: {tag}": "Tagi kopioitu: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Kopioi ensin tagi hiiren oikealla painikkeella"
+          "Сначала скопируйте тег правым щелчком": "Kopioi ensin tagi hiiren oikealla painikkeella",
+          "Основное": "Yleiset",
+          "Меню сайта": "Sivuston valikko",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Sivuvalikon kohdat: oma nimi, näkyvyys, laskuri ja näppäin sivun avaamiseen. Laskurit päivittyvät, kun valikko avataan.",
+          "Показывать пункт": "Näytä kohta",
+          "Своё название": "Oma nimi",
+          "Показывать счётчик": "Näytä laskuri",
+          "Переход по клавише": "Avaa näppäimellä",
+          "Не знаю, куда вести этот пункт — откройте меню": "En tiedä, mihin tämä kohta vie — avaa valikko"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3069,7 +3198,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "a többszavas címkét az oldal csak a saját javaslataiból fogadja el, ezt pedig nem ajánlotta fel",
           "похожие: {list}": "hasonlók: {list}",
           "Тег скопирован: {tag}": "Címke másolva: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Előbb másoljon egy címkét jobb kattintással"
+          "Сначала скопируйте тег правым щелчком": "Előbb másoljon egy címkét jobb kattintással",
+          "Основное": "Általános",
+          "Меню сайта": "Oldalmenü",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Az oldalsó menü elemei: saját név, láthatóság, számláló és billentyű a megnyitáshoz. A számlálók a menü megnyitásakor frissülnek.",
+          "Показывать пункт": "Elem megjelenítése",
+          "Своё название": "Saját név",
+          "Показывать счётчик": "Számláló megjelenítése",
+          "Переход по клавише": "Megnyitás billentyűvel",
+          "Не знаю, куда вести этот пункт — откройте меню": "Nem tudom, hová vezet ez az elem — nyissa meg a menüt"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3237,7 +3374,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "o etichetă din mai multe cuvinte este acceptată doar din sugestiile site-ului, iar aceasta nu a apărut",
           "похожие: {list}": "similare: {list}",
           "Тег скопирован: {tag}": "Etichetă copiată: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Copiați mai întâi o etichetă cu clic dreapta"
+          "Сначала скопируйте тег правым щелчком": "Copiați mai întâi o etichetă cu clic dreapta",
+          "Основное": "General",
+          "Меню сайта": "Meniul site-ului",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Elementele meniului lateral: nume propriu, vizibilitate, contor și o tastă pentru deschidere. Contoarele se actualizează la deschiderea meniului.",
+          "Показывать пункт": "Afișează elementul",
+          "Своё название": "Nume propriu",
+          "Показывать счётчик": "Afișează contorul",
+          "Переход по клавише": "Deschide cu o tastă",
+          "Не знаю, куда вести этот пункт — откройте меню": "Nu știu unde duce acest element — deschideți meniul"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3405,7 +3550,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "съставен таг се приема само от подсказките на сайта, а такъв не беше предложен",
           "похожие: {list}": "подобни: {list}",
           "Тег скопирован: {tag}": "Тагът е копиран: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Първо копирайте таг с десен бутон"
+          "Сначала скопируйте тег правым щелчком": "Първо копирайте таг с десен бутон",
+          "Основное": "Основно",
+          "Меню сайта": "Меню на сайта",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Елементи на страничното меню: свое име, видимост, брояч и клавиш за отваряне. Броячите се обновяват при отваряне на менюто.",
+          "Показывать пункт": "Показване на елемента",
+          "Своё название": "Свое име",
+          "Показывать счётчик": "Показване на брояча",
+          "Переход по клавише": "Отваряне с клавиш",
+          "Не знаю, куда вести этот пункт — откройте меню": "Не знам накъде води този елемент — отворете менюто"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3573,7 +3726,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "μια ετικέτα με πολλές λέξεις γίνεται δεκτή μόνο από τις προτάσεις του ιστότοπου, και αυτή δεν προτάθηκε",
           "похожие: {list}": "παρόμοια: {list}",
           "Тег скопирован: {tag}": "Η ετικέτα αντιγράφηκε: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Πρώτα αντιγράψτε μια ετικέτα με δεξί κλικ"
+          "Сначала скопируйте тег правым щелчком": "Πρώτα αντιγράψτε μια ετικέτα με δεξί κλικ",
+          "Основное": "Γενικά",
+          "Меню сайта": "Μενού ιστότοπου",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Στοιχεία του πλαϊνού μενού: δικό σας όνομα, ορατότητα, μετρητής και πλήκτρο για άνοιγμα. Οι μετρητές ανανεώνονται όταν ανοίγει το μενού.",
+          "Показывать пункт": "Εμφάνιση στοιχείου",
+          "Своё название": "Δικό σας όνομα",
+          "Показывать счётчик": "Εμφάνιση μετρητή",
+          "Переход по клавише": "Άνοιγμα με πλήκτρο",
+          "Не знаю, куда вести этот пункт — откройте меню": "Δεν ξέρω πού οδηγεί αυτό το στοιχείο — ανοίξτε το μενού"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3741,7 +3902,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "birden çok kelimeli etiket yalnızca sitenin kendi önerilerinden eklenir, bu ise önerilmedi",
           "похожие: {list}": "benzerleri: {list}",
           "Тег скопирован: {tag}": "Etiket kopyalandı: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Önce sağ tıklayarak bir etiket kopyalayın"
+          "Сначала скопируйте тег правым щелчком": "Önce sağ tıklayarak bir etiket kopyalayın",
+          "Основное": "Genel",
+          "Меню сайта": "Sitenin menüsü",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Yan menü ögeleri: kendi adınız, görünürlük, sayaç ve sayfayı açan tuş. Sayaçlar menü açıldığında yenilenir.",
+          "Показывать пункт": "Ögeyi göster",
+          "Своё название": "Kendi adınız",
+          "Показывать счётчик": "Sayacı göster",
+          "Переход по клавише": "Tuşla aç",
+          "Не знаю, куда вести этот пункт — откройте меню": "Bu ögenin nereye gittiğini bilmiyorum — menüyü açın"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -3909,7 +4078,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "แท็กหลายคำเพิ่มได้จากรายการแนะนำของเว็บไซต์เท่านั้น และไม่มีแท็กนี้ในรายการ",
           "похожие: {list}": "ใกล้เคียง: {list}",
           "Тег скопирован: {tag}": "คัดลอกแท็กแล้ว: {tag}",
-          "Сначала скопируйте тег правым щелчком": "คัดลอกแท็กด้วยคลิกขวาก่อน"
+          "Сначала скопируйте тег правым щелчком": "คัดลอกแท็กด้วยคลิกขวาก่อน",
+          "Основное": "ทั่วไป",
+          "Меню сайта": "เมนูของเว็บไซต์",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "รายการในเมนูด้านข้าง: ชื่อที่ตั้งเอง การแสดง ตัวนับ และปุ่มสำหรับเปิดหน้า ตัวนับจะอัปเดตเมื่อเปิดเมนู",
+          "Показывать пункт": "แสดงรายการ",
+          "Своё название": "ชื่อที่ตั้งเอง",
+          "Показывать счётчик": "แสดงตัวนับ",
+          "Переход по клавише": "เปิดด้วยปุ่ม",
+          "Не знаю, куда вести этот пункт — откройте меню": "ไม่ทราบว่ารายการนี้ไปที่ใด — เปิดเมนูก่อน"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4077,7 +4254,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "कई शब्दों वाला टैग साइट केवल अपने सुझावों से लेती है, और यह सुझाव नहीं मिला",
           "похожие: {list}": "मिलते-जुलते: {list}",
           "Тег скопирован: {tag}": "टैग कॉपी किया गया: {tag}",
-          "Сначала скопируйте тег правым щелчком": "पहले दाएँ क्लिक से कोई टैग कॉपी करें"
+          "Сначала скопируйте тег правым щелчком": "पहले दाएँ क्लिक से कोई टैग कॉपी करें",
+          "Основное": "सामान्य",
+          "Меню сайта": "साइट का मेन्यू",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "साइड मेन्यू के आइटम: अपना नाम, दिखाना, काउंटर और पेज खोलने की कुंजी। मेन्यू खुलने पर काउंटर अपडेट होते हैं।",
+          "Показывать пункт": "आइटम दिखाएँ",
+          "Своё название": "अपना नाम",
+          "Показывать счётчик": "काउंटर दिखाएँ",
+          "Переход по клавише": "कुंजी से खोलें",
+          "Не знаю, куда вести этот пункт — откройте меню": "पता नहीं यह आइटम कहाँ ले जाता है — मेन्यू खोलें"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4245,7 +4430,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag beberapa kata hanya diterima dari saran situs, dan yang ini tidak ditawarkan",
           "похожие: {list}": "mirip: {list}",
           "Тег скопирован: {tag}": "Tag disalin: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Salin dulu sebuah tag dengan klik kanan"
+          "Сначала скопируйте тег правым щелчком": "Salin dulu sebuah tag dengan klik kanan",
+          "Основное": "Umum",
+          "Меню сайта": "Menu situs",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Item menu samping: nama sendiri, tampilan, penghitung, dan tombol untuk membuka halaman. Penghitung diperbarui saat menu dibuka.",
+          "Показывать пункт": "Tampilkan item",
+          "Своё название": "Nama sendiri",
+          "Показывать счётчик": "Tampilkan penghitung",
+          "Переход по клавише": "Buka dengan tombol",
+          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini menuju — buka menunya"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4413,7 +4606,15 @@ function core(storedSettings) {
           "составной тег сайт принимает только из своих подсказок, а такой не предложил": "tag berbilang perkataan hanya diterima daripada cadangan tapak, dan yang ini tidak ditawarkan",
           "похожие: {list}": "serupa: {list}",
           "Тег скопирован: {tag}": "Tag disalin: {tag}",
-          "Сначала скопируйте тег правым щелчком": "Salin tag dahulu dengan klik kanan"
+          "Сначала скопируйте тег правым щелчком": "Salin tag dahulu dengan klik kanan",
+          "Основное": "Umum",
+          "Меню сайта": "Menu tapak",
+          "Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.": "Item menu sisi: nama sendiri, kelihatan, kaunter dan kekunci untuk membuka halaman. Kaunter dikemas kini apabila menu dibuka.",
+          "Показывать пункт": "Tunjukkan item",
+          "Своё название": "Nama sendiri",
+          "Показывать счётчик": "Tunjukkan kaunter",
+          "Переход по клавише": "Buka dengan kekunci",
+          "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini pergi — buka menu"
     },
   } /* SKQ_I18N_END */;
 
@@ -5106,6 +5307,7 @@ function core(storedSettings) {
     mountSettingsTab();
     scanReputationDom();
     mountReputation();
+    applySiteMenu();
     if (!FRAME_MODE) {
       injectMassMenuItem();
       syncMassRoute();
@@ -8986,6 +9188,256 @@ function core(storedSettings) {
   // ---------------------------------------------------------------------------
   // Окно настроек
   // ---------------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------------
+  // Боковое меню сайта: свои названия, скрытие, счётчики и клавиши перехода.
+  // Пункты рендерятся с data-test = ключ пункта из конфигурации сайта, поэтому
+  // на них можно опереться на любом языке. Названия берём из словаря сайта.
+  // ---------------------------------------------------------------------------
+  const SITE_MENU = [
+    { key: 'home_page', word: '', fallback: 'Home Page', path: '/homepage' },
+    { key: 'post-indexes', word: 'common-title__posts', path: '/', mod: 'ctrl', children: [
+      { key: 'upload_post', word: 'common-title__upload_post', path: '/posts/upload' },
+      { key: 'menu_browse_all', word: 'common-title__browse_posts', path: '/' },
+      { key: 'menu_favorites-posts', word: 'common-title__posts_favorited', path: '/', query: 'tags=fav:{me}', count: 'favPosts' },
+      { key: 'my_posts', word: 'common-title__my-posts', path: '/', query: 'tags=user:{me}', count: 'myPosts' },
+      { key: 'menu_popular_post', word: 'common-title__popular_posts', path: '/', query: 'tags=order:popularity' },
+      { key: 'menu_top_post', word: 'common-title__top_posts', path: '/', query: 'tags=order:quality' },
+    ] },
+    { key: 'book-indexes', word: 'common-title__books', path: '/books', mod: 'alt', children: [
+      { key: 'upload_book', word: 'common-title__upload_book', path: '/books/upload' },
+      { key: 'menu_books', word: 'common-title__browse_books', path: '/books' },
+      { key: 'menu_favorites-book', word: 'common-title__books_favorited', path: '/books', query: 'tags=fav:{me}', count: 'favBooks' },
+      { key: 'my_books', word: 'common-title__my-books', path: '/books', query: 'tags=user:{me}', count: 'myBooks' },
+      { key: 'menu_popular_book', word: 'common-title__popular_books', path: '/books', query: 'tags=order:popularity' },
+      { key: 'menu_top_book', word: 'common-title__top_books', path: '/books', query: 'tags=order:quality' },
+    ] },
+    { key: 'ai_art', word: 'common-title__sankaku-ai-creator', path: '/ai-create' },
+    { key: 'menu_readings', word: 'common-title__readings-books', path: '/books/reading' },
+    { key: 'menu_series', word: 'common-title__series', path: '/series' },
+    { key: 'menu_favorite_series', word: 'common-title__series_favorited', path: '/series', query: 'tags=favoritedBy:{me}' },
+    { key: 'creators', word: 'common-title__creators', children: [
+      { key: 'creator_dashboard', word: 'common-title__dashboard' },
+      { key: 'creator_memberships', word: 'common-title__memberships' },
+    ] },
+    { key: 'menu_reputation', word: 'common-title__reputation', children: [
+      { key: 'reputation_rankings', word: 'common-title__rankings', path: '/reputation', count: 'reputation' },
+      { key: 'reputation_achievements', word: 'common-title__achievements' },
+      { key: 'reputation_privileges', word: 'common-title__privileges' },
+    ] },
+    { key: 'gifts', word: 'common-title__gifts' },
+    { key: 'collections', word: 'collection__title', children: [
+      { key: 'collections_browse', word: 'collection__browse' },
+      { key: 'collections_favorited', word: 'collection__favorited' },
+      { key: 'collections_my', word: 'collection__my' },
+      { key: 'popular_collections', word: 'common-title__popular-collections' },
+      { key: 'top_collections', word: 'common-title__top-collections' },
+    ] },
+    { key: 'menu_games', word: 'common-title__games' },
+    { key: 'menu_ranking', word: 'common-title__ranking', path: '/rankings/books' },
+    { key: 'wiki', word: 'common-title__wiki', path: '/wiki', children: [
+      { key: 'wiki_create', word: 'common-title__wiki-create' },
+      { key: 'wiki_lists', word: 'common-title__tags-listing', path: '/wiki' },
+      { key: 'wiki_help', word: 'common-title__help' },
+    ] },
+    { key: 'history-indexes', word: 'common-title__history', children: [
+      { key: 'history-indexes-post-tag', word: 'common-title__post', path: '/posts/changes' },
+      { key: 'history-indexes-book', word: 'common-title__book', path: '/books/changes' },
+      { key: 'history-indexes-note', word: 'common-title__note' },
+      { key: 'history-indexes-tags', word: 'common-title__tag', path: '/tags/changes' },
+      { key: 'history-indexes-wiki', word: 'common-title__wiki-history', path: '/wiki/changes' },
+    ] },
+    { key: 'tag', word: 'common-title__tags', children: [
+      { key: 'tag-list', word: 'common-title__tags-listing', path: '/tags' },
+      { key: 'tags-translation', word: 'common-title__tags-translation', path: '/tags/translations' },
+      { key: 'tags-alias', word: 'common-title__tags-alias', path: '/tags/aliases' },
+      { key: 'tags-implication', word: 'common-title__tags-implication', path: '/tags/implications' },
+      { key: 'mass-tag-edit', word: 'common-title__mass-tag', path: '/tags/mass_edits' },
+    ] },
+    { key: 'menu_users', word: 'common-title__users', path: '/users' },
+    { key: 'menu_comments', word: 'common-title__comments', path: '/comments' },
+    { key: 'referrals', word: 'common-title__referrals' },
+    { key: 'menu_inbox', word: 'common-title__inbox', path: '/inbox' },
+    { key: 'menu_settings', word: 'common-title__settings', path: '/settings' },
+  ];
+
+  const MENU_ITEMS = [];
+  const MENU_BY_KEY = new Map();
+  for (const top of SITE_MENU) {
+    MENU_ITEMS.push(top);
+    MENU_BY_KEY.set(top.key, top);
+    (top.children || []).forEach((child, i) => {
+      // по умолчанию подменю «Посты» — Ctrl+n, «Книги» — Alt+n; включать вручную
+      child.parentKey = top.key;
+      child.defHk = top.mod ? `${top.mod}+Digit${i + 1}` : '';
+      MENU_ITEMS.push(child);
+      MENU_BY_KEY.set(child.key, child);
+    });
+  }
+
+  const menuState = (key) => (isObj(settings.menu) && isObj(settings.menu[key]) ? settings.menu[key] : {});
+  const menuName = (key) => String(menuState(key).name || '').trim();
+  const menuHidden = (key) => !!menuState(key).off;
+  const menuCountOn = (key) => menuState(key).count !== false;
+  const menuDefHk = (key) => (MENU_BY_KEY.get(key) || {}).defHk || '';
+
+  function menuHotkey(key) {
+    const st = menuState(key);
+    if (!st.hkOn) return '';
+    return String(st.hk || menuDefHk(key) || '');
+  }
+
+  // Счётчики: избранное и загруженное берём из профиля, репутацию — из своего запроса
+  const COUNT_FIELDS = {
+    favPosts: 'post_favorite_count', myPosts: 'post_upload_count',
+    favBooks: 'pool_favorite_count', myBooks: 'pool_upload_count',
+  };
+  const counts = { values: {}, at: 0, loading: false };
+
+  async function refreshCounts(force) {
+    if (FRAME_MODE || counts.loading) return;
+    if (!force && Date.now() - counts.at < REP_TTL) return;
+    counts.loading = true;
+    try {
+      const data = await api('GET', '/users/me');
+      const me = isObj(data) && isObj(data.user) ? data.user : data;
+      const next = {};
+      for (const id in COUNT_FIELDS) {
+        const v = isObj(me) ? me[COUNT_FIELDS[id]] : null;
+        if (typeof v === 'number' && Number.isFinite(v)) next[id] = v;
+      }
+      counts.values = next;
+      counts.at = Date.now();
+      applySiteMenu();
+    } catch (e) {
+      log('counters', e.message);
+    } finally {
+      counts.loading = false;
+    }
+  }
+
+  const countValue = (id) => (id === 'reputation' ? rep.value : counts.values[id]);
+
+  // Меню открыли — счётчики могли устареть
+  let menuVisible = false;
+  let menuOpenedAt = 0;
+
+  function onMenuOpened() {
+    if (Date.now() - menuOpenedAt < REP_OPEN_TTL) return;
+    menuOpenedAt = Date.now();
+    refreshCounts(true);
+    refreshReputation(true);
+  }
+
+  const menuTextEl = (el) =>
+    el.querySelector('[class*="MuiListItemText-primary"]')
+    || el.querySelector('[class*="MuiListItemText"] p, [class*="MuiListItemText"] span')
+    || null;
+
+  function menuCounterEl(el) {
+    let badge = el.querySelector(':scope > .skq-mcount');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'skq-mcount';
+      el.appendChild(badge);
+    }
+    return badge;
+  }
+
+  function applySiteMenu() {
+    if (FRAME_MODE || !document.body) return;
+    let seen = 0;
+    for (const el of document.querySelectorAll('[data-test]')) {
+      const key = el.getAttribute('data-test');
+      const cfg = MENU_BY_KEY.get(key);
+      if (!cfg) continue;
+      if (!el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]')) continue;
+      seen++;
+      el.classList.toggle('skq-menu-off', menuHidden(key));
+      const textEl = menuTextEl(el);
+      if (textEl) {
+        if (!textEl.dataset.skqOrig) textEl.dataset.skqOrig = (textEl.textContent || '').trim();
+        const want = menuName(key) || textEl.dataset.skqOrig;
+        if ((textEl.textContent || '').trim() !== want) textEl.textContent = want;
+      }
+      if (cfg.count) {
+        const value = menuCountOn(key) ? countValue(cfg.count) : null;
+        const badge = menuCounterEl(el);
+        const text = typeof value === 'number' ? shortCount(value) : '';
+        if (badge.textContent !== text) badge.textContent = text;
+      }
+    }
+    if (seen && !menuVisible) onMenuOpened();
+    menuVisible = seen > 0;
+    applyMenuTitles();
+  }
+
+  // Переименованный пункт меняет и заголовок своей страницы
+  function renamedTitles() {
+    const map = new Map();
+    for (const item of MENU_ITEMS) {
+      const name = menuName(item.key);
+      if (!name || !item.word) continue;
+      const orig = siteWord(item.word);
+      if (orig && orig !== name) map.set(orig, name);
+    }
+    return map;
+  }
+
+  function applyMenuTitles() {
+    const holder = document.getElementById('portal-title');
+    if (!holder) return;
+    const renamed = renamedTitles();
+    if (!renamed.size) return;
+    for (const el of holder.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span')) {
+      if (el.children.length) continue;
+      const want = renamed.get((el.textContent || '').trim());
+      if (want) el.textContent = want;
+    }
+  }
+
+  // ---- Клавиши перехода ----
+  const comboOf = (e) => `${e.ctrlKey ? 'ctrl+' : ''}${e.altKey ? 'alt+' : ''}${e.shiftKey ? 'shift+' : ''}${e.metaKey ? 'meta+' : ''}${e.code}`;
+  const comboLabel = (combo) => {
+    if (!combo) return '—';
+    const parts = String(combo).split('+');
+    const code = parts.pop();
+    const mods = parts.map((m) => m.charAt(0).toUpperCase() + m.slice(1));
+    return [...mods, keyLabel(code)].join('+');
+  };
+
+  function menuUrl(cfg) {
+    if (!cfg || !cfg.path) return '';
+    let query = cfg.query || '';
+    if (query.includes('{me}')) {
+      if (!rep.name) return '';
+      query = query.replace('{me}', encodeURIComponent(rep.name));
+    }
+    return location.origin + langPrefix() + cfg.path + (query ? '?' + query : '');
+  }
+
+  function goToMenuItem(key) {
+    const link = [...document.querySelectorAll('[data-test]')].find((el) =>
+      el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]'));
+    if (link) { link.click(); return true; } // меню открыто — пусть сайт сам переходит
+    const url = menuUrl(MENU_BY_KEY.get(key));
+    if (!url) return false;
+    location.assign(url);
+    return true;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (FRAME_MODE || settingsOpen || !(e.ctrlKey || e.altKey || e.metaKey)) return;
+    const node = e.composedPath ? e.composedPath()[0] : e.target;
+    if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
+    const combo = comboOf(e);
+    const item = MENU_ITEMS.find((it) => menuHotkey(it.key) === combo);
+    if (!item) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!goToMenuItem(item.key)) toast(t('Не знаю, куда вести этот пункт — откройте меню'), true);
+  }, true);
+
   const HOTKEYS = [
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
@@ -9040,6 +9492,24 @@ function core(storedSettings) {
     .key.wait { border-color: #ff8c00; color: #ff8c00; }
     .hint { margin: 4px 0 0; color: #999; font-size: 12px; }
     .hint.err { color: #ff6b6b; }
+    .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
+    .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
+    .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    .mlist { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
+    .mrow { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+    .mrow.child { padding-left: 16px; }
+    .mrow.top { margin-top: 6px; }
+    .mrow .mname {
+      flex: 1 1 auto; min-width: 40px; padding: 5px 8px; border-radius: 6px; border: 1px solid #555;
+      background: #1f1f1f; color: #fff; font-size: 13px;
+    }
+    .mrow.top .mname { font-weight: 600; }
+    .mrow.hidden .mname { opacity: .45; text-decoration: line-through; }
+    .mrow .mhk { min-width: 82px; padding: 4px 6px; font-size: 12px; }
+    .mrow .mhk.wait { border-color: #ff8c00; color: #ff8c00; }
+    .mrow .mhk[disabled] { opacity: .4; cursor: default; }
+    .mcell { display: inline-flex; align-items: center; justify-content: center; width: 20px; flex: none; cursor: pointer; }
+    .mcell.empty { cursor: default; }
     .actions { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
     .ver { background: none; border: 0; padding: 7px 2px; color: #999; font-size: 12px; }
     .ver:hover { background: none; color: #ddd; }
@@ -9078,6 +9548,11 @@ function core(storedSettings) {
       ${embedded ? '' : '<div class="backdrop"></div>'}
       <form class="dlg" tabindex="-1" ${embedded ? '' : 'role="dialog" aria-modal="true"'} aria-label="${T('Настройки скрипта')}">
         <h2>Sankaku: ${T('настройки скрипта')}</h2>
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab on" data-page="main" role="tab">${T('Основное')}</button>
+          <button type="button" class="tab" data-page="menu" role="tab">${T('Меню сайта')}</button>
+        </div>
+        <div class="page" data-page="main">
         <fieldset>
           <legend>${T('Реклама')}</legend>
           <label class="row"><input type="checkbox" name="hideAds"> ${T('Скрывать рекламу')}</label>
@@ -9118,6 +9593,11 @@ function core(storedSettings) {
             <button type="button" class="key" data-setting="${h.id}"></button></div>`).join('')}
           <p class="hint keyhint">${T('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
         </fieldset>
+        </div>
+        <div class="page" data-page="menu" hidden>
+          <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
+          <div class="mlist"></div>
+        </div>
         <div class="actions">
           <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
           <button type="button" class="reset">${T('Сбросить')}</button>
@@ -9138,8 +9618,118 @@ function core(storedSettings) {
     const subRow = root.querySelector('.sub');
     const keys = {};
     let capturing = null; // какую клавишу сейчас назначаем
+    let capturingMenu = null; // ... и то же для пункта меню
+    let menuDraft = {};
+
+    for (const tab of root.querySelectorAll('.tab')) {
+      tab.addEventListener('click', () => {
+        for (const other of root.querySelectorAll('.tab')) other.classList.toggle('on', other === tab);
+        for (const page of root.querySelectorAll('.page')) page.hidden = page.dataset.page !== tab.dataset.page;
+        setCapturingMenu(null);
+      });
+    }
+
+    const draftOf = (key) => (menuDraft[key] = menuDraft[key] || {});
+
+    function setCapturingMenu(key) {
+      capturingMenu = key;
+      renderMenuRows();
+    }
+
+    function menuRowHk(key) {
+      const st = menuDraft[key] || {};
+      return String(st.hk || menuDefHk(key) || '');
+    }
+
+    function renderMenuRows() {
+      const list = root.querySelector('.mlist');
+      list.replaceChildren();
+      for (const item of MENU_ITEMS) {
+        const st = menuDraft[item.key] || {};
+        const orig = siteWord(item.word) || item.fallback || item.key;
+        const row = document.createElement('div');
+        row.className = 'mrow ' + (item.parentKey ? 'child' : 'top') + (st.off ? ' hidden' : '');
+        row.dataset.key = item.key;
+
+        const show = document.createElement('label');
+        show.className = 'mcell';
+        show.title = t('Показывать пункт');
+        const showBox = document.createElement('input');
+        showBox.type = 'checkbox';
+        showBox.className = 'mshow';
+        showBox.checked = !st.off;
+        showBox.addEventListener('change', () => { draftOf(item.key).off = !showBox.checked; renderMenuRows(); });
+        show.appendChild(showBox);
+        row.appendChild(show);
+
+        const name = document.createElement('input');
+        name.type = 'text';
+        name.className = 'mname';
+        name.placeholder = orig;
+        name.title = t('Своё название');
+        name.value = String(st.name || '');
+        name.addEventListener('input', () => { draftOf(item.key).name = name.value; });
+        row.appendChild(name);
+
+        const cnt = document.createElement('label');
+        cnt.className = 'mcell' + (item.count ? '' : ' empty');
+        if (item.count) {
+          cnt.title = t('Показывать счётчик');
+          const box = document.createElement('input');
+          box.type = 'checkbox';
+          box.className = 'mcount';
+          box.checked = st.count !== false;
+          box.addEventListener('change', () => { draftOf(item.key).count = box.checked; });
+          cnt.appendChild(box);
+        }
+        row.appendChild(cnt);
+
+        const hkCell = document.createElement('label');
+        hkCell.className = 'mcell keys-only';
+        hkCell.title = t('Переход по клавише');
+        const hkBox = document.createElement('input');
+        hkBox.type = 'checkbox';
+        hkBox.className = 'mhkon';
+        hkBox.checked = !!st.hkOn;
+        hkBox.addEventListener('change', () => { draftOf(item.key).hkOn = hkBox.checked; renderMenuRows(); });
+        hkCell.appendChild(hkBox);
+        row.appendChild(hkCell);
+
+        const hkBtn = document.createElement('button');
+        hkBtn.type = 'button';
+        hkBtn.className = 'mhk keys-only' + (capturingMenu === item.key ? ' wait' : '');
+        hkBtn.textContent = capturingMenu === item.key ? t('Нажмите клавишу…') : comboLabel(menuRowHk(item.key));
+        hkBtn.disabled = !st.hkOn;
+        hkBtn.addEventListener('click', () => {
+          setCapturingMenu(item.key);
+          setHint(t('Esc — отмена.'));
+        });
+        row.appendChild(hkBtn);
+
+        list.appendChild(row);
+      }
+    }
+
+    function collectMenu() {
+      const out = {};
+      for (const key in menuDraft) {
+        const st = menuDraft[key];
+        const item = {};
+        if (String(st.name || '').trim()) item.name = String(st.name).trim();
+        if (st.off) item.off = true;
+        if (st.count === false) item.count = false;
+        if (st.hkOn) item.hkOn = true;
+        if (st.hk && st.hk !== menuDefHk(key)) item.hk = st.hk;
+        if (Object.keys(item).length) out[key] = item;
+      }
+      return out;
+    }
 
     function fill(s) {
+      menuDraft = {};
+      if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      capturingMenu = null;
+      renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
@@ -9206,6 +9796,18 @@ function core(storedSettings) {
         setHint(hintText);
         return;
       }
+      if (capturingMenu) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'Escape') { setCapturingMenu(null); setHint(hintText); return; }
+        if (/^(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?$/.test(e.code)) return;
+        const st = draftOf(capturingMenu);
+        st.hk = comboOf(e);
+        st.hkOn = true;
+        setCapturingMenu(null);
+        setHint(hintText);
+        return;
+      }
       if (e.key === 'Escape' && !embedded) {
         e.preventDefault();
         close();
@@ -9244,9 +9846,11 @@ function core(storedSettings) {
         rehideOnBlur: f('rehideOnBlur').checked,
         rehideDelayMs: ms('rehideDelayMs', DEFAULTS.rehideDelayMs),
         massMaxForms: Math.min(10, Math.max(1, ms('massMaxForms', DEFAULTS.massMaxForms) || DEFAULTS.massMaxForms)),
+        menu: collectMenu(),
         ...keys,
       });
       setCapturing(null);
+      setCapturingMenu(null);
       close();
       toast(t('Настройки сохранены'));
     });
@@ -9427,6 +10031,12 @@ function core(storedSettings) {
     .skq-fav .skq-heart.skq-faved path { fill: #ff4f70 !important; }
     .skq-busy { opacity: .5; pointer-events: none !important; }
     .skq-off { display: none !important; }
+    .skq-menu-off { display: none !important; }
+    .skq-mcount {
+      margin-left: auto; padding-left: 8px; flex: none; color: #ff8c00;
+      font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
+    }
+    .skq-mcount:empty { display: none; }
     .skq-settings-panel { padding: 8px 0 24px; }
     .skq-rep {
       display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; vertical-align: middle;

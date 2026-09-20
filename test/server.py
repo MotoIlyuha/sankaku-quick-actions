@@ -35,7 +35,9 @@ class H(http.server.BaseHTTPRequestHandler):
         path = self.path.split('?')[0].split('#')[0]
         if path.startswith('/users/me'):
             # у сайта в профиле репутации нет: она приходит только из reputation/ranking
-            me = {'id': 7, 'name': 'ilyuxa3211', 'points': 300, 'favorite_count': 12}
+            me = {'id': 7, 'name': 'ilyuxa3211', 'points': 300,
+                  'favorite_count': 1252, 'post_favorite_count': 1240, 'post_upload_count': 87,
+                  'pool_favorite_count': 12, 'pool_upload_count': 3}
             if os.path.exists(os.path.join(ROOT, 'rep_in_profile.flag')):
                 me['reputation'] = reputation_value()
             return self._send(200, json.dumps(me), 'application/json')

@@ -164,5 +164,13 @@
  "162": "en tagg med flera ord tas bara från webbplatsens egna förslag, och den föreslogs inte",
  "163": "liknande: {list}",
  "164": "Tagg kopierad: {tag}",
- "165": "Kopiera först en tagg med högerklick"
+ "165": "Kopiera först en tagg med högerklick",
+ "166": "Allmänt",
+ "167": "Webbplatsens meny",
+ "168": "Poster i sidomenyn: eget namn, synlighet, räknare och en tangent som öppnar sidan. Räknarna uppdateras när menyn öppnas.",
+ "169": "Visa posten",
+ "170": "Eget namn",
+ "171": "Visa räknaren",
+ "172": "Öppna med tangent",
+ "173": "Jag vet inte vart posten leder — öppna menyn"
 }

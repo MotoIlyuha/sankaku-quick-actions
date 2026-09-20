@@ -67,14 +67,38 @@
 .pcard img { width: 160px; height: 160px; display: block; }
 </style>
 </head><body>
-<header class="MuiAppBar-root"><button id="menu">☰</button><h6 id="title"></h6></header>
-<nav id="drawer"><ul class="MuiList-root"><li class=""><a data-test="upload_post" href="/ru/posts/upload"><div><span class="MuiListItemText-primary">Загрузить пост</span></div></a></li><li><a data-test="menu_browse_all" href="/ru"><span class="MuiListItemText-primary">Просмотр постов</span></a></li><li><div class="MuiGrid-root"><div class="MuiGrid-root"><button class="pointsbtn MuiButtonBase-root"><span class="MuiButton-label"><span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><rect width="24" height="24" x="0.5" fill="transparent" rx="12"></rect><path fill="#fff" d="m12.5 4-8 13.177h16l-1.619-2.668H9.138l3.359-5.624 3.06 4.963h2.924z"></path></svg></span><p class="MuiTypography-root">0</p></span></button></div></div></li></ul></nav>
+<header class="MuiAppBar-root"><button id="menu" data-test="hamburger-menu">☰</button><div id="portal-title"><h2 id="title" class="MuiTypography-root MuiTypography-h6"></h2></div></header>
+<nav id="drawer"><ul class="MuiList-root" id="menulist"></ul><ul class="MuiList-root"><li><div class="MuiGrid-root"><div class="MuiGrid-root"><button class="pointsbtn MuiButtonBase-root"><span class="MuiButton-label"><span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><rect width="24" height="24" x="0.5" fill="transparent" rx="12"></rect><path fill="#fff" d="m12.5 4-8 13.177h16l-1.619-2.668H9.138l3.359-5.624 3.06 4.963h2.924z"></path></svg></span><p class="MuiTypography-root">0</p></span></button></div></div></li></ul></nav>
 <div id="app"></div>
 <script>
   // сайт держит свои надписи в словаре рядом с состоянием страницы
+  const MENU_WORDS = {
+    ru: {
+      'common-title__posts': 'Посты', 'common-title__upload_post': 'Загрузить пост',
+      'common-title__browse_posts': 'Просмотр постов', 'common-title__posts_favorited': 'Избранные посты',
+      'common-title__my-posts': 'Мои Posts', 'common-title__popular_posts': 'Популярные посты',
+      'common-title__top_posts': 'Лучшие посты', 'common-title__books': 'Книги',
+      'common-title__upload_book': 'Загрузить книгу', 'common-title__browse_books': 'Просмотр книг',
+      'common-title__books_favorited': 'Избранные книги', 'common-title__my-books': 'Мои Books',
+      'common-title__popular_books': 'Популярные книги', 'common-title__top_books': 'Лучшие книги',
+      'common-title__reputation': 'Репутация', 'common-title__rankings': 'Рейтинги',
+      'common-title__settings': 'Настройки',
+    },
+    nl: {
+      'common-title__posts': 'Berichten', 'common-title__upload_post': 'Bericht uploaden',
+      'common-title__browse_posts': 'Berichten bekijken', 'common-title__posts_favorited': 'Favoriete berichten',
+      'common-title__my-posts': 'Mijn Posts', 'common-title__popular_posts': 'Populaire berichten',
+      'common-title__top_posts': 'Beste berichten', 'common-title__books': 'Boeken',
+      'common-title__upload_book': 'Boek uploaden', 'common-title__browse_books': 'Boeken bekijken',
+      'common-title__books_favorited': 'Favoriete boeken', 'common-title__my-books': 'Mijn Books',
+      'common-title__popular_books': 'Populaire boeken', 'common-title__top_books': 'Beste boeken',
+      'common-title__reputation': 'Reputatie', 'common-title__rankings': 'Ranglijsten',
+      'common-title__settings': 'Instellingen',
+    },
+  };
   const SITE_WORDS = {
-    ru: { 'common-title__create_post': 'Создать пост', 'common-title__add-tags': 'Добавить теги' },
-    nl: { 'common-title__create_post': 'Bericht maken', 'common-title__add-tags': 'Tags toevoegen' },
+    ru: { 'common-title__create_post': 'Создать пост', 'common-title__add-tags': 'Добавить теги', ...MENU_WORDS.ru },
+    nl: { 'common-title__create_post': 'Bericht maken', 'common-title__add-tags': 'Tags toevoegen', ...MENU_WORDS.nl },
   };
   const siteLang = (new URLSearchParams(location.search).get('sitelang')
     || sessionStorage.getItem('sitelang') || 'ru');
@@ -85,7 +109,58 @@
   };
   const word = (key) => window.__PRELOADED_STATE__.initialI18nStore[siteLang].translation[key] || key;
 
+  const MENU_TREE = [
+    ['post-indexes', 'common-title__posts', '/', [
+      ['upload_post', 'common-title__upload_post', '/posts/upload'],
+      ['menu_browse_all', 'common-title__browse_posts', '/'],
+      ['menu_favorites-posts', 'common-title__posts_favorited', '/?tags=fav:ilyuxa3211'],
+      ['my_posts', 'common-title__my-posts', '/?tags=user:ilyuxa3211'],
+      ['menu_popular_post', 'common-title__popular_posts', '/?tags=order:popularity'],
+      ['menu_top_post', 'common-title__top_posts', '/?tags=order:quality'],
+    ]],
+    ['book-indexes', 'common-title__books', '/books', [
+      ['upload_book', 'common-title__upload_book', '/books/upload'],
+      ['menu_books', 'common-title__browse_books', '/books'],
+      ['menu_favorites-book', 'common-title__books_favorited', '/books?tags=fav:ilyuxa3211'],
+      ['my_books', 'common-title__my-books', '/books?tags=user:ilyuxa3211'],
+      ['menu_popular_book', 'common-title__popular_books', '/books?tags=order:popularity'],
+      ['menu_top_book', 'common-title__top_books', '/books?tags=order:quality'],
+    ]],
+    ['menu_reputation', 'common-title__reputation', '', [
+      ['reputation_rankings', 'common-title__rankings', '/reputation'],
+    ]],
+    ['menu_settings', 'common-title__settings', '/settings', []],
+  ];
+
+  function buildMenu() {
+    const list = document.getElementById('menulist');
+    if (!list) return;
+    const lang = location.pathname.split('/')[1] || 'ru';
+    const row = (key, wordKey, href, child) => {
+      const li = document.createElement('li');
+      li.className = 'MuiListItem-root' + (child ? ' child' : '');
+      li.setAttribute('data-test', key);
+      li.style.cssText = 'display:flex;align-items:center;padding:6px 12px;cursor:pointer;'
+        + (child ? 'padding-left:28px;' : 'font-weight:600;');
+      const text = document.createElement('span');
+      text.className = 'MuiListItemText-primary';
+      text.textContent = word(wordKey);
+      li.appendChild(text);
+      if (href) li.addEventListener('click', () => {
+        history.pushState({}, '', '/' + lang + href);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+        document.getElementById('drawer').classList.remove('open');
+      });
+      list.appendChild(li);
+    };
+    for (const [key, wordKey, href, children] of MENU_TREE) {
+      row(key, wordKey, href, false);
+      for (const [ckey, cword, chref] of children) row(ckey, cword, chref, true);
+    }
+  }
+
   const app = document.getElementById('app'), titleEl = document.getElementById('title');
+  buildMenu();
   document.getElementById('menu').onclick = () => document.getElementById('drawer').classList.toggle('open');
   function render() {
     const p = location.pathname.replace(/\/$/, '');

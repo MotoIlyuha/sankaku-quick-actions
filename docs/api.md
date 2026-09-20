@@ -25,6 +25,7 @@
 | Избранное | `POST posts/{id}/favorite`, `DELETE` — убрать |
 | Подсказки тегов | через API не запрашиваются: расширение вводит текст в форму сайта и читает её выпадающий список — так теги совпадают с тем, что примет сам сайт |
 | Профиль | `GET users/me` — репутации в нём нет |
+| Счётчики меню | `GET users/me` → `post_favorite_count`, `post_upload_count`, `pool_favorite_count`, `pool_upload_count` |
 | Репутация | `GET reputation/ranking` → `{list, user_reputation}` |
 
 `user_reputation` — наша строка рейтинга: `rank`, `reputation`,

@@ -76,6 +76,19 @@ In the extension the settings open from the toolbar button, in Tampermonkey
 from the «⚙ Settings» menu command. On the site's own settings page both add a
 «Plugin» tab.
 
+## The site's menu
+
+The «Site menu» tab in the add-on settings: every item of the side menu can be
+renamed, hidden, or given a key that opens its page (the Posts submenu gets
+Ctrl+1…6, Books gets Alt+1…6, all disabled by default). Favorited and uploaded
+posts and books show their counts next to the item, the rankings item shows the
+reputation; the counters refresh when the menu opens.
+
+Items are found by their `data-test` attribute — the key from the site's own
+menu config (`post-indexes`, `my_posts`, `menu_favorites-book`…) — and their
+original names come from the site's dictionary in `window.__PRELOADED_STATE__`.
+So renaming works in any interface language and also changes the page heading.
+
 ## Phones
 
 The add-on is marked compatible with Firefox for Android (`gecko_android`,

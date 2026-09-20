@@ -54,6 +54,7 @@ function core(storedSettings) {
     showReputation: true,
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
+    menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
   };
   const settings = {
     ...DEFAULTS,
@@ -803,6 +804,7 @@ function core(storedSettings) {
     mountSettingsTab();
     scanReputationDom();
     mountReputation();
+    applySiteMenu();
     if (!FRAME_MODE) {
       injectMassMenuItem();
       syncMassRoute();
@@ -4683,6 +4685,256 @@ function core(storedSettings) {
   // ---------------------------------------------------------------------------
   // Окно настроек
   // ---------------------------------------------------------------------------
+
+  // ---------------------------------------------------------------------------
+  // Боковое меню сайта: свои названия, скрытие, счётчики и клавиши перехода.
+  // Пункты рендерятся с data-test = ключ пункта из конфигурации сайта, поэтому
+  // на них можно опереться на любом языке. Названия берём из словаря сайта.
+  // ---------------------------------------------------------------------------
+  const SITE_MENU = [
+    { key: 'home_page', word: '', fallback: 'Home Page', path: '/homepage' },
+    { key: 'post-indexes', word: 'common-title__posts', path: '/', mod: 'ctrl', children: [
+      { key: 'upload_post', word: 'common-title__upload_post', path: '/posts/upload' },
+      { key: 'menu_browse_all', word: 'common-title__browse_posts', path: '/' },
+      { key: 'menu_favorites-posts', word: 'common-title__posts_favorited', path: '/', query: 'tags=fav:{me}', count: 'favPosts' },
+      { key: 'my_posts', word: 'common-title__my-posts', path: '/', query: 'tags=user:{me}', count: 'myPosts' },
+      { key: 'menu_popular_post', word: 'common-title__popular_posts', path: '/', query: 'tags=order:popularity' },
+      { key: 'menu_top_post', word: 'common-title__top_posts', path: '/', query: 'tags=order:quality' },
+    ] },
+    { key: 'book-indexes', word: 'common-title__books', path: '/books', mod: 'alt', children: [
+      { key: 'upload_book', word: 'common-title__upload_book', path: '/books/upload' },
+      { key: 'menu_books', word: 'common-title__browse_books', path: '/books' },
+      { key: 'menu_favorites-book', word: 'common-title__books_favorited', path: '/books', query: 'tags=fav:{me}', count: 'favBooks' },
+      { key: 'my_books', word: 'common-title__my-books', path: '/books', query: 'tags=user:{me}', count: 'myBooks' },
+      { key: 'menu_popular_book', word: 'common-title__popular_books', path: '/books', query: 'tags=order:popularity' },
+      { key: 'menu_top_book', word: 'common-title__top_books', path: '/books', query: 'tags=order:quality' },
+    ] },
+    { key: 'ai_art', word: 'common-title__sankaku-ai-creator', path: '/ai-create' },
+    { key: 'menu_readings', word: 'common-title__readings-books', path: '/books/reading' },
+    { key: 'menu_series', word: 'common-title__series', path: '/series' },
+    { key: 'menu_favorite_series', word: 'common-title__series_favorited', path: '/series', query: 'tags=favoritedBy:{me}' },
+    { key: 'creators', word: 'common-title__creators', children: [
+      { key: 'creator_dashboard', word: 'common-title__dashboard' },
+      { key: 'creator_memberships', word: 'common-title__memberships' },
+    ] },
+    { key: 'menu_reputation', word: 'common-title__reputation', children: [
+      { key: 'reputation_rankings', word: 'common-title__rankings', path: '/reputation', count: 'reputation' },
+      { key: 'reputation_achievements', word: 'common-title__achievements' },
+      { key: 'reputation_privileges', word: 'common-title__privileges' },
+    ] },
+    { key: 'gifts', word: 'common-title__gifts' },
+    { key: 'collections', word: 'collection__title', children: [
+      { key: 'collections_browse', word: 'collection__browse' },
+      { key: 'collections_favorited', word: 'collection__favorited' },
+      { key: 'collections_my', word: 'collection__my' },
+      { key: 'popular_collections', word: 'common-title__popular-collections' },
+      { key: 'top_collections', word: 'common-title__top-collections' },
+    ] },
+    { key: 'menu_games', word: 'common-title__games' },
+    { key: 'menu_ranking', word: 'common-title__ranking', path: '/rankings/books' },
+    { key: 'wiki', word: 'common-title__wiki', path: '/wiki', children: [
+      { key: 'wiki_create', word: 'common-title__wiki-create' },
+      { key: 'wiki_lists', word: 'common-title__tags-listing', path: '/wiki' },
+      { key: 'wiki_help', word: 'common-title__help' },
+    ] },
+    { key: 'history-indexes', word: 'common-title__history', children: [
+      { key: 'history-indexes-post-tag', word: 'common-title__post', path: '/posts/changes' },
+      { key: 'history-indexes-book', word: 'common-title__book', path: '/books/changes' },
+      { key: 'history-indexes-note', word: 'common-title__note' },
+      { key: 'history-indexes-tags', word: 'common-title__tag', path: '/tags/changes' },
+      { key: 'history-indexes-wiki', word: 'common-title__wiki-history', path: '/wiki/changes' },
+    ] },
+    { key: 'tag', word: 'common-title__tags', children: [
+      { key: 'tag-list', word: 'common-title__tags-listing', path: '/tags' },
+      { key: 'tags-translation', word: 'common-title__tags-translation', path: '/tags/translations' },
+      { key: 'tags-alias', word: 'common-title__tags-alias', path: '/tags/aliases' },
+      { key: 'tags-implication', word: 'common-title__tags-implication', path: '/tags/implications' },
+      { key: 'mass-tag-edit', word: 'common-title__mass-tag', path: '/tags/mass_edits' },
+    ] },
+    { key: 'menu_users', word: 'common-title__users', path: '/users' },
+    { key: 'menu_comments', word: 'common-title__comments', path: '/comments' },
+    { key: 'referrals', word: 'common-title__referrals' },
+    { key: 'menu_inbox', word: 'common-title__inbox', path: '/inbox' },
+    { key: 'menu_settings', word: 'common-title__settings', path: '/settings' },
+  ];
+
+  const MENU_ITEMS = [];
+  const MENU_BY_KEY = new Map();
+  for (const top of SITE_MENU) {
+    MENU_ITEMS.push(top);
+    MENU_BY_KEY.set(top.key, top);
+    (top.children || []).forEach((child, i) => {
+      // по умолчанию подменю «Посты» — Ctrl+n, «Книги» — Alt+n; включать вручную
+      child.parentKey = top.key;
+      child.defHk = top.mod ? `${top.mod}+Digit${i + 1}` : '';
+      MENU_ITEMS.push(child);
+      MENU_BY_KEY.set(child.key, child);
+    });
+  }
+
+  const menuState = (key) => (isObj(settings.menu) && isObj(settings.menu[key]) ? settings.menu[key] : {});
+  const menuName = (key) => String(menuState(key).name || '').trim();
+  const menuHidden = (key) => !!menuState(key).off;
+  const menuCountOn = (key) => menuState(key).count !== false;
+  const menuDefHk = (key) => (MENU_BY_KEY.get(key) || {}).defHk || '';
+
+  function menuHotkey(key) {
+    const st = menuState(key);
+    if (!st.hkOn) return '';
+    return String(st.hk || menuDefHk(key) || '');
+  }
+
+  // Счётчики: избранное и загруженное берём из профиля, репутацию — из своего запроса
+  const COUNT_FIELDS = {
+    favPosts: 'post_favorite_count', myPosts: 'post_upload_count',
+    favBooks: 'pool_favorite_count', myBooks: 'pool_upload_count',
+  };
+  const counts = { values: {}, at: 0, loading: false };
+
+  async function refreshCounts(force) {
+    if (FRAME_MODE || counts.loading) return;
+    if (!force && Date.now() - counts.at < REP_TTL) return;
+    counts.loading = true;
+    try {
+      const data = await api('GET', '/users/me');
+      const me = isObj(data) && isObj(data.user) ? data.user : data;
+      const next = {};
+      for (const id in COUNT_FIELDS) {
+        const v = isObj(me) ? me[COUNT_FIELDS[id]] : null;
+        if (typeof v === 'number' && Number.isFinite(v)) next[id] = v;
+      }
+      counts.values = next;
+      counts.at = Date.now();
+      applySiteMenu();
+    } catch (e) {
+      log('counters', e.message);
+    } finally {
+      counts.loading = false;
+    }
+  }
+
+  const countValue = (id) => (id === 'reputation' ? rep.value : counts.values[id]);
+
+  // Меню открыли — счётчики могли устареть
+  let menuVisible = false;
+  let menuOpenedAt = 0;
+
+  function onMenuOpened() {
+    if (Date.now() - menuOpenedAt < REP_OPEN_TTL) return;
+    menuOpenedAt = Date.now();
+    refreshCounts(true);
+    refreshReputation(true);
+  }
+
+  const menuTextEl = (el) =>
+    el.querySelector('[class*="MuiListItemText-primary"]')
+    || el.querySelector('[class*="MuiListItemText"] p, [class*="MuiListItemText"] span')
+    || null;
+
+  function menuCounterEl(el) {
+    let badge = el.querySelector(':scope > .skq-mcount');
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'skq-mcount';
+      el.appendChild(badge);
+    }
+    return badge;
+  }
+
+  function applySiteMenu() {
+    if (FRAME_MODE || !document.body) return;
+    let seen = 0;
+    for (const el of document.querySelectorAll('[data-test]')) {
+      const key = el.getAttribute('data-test');
+      const cfg = MENU_BY_KEY.get(key);
+      if (!cfg) continue;
+      if (!el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]')) continue;
+      seen++;
+      el.classList.toggle('skq-menu-off', menuHidden(key));
+      const textEl = menuTextEl(el);
+      if (textEl) {
+        if (!textEl.dataset.skqOrig) textEl.dataset.skqOrig = (textEl.textContent || '').trim();
+        const want = menuName(key) || textEl.dataset.skqOrig;
+        if ((textEl.textContent || '').trim() !== want) textEl.textContent = want;
+      }
+      if (cfg.count) {
+        const value = menuCountOn(key) ? countValue(cfg.count) : null;
+        const badge = menuCounterEl(el);
+        const text = typeof value === 'number' ? shortCount(value) : '';
+        if (badge.textContent !== text) badge.textContent = text;
+      }
+    }
+    if (seen && !menuVisible) onMenuOpened();
+    menuVisible = seen > 0;
+    applyMenuTitles();
+  }
+
+  // Переименованный пункт меняет и заголовок своей страницы
+  function renamedTitles() {
+    const map = new Map();
+    for (const item of MENU_ITEMS) {
+      const name = menuName(item.key);
+      if (!name || !item.word) continue;
+      const orig = siteWord(item.word);
+      if (orig && orig !== name) map.set(orig, name);
+    }
+    return map;
+  }
+
+  function applyMenuTitles() {
+    const holder = document.getElementById('portal-title');
+    if (!holder) return;
+    const renamed = renamedTitles();
+    if (!renamed.size) return;
+    for (const el of holder.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span')) {
+      if (el.children.length) continue;
+      const want = renamed.get((el.textContent || '').trim());
+      if (want) el.textContent = want;
+    }
+  }
+
+  // ---- Клавиши перехода ----
+  const comboOf = (e) => `${e.ctrlKey ? 'ctrl+' : ''}${e.altKey ? 'alt+' : ''}${e.shiftKey ? 'shift+' : ''}${e.metaKey ? 'meta+' : ''}${e.code}`;
+  const comboLabel = (combo) => {
+    if (!combo) return '—';
+    const parts = String(combo).split('+');
+    const code = parts.pop();
+    const mods = parts.map((m) => m.charAt(0).toUpperCase() + m.slice(1));
+    return [...mods, keyLabel(code)].join('+');
+  };
+
+  function menuUrl(cfg) {
+    if (!cfg || !cfg.path) return '';
+    let query = cfg.query || '';
+    if (query.includes('{me}')) {
+      if (!rep.name) return '';
+      query = query.replace('{me}', encodeURIComponent(rep.name));
+    }
+    return location.origin + langPrefix() + cfg.path + (query ? '?' + query : '');
+  }
+
+  function goToMenuItem(key) {
+    const link = [...document.querySelectorAll('[data-test]')].find((el) =>
+      el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]'));
+    if (link) { link.click(); return true; } // меню открыто — пусть сайт сам переходит
+    const url = menuUrl(MENU_BY_KEY.get(key));
+    if (!url) return false;
+    location.assign(url);
+    return true;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (FRAME_MODE || settingsOpen || !(e.ctrlKey || e.altKey || e.metaKey)) return;
+    const node = e.composedPath ? e.composedPath()[0] : e.target;
+    if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
+    const combo = comboOf(e);
+    const item = MENU_ITEMS.find((it) => menuHotkey(it.key) === combo);
+    if (!item) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!goToMenuItem(item.key)) toast(t('Не знаю, куда вести этот пункт — откройте меню'), true);
+  }, true);
+
   const HOTKEYS = [
     { id: 'favKey', label: 'Добавить в избранное / убрать' },
     { id: 'commentKey', label: 'Комментарии (на странице поста)' },
@@ -4737,6 +4989,24 @@ function core(storedSettings) {
     .key.wait { border-color: #ff8c00; color: #ff8c00; }
     .hint { margin: 4px 0 0; color: #999; font-size: 12px; }
     .hint.err { color: #ff6b6b; }
+    .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
+    .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
+    .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    .mlist { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
+    .mrow { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+    .mrow.child { padding-left: 16px; }
+    .mrow.top { margin-top: 6px; }
+    .mrow .mname {
+      flex: 1 1 auto; min-width: 40px; padding: 5px 8px; border-radius: 6px; border: 1px solid #555;
+      background: #1f1f1f; color: #fff; font-size: 13px;
+    }
+    .mrow.top .mname { font-weight: 600; }
+    .mrow.hidden .mname { opacity: .45; text-decoration: line-through; }
+    .mrow .mhk { min-width: 82px; padding: 4px 6px; font-size: 12px; }
+    .mrow .mhk.wait { border-color: #ff8c00; color: #ff8c00; }
+    .mrow .mhk[disabled] { opacity: .4; cursor: default; }
+    .mcell { display: inline-flex; align-items: center; justify-content: center; width: 20px; flex: none; cursor: pointer; }
+    .mcell.empty { cursor: default; }
     .actions { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
     .ver { background: none; border: 0; padding: 7px 2px; color: #999; font-size: 12px; }
     .ver:hover { background: none; color: #ddd; }
@@ -4775,6 +5045,11 @@ function core(storedSettings) {
       ${embedded ? '' : '<div class="backdrop"></div>'}
       <form class="dlg" tabindex="-1" ${embedded ? '' : 'role="dialog" aria-modal="true"'} aria-label="${T('Настройки скрипта')}">
         <h2>Sankaku: ${T('настройки скрипта')}</h2>
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab on" data-page="main" role="tab">${T('Основное')}</button>
+          <button type="button" class="tab" data-page="menu" role="tab">${T('Меню сайта')}</button>
+        </div>
+        <div class="page" data-page="main">
         <fieldset>
           <legend>${T('Реклама')}</legend>
           <label class="row"><input type="checkbox" name="hideAds"> ${T('Скрывать рекламу')}</label>
@@ -4815,6 +5090,11 @@ function core(storedSettings) {
             <button type="button" class="key" data-setting="${h.id}"></button></div>`).join('')}
           <p class="hint keyhint">${T('Нажмите на кнопку и затем нужную клавишу. Стрелки, 1–5, Enter и Esc заняты.')}</p>
         </fieldset>
+        </div>
+        <div class="page" data-page="menu" hidden>
+          <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
+          <div class="mlist"></div>
+        </div>
         <div class="actions">
           <button type="button" class="ver" title="${T('Скопировать версию')}">v${esc(SKQ_VERSION)}</button>
           <button type="button" class="reset">${T('Сбросить')}</button>
@@ -4835,8 +5115,118 @@ function core(storedSettings) {
     const subRow = root.querySelector('.sub');
     const keys = {};
     let capturing = null; // какую клавишу сейчас назначаем
+    let capturingMenu = null; // ... и то же для пункта меню
+    let menuDraft = {};
+
+    for (const tab of root.querySelectorAll('.tab')) {
+      tab.addEventListener('click', () => {
+        for (const other of root.querySelectorAll('.tab')) other.classList.toggle('on', other === tab);
+        for (const page of root.querySelectorAll('.page')) page.hidden = page.dataset.page !== tab.dataset.page;
+        setCapturingMenu(null);
+      });
+    }
+
+    const draftOf = (key) => (menuDraft[key] = menuDraft[key] || {});
+
+    function setCapturingMenu(key) {
+      capturingMenu = key;
+      renderMenuRows();
+    }
+
+    function menuRowHk(key) {
+      const st = menuDraft[key] || {};
+      return String(st.hk || menuDefHk(key) || '');
+    }
+
+    function renderMenuRows() {
+      const list = root.querySelector('.mlist');
+      list.replaceChildren();
+      for (const item of MENU_ITEMS) {
+        const st = menuDraft[item.key] || {};
+        const orig = siteWord(item.word) || item.fallback || item.key;
+        const row = document.createElement('div');
+        row.className = 'mrow ' + (item.parentKey ? 'child' : 'top') + (st.off ? ' hidden' : '');
+        row.dataset.key = item.key;
+
+        const show = document.createElement('label');
+        show.className = 'mcell';
+        show.title = t('Показывать пункт');
+        const showBox = document.createElement('input');
+        showBox.type = 'checkbox';
+        showBox.className = 'mshow';
+        showBox.checked = !st.off;
+        showBox.addEventListener('change', () => { draftOf(item.key).off = !showBox.checked; renderMenuRows(); });
+        show.appendChild(showBox);
+        row.appendChild(show);
+
+        const name = document.createElement('input');
+        name.type = 'text';
+        name.className = 'mname';
+        name.placeholder = orig;
+        name.title = t('Своё название');
+        name.value = String(st.name || '');
+        name.addEventListener('input', () => { draftOf(item.key).name = name.value; });
+        row.appendChild(name);
+
+        const cnt = document.createElement('label');
+        cnt.className = 'mcell' + (item.count ? '' : ' empty');
+        if (item.count) {
+          cnt.title = t('Показывать счётчик');
+          const box = document.createElement('input');
+          box.type = 'checkbox';
+          box.className = 'mcount';
+          box.checked = st.count !== false;
+          box.addEventListener('change', () => { draftOf(item.key).count = box.checked; });
+          cnt.appendChild(box);
+        }
+        row.appendChild(cnt);
+
+        const hkCell = document.createElement('label');
+        hkCell.className = 'mcell keys-only';
+        hkCell.title = t('Переход по клавише');
+        const hkBox = document.createElement('input');
+        hkBox.type = 'checkbox';
+        hkBox.className = 'mhkon';
+        hkBox.checked = !!st.hkOn;
+        hkBox.addEventListener('change', () => { draftOf(item.key).hkOn = hkBox.checked; renderMenuRows(); });
+        hkCell.appendChild(hkBox);
+        row.appendChild(hkCell);
+
+        const hkBtn = document.createElement('button');
+        hkBtn.type = 'button';
+        hkBtn.className = 'mhk keys-only' + (capturingMenu === item.key ? ' wait' : '');
+        hkBtn.textContent = capturingMenu === item.key ? t('Нажмите клавишу…') : comboLabel(menuRowHk(item.key));
+        hkBtn.disabled = !st.hkOn;
+        hkBtn.addEventListener('click', () => {
+          setCapturingMenu(item.key);
+          setHint(t('Esc — отмена.'));
+        });
+        row.appendChild(hkBtn);
+
+        list.appendChild(row);
+      }
+    }
+
+    function collectMenu() {
+      const out = {};
+      for (const key in menuDraft) {
+        const st = menuDraft[key];
+        const item = {};
+        if (String(st.name || '').trim()) item.name = String(st.name).trim();
+        if (st.off) item.off = true;
+        if (st.count === false) item.count = false;
+        if (st.hkOn) item.hkOn = true;
+        if (st.hk && st.hk !== menuDefHk(key)) item.hk = st.hk;
+        if (Object.keys(item).length) out[key] = item;
+      }
+      return out;
+    }
 
     function fill(s) {
+      menuDraft = {};
+      if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      capturingMenu = null;
+      renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount', 'rehideOnBlur']) f(k).checked = !!s[k];
       for (const k of ['revealHoverMs', 'revealKeyboardMs', 'rehideDelayMs', 'massMaxForms']) f(k).value = s[k];
       for (const h of HOTKEYS) keys[h.id] = s[h.id];
@@ -4903,6 +5293,18 @@ function core(storedSettings) {
         setHint(hintText);
         return;
       }
+      if (capturingMenu) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.key === 'Escape') { setCapturingMenu(null); setHint(hintText); return; }
+        if (/^(?:Shift|Control|Alt|Meta|OS)(?:Left|Right)?$/.test(e.code)) return;
+        const st = draftOf(capturingMenu);
+        st.hk = comboOf(e);
+        st.hkOn = true;
+        setCapturingMenu(null);
+        setHint(hintText);
+        return;
+      }
       if (e.key === 'Escape' && !embedded) {
         e.preventDefault();
         close();
@@ -4941,9 +5343,11 @@ function core(storedSettings) {
         rehideOnBlur: f('rehideOnBlur').checked,
         rehideDelayMs: ms('rehideDelayMs', DEFAULTS.rehideDelayMs),
         massMaxForms: Math.min(10, Math.max(1, ms('massMaxForms', DEFAULTS.massMaxForms) || DEFAULTS.massMaxForms)),
+        menu: collectMenu(),
         ...keys,
       });
       setCapturing(null);
+      setCapturingMenu(null);
       close();
       toast(t('Настройки сохранены'));
     });
@@ -5124,6 +5528,12 @@ function core(storedSettings) {
     .skq-fav .skq-heart.skq-faved path { fill: #ff4f70 !important; }
     .skq-busy { opacity: .5; pointer-events: none !important; }
     .skq-off { display: none !important; }
+    .skq-menu-off { display: none !important; }
+    .skq-mcount {
+      margin-left: auto; padding-left: 8px; flex: none; color: #ff8c00;
+      font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
+    }
+    .skq-mcount:empty { display: none; }
     .skq-settings-panel { padding: 8px 0 24px; }
     .skq-rep {
       display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; vertical-align: middle;

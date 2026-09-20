@@ -164,5 +164,13 @@
  "162": "a többszavas címkét az oldal csak a saját javaslataiból fogadja el, ezt pedig nem ajánlotta fel",
  "163": "hasonlók: {list}",
  "164": "Címke másolva: {tag}",
- "165": "Előbb másoljon egy címkét jobb kattintással"
+ "165": "Előbb másoljon egy címkét jobb kattintással",
+ "166": "Általános",
+ "167": "Oldalmenü",
+ "168": "Az oldalsó menü elemei: saját név, láthatóság, számláló és billentyű a megnyitáshoz. A számlálók a menü megnyitásakor frissülnek.",
+ "169": "Elem megjelenítése",
+ "170": "Saját név",
+ "171": "Számláló megjelenítése",
+ "172": "Megnyitás billentyűvel",
+ "173": "Nem tudom, hová vezet ez az elem — nyissa meg a menüt"
 }
