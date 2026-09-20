@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.25.0
+// @version      1.25.1
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -213,7 +213,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.25.0';
+  const SKQ_VERSION = '1.25.1';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -9212,28 +9212,40 @@ function core(storedSettings) {
       { key: 'menu_popular_book', word: 'common-title__popular_books', path: '/books', query: 'tags=order:popularity' },
       { key: 'menu_top_book', word: 'common-title__top_books', path: '/books', query: 'tags=order:quality' },
     ] },
-    { key: 'ai_art', word: 'common-title__sankaku-ai-creator', path: '/ai-create' },
+    { key: 'ai_companion', word: 'common-title__ai-companion', path: '/ai_companion', children: [
+      { key: 'companion_chats', word: 'ai-companion__chats', path: '/ai_companion/empty/empty' },
+      { key: 'create_companion', word: ['common-title__add-companion', 'common-title__create'], path: '/companions/add' },
+      { key: 'browse_companions', word: 'ai-companion__browse-companions', path: '/ai_companion' },
+      { key: 'discover_companions', word: 'common-title__discover', path: '/ai_companion' },
+      { key: 'companions_favorited', word: 'common-title__companions_favorited', path: '/ai_companion', query: 'tags=fav:{me}&tab=explore', count: 'favCompanions' },
+      { key: 'my_companions', word: 'ai-companion__my-companions', path: '/ai_companion', query: 'tags=user:{me}&tab=explore', count: 'myCompanions' },
+      { key: 'companion_library', word: 'common-title__library', path: '/ai_companion', query: 'tags=user:{me}&tab=explore' },
+      { key: 'upgraded_companions', word: 'ai-companion__upgraded-companions', path: '/ai_companion', query: 'enabled_feature=true&tab=explore' },
+      { key: 'popular_companions', word: 'common-title__popular-companions', path: '/ai_companion', query: 'tags=order:popularity' },
+      { key: 'top_companions', word: 'common-title__top-companions', path: '/ai_companion', query: 'tags=order:quality' },
+    ] },
+    { key: 'ai_art', word: 'common-title__sankaku-ai-creator', path: '/ai/create' },
     { key: 'menu_readings', word: 'common-title__readings-books', path: '/books/reading' },
     { key: 'menu_series', word: 'common-title__series', path: '/series' },
     { key: 'menu_favorite_series', word: 'common-title__series_favorited', path: '/series', query: 'tags=favoritedBy:{me}' },
-    { key: 'creators', word: 'common-title__creators', children: [
-      { key: 'creator_dashboard', word: 'common-title__dashboard' },
-      { key: 'creator_memberships', word: 'common-title__memberships' },
+    { key: 'creators', word: 'common-title__creators', path: '/creators/posts', children: [
+      { key: 'creator_dashboard', word: 'common-title__dashboard', path: '/creators/posts' },
+      { key: 'creator_memberships', word: 'common-title__memberships', path: '/creators/memberships' },
     ] },
     { key: 'menu_reputation', word: 'common-title__reputation', children: [
       { key: 'reputation_rankings', word: 'common-title__rankings', path: '/reputation', count: 'reputation' },
-      { key: 'reputation_achievements', word: 'common-title__achievements' },
-      { key: 'reputation_privileges', word: 'common-title__privileges' },
+      { key: 'reputation_achievements', word: 'common-title__achievements', path: '/achievements' },
+      { key: 'reputation_privileges', word: 'common-title__privileges', path: '/privileges' },
     ] },
-    { key: 'gifts', word: 'common-title__gifts' },
-    { key: 'collections', word: 'collection__title', children: [
-      { key: 'collections_browse', word: 'collection__browse' },
-      { key: 'collections_favorited', word: 'collection__favorited' },
-      { key: 'collections_my', word: 'collection__my' },
-      { key: 'popular_collections', word: 'common-title__popular-collections' },
-      { key: 'top_collections', word: 'common-title__top-collections' },
+    { key: 'gifts', word: 'common-title__gifts', path: '/gifts' },
+    { key: 'collections', word: 'collection__title', path: '/collections', children: [
+      { key: 'collections_browse', word: 'collection__browse', path: '/collections' },
+      { key: 'collections_favorited', word: 'collection__favorited', path: '/collections/favorited' },
+      { key: 'collections_my', word: 'collection__my', path: '/collections/my' },
+      { key: 'popular_collections', word: 'common-title__popular-collections', path: '/collections', query: 'tags=order:popularity' },
+      { key: 'top_collections', word: 'common-title__top-collections', path: '/collections', query: 'tags=order:quality' },
     ] },
-    { key: 'menu_games', word: 'common-title__games' },
+    { key: 'menu_games', word: 'common-title__games', path: '/games' },
     { key: 'menu_ranking', word: 'common-title__ranking', path: '/rankings/books' },
     { key: 'wiki', word: 'common-title__wiki', path: '/wiki', children: [
       { key: 'wiki_create', word: 'common-title__wiki-create' },
@@ -9256,7 +9268,7 @@ function core(storedSettings) {
     ] },
     { key: 'menu_users', word: 'common-title__users', path: '/users' },
     { key: 'menu_comments', word: 'common-title__comments', path: '/comments' },
-    { key: 'referrals', word: 'common-title__referrals' },
+    { key: 'referrals', word: 'common-title__referrals', path: '/referrals' },
     { key: 'menu_inbox', word: 'common-title__inbox', path: '/inbox' },
     { key: 'menu_settings', word: 'common-title__settings', path: '/settings' },
   ];
@@ -9275,6 +9287,15 @@ function core(storedSettings) {
     });
   }
 
+  // у некоторых пунктов сайт держит два названия — какое покажет, зависит от режима
+  const menuWord = (item) => {
+    for (const w of (Array.isArray(item.word) ? item.word : [item.word])) {
+      const value = w && siteWord(w);
+      if (value) return value;
+    }
+    return '';
+  };
+
   const menuState = (key) => (isObj(settings.menu) && isObj(settings.menu[key]) ? settings.menu[key] : {});
   const menuName = (key) => String(menuState(key).name || '').trim();
   const menuHidden = (key) => !!menuState(key).off;
@@ -9291,6 +9312,7 @@ function core(storedSettings) {
   const COUNT_FIELDS = {
     favPosts: 'post_favorite_count', myPosts: 'post_upload_count',
     favBooks: 'pool_favorite_count', myBooks: 'pool_upload_count',
+    favCompanions: 'companion_favorite_count', myCompanions: 'companion_upload_count',
   };
   const counts = { values: {}, at: 0, loading: false };
 
@@ -9378,7 +9400,7 @@ function core(storedSettings) {
     for (const item of MENU_ITEMS) {
       const name = menuName(item.key);
       if (!name || !item.word) continue;
-      const orig = siteWord(item.word);
+      const orig = menuWord(item);
       if (orig && orig !== name) map.set(orig, name);
     }
     return map;
@@ -9646,7 +9668,7 @@ function core(storedSettings) {
       list.replaceChildren();
       for (const item of MENU_ITEMS) {
         const st = menuDraft[item.key] || {};
-        const orig = siteWord(item.word) || item.fallback || item.key;
+        const orig = menuWord(item) || item.fallback || item.key;
         const row = document.createElement('div');
         row.className = 'mrow ' + (item.parentKey ? 'child' : 'top') + (st.off ? ' hidden' : '');
         row.dataset.key = item.key;

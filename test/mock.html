@@ -82,7 +82,11 @@
       'common-title__books_favorited': 'Избранные книги', 'common-title__my-books': 'Мои Books',
       'common-title__popular_books': 'Популярные книги', 'common-title__top_books': 'Лучшие книги',
       'common-title__reputation': 'Репутация', 'common-title__rankings': 'Рейтинги',
-      'common-title__settings': 'Настройки',
+      'common-title__settings': 'Настройки', 'common-title__ai-companion': 'Компаньоны',
+      'common-title__add-companion': 'Добавить компаньона',
+      'ai-companion__browse-companions': 'Просмотр компаньонов',
+      'common-title__companions_favorited': 'Избранные компаньоны',
+      'ai-companion__my-companions': 'Мои компаньоны',
     },
     nl: {
       'common-title__posts': 'Berichten', 'common-title__upload_post': 'Bericht uploaden',
@@ -93,7 +97,11 @@
       'common-title__books_favorited': 'Favoriete boeken', 'common-title__my-books': 'Mijn Books',
       'common-title__popular_books': 'Populaire boeken', 'common-title__top_books': 'Beste boeken',
       'common-title__reputation': 'Reputatie', 'common-title__rankings': 'Ranglijsten',
-      'common-title__settings': 'Instellingen',
+      'common-title__settings': 'Instellingen', 'common-title__ai-companion': 'Metgezellen',
+      'common-title__add-companion': 'Metgezel toevoegen',
+      'ai-companion__browse-companions': 'Metgezellen bekijken',
+      'common-title__companions_favorited': 'Favoriete metgezellen',
+      'ai-companion__my-companions': 'Mijn metgezellen',
     },
   };
   const SITE_WORDS = {
@@ -125,6 +133,12 @@
       ['my_books', 'common-title__my-books', '/books?tags=user:ilyuxa3211'],
       ['menu_popular_book', 'common-title__popular_books', '/books?tags=order:popularity'],
       ['menu_top_book', 'common-title__top_books', '/books?tags=order:quality'],
+    ]],
+    ['ai_companion', 'common-title__ai-companion', '/ai_companion', [
+      ['create_companion', 'common-title__add-companion', '/companions/add'],
+      ['browse_companions', 'ai-companion__browse-companions', '/ai_companion'],
+      ['companions_favorited', 'common-title__companions_favorited', '/ai_companion?tags=fav:ilyuxa3211'],
+      ['my_companions', 'ai-companion__my-companions', '/ai_companion?tags=user:ilyuxa3211'],
     ]],
     ['menu_reputation', 'common-title__reputation', '', [
       ['reputation_rankings', 'common-title__rankings', '/reputation'],
