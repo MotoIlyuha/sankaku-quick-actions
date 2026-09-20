@@ -119,6 +119,9 @@ version 142 and newer). On a touch screen:
 - bulk upload keeps at most two forms open at once even if the setting says
   more: every form is a full copy of the site's page.
 
+The card's top-left corner shows the post's average rating and your own vote,
+the top-right one the number of likes; each badge can be switched off.
+
 The «B» key reveals every hidden preview on the page at once and hides them
 again on the next press. The card under the mouse gets the same outline as the
 one selected with the arrow keys.

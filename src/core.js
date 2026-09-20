@@ -53,6 +53,7 @@ function core(storedSettings) {
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
+    showScore: true, // средняя оценка поста в углу карточки
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
@@ -1011,6 +1012,13 @@ function core(storedSettings) {
     return p ? userVote(p) : Number(myVotes[String(id)]) || 0;
   }
 
+  // Средняя оценка: сайт присылает сумму баллов и число голосов
+  function scoreOfId(id) {
+    const p = posts.get(String(id));
+    if (!p || typeof p.total_score !== 'number' || !(p.vote_count > 0)) return null;
+    return { avg: p.total_score / p.vote_count, votes: p.vote_count };
+  }
+
   function favsOfId(id) {
     const p = posts.get(String(id));
     return p && typeof p.fav_count === 'number' ? p.fav_count : null;
@@ -1019,15 +1027,35 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
+  // Метки левого угла живут в общей строке, чтобы не наезжать друг на друга
+  const LEFT_BADGES = { 'skq-score': 1, 'skq-myvote': 1 };
+
+  function cornerBox(card) {
+    let box = card.querySelector(':scope > .skq-corner');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'skq-corner';
+      card.appendChild(box);
+    }
+    return box;
+  }
+
   // Одна метка на карточке: создаём, обновляем или убираем
   function cardBadge(card, cls, text, title) {
-    let badge = card.querySelector(':scope > .' + cls);
-    if (text == null) { if (badge) badge.remove(); return; }
+    let badge = card.querySelector(':scope > .' + cls + ', :scope > .skq-corner > .' + cls);
+    if (text == null) {
+      if (badge) {
+        const box = badge.parentElement;
+        badge.remove();
+        if (box.classList.contains('skq-corner') && !box.children.length) box.remove();
+      }
+      return;
+    }
     if (!badge) {
       badge = document.createElement('div');
       badge.className = cls;
       if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-      card.appendChild(badge);
+      (LEFT_BADGES[cls] ? cornerBox(card) : card).appendChild(badge);
     }
     if (badge.textContent !== text) badge.textContent = text;
     if (badge.title !== title) badge.title = title;
@@ -1035,15 +1063,19 @@ function core(storedSettings) {
 
   function markCards() {
     if (FRAME_MODE || !document.body) return;
-    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount;
+    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = wantVote || wantFavs ? cardId(card) : null;
+      const id = wantVote || wantFavs || wantScore ? cardId(card) : null;
       // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
+      // средняя оценка идёт первой: своя оценка привычно ближе к центру карточки
+      const score = wantScore && id ? scoreOfId(id) : null;
+      cardBadge(card, 'skq-score', score ? `★ ${score.avg.toFixed(1)}` : null,
+        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '');
       const n = wantVote && id ? voteOfId(id) : 0;
       cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
       // ноль не показываем: пустой угол спокойнее, чем «♥ 0» на половине сетки
@@ -5436,6 +5468,7 @@ function core(storedSettings) {
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
+          <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
           <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
           <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
@@ -5654,7 +5687,7 @@ function core(storedSettings) {
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       capturingMenu = null;
       renderMenuRows();
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showScore', 'showMyVote', 'showFavCount',
         'rehideOnBlur', 'menuKeyOn', 'menuHoldMod', 'menuHoldHints']) f(k).checked = !!s[k];
       syncHoldHints();
       capturingToggle = false;
@@ -5784,6 +5817,7 @@ function core(storedSettings) {
         hidePromo: f('hidePromo').checked,
         showPoints: f('showPoints').checked,
         showReputation: f('showReputation').checked,
+        showScore: f('showScore').checked,
         showMyVote: f('showMyVote').checked,
         showFavCount: f('showFavCount').checked,
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
@@ -5958,19 +5992,20 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > *:not(.skq-myvote):not(.skq-favs),
-    ${CARD_SEL}.skq-hover-active > *:not(.skq-myvote):not(.skq-favs) {
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner):not(.skq-favs),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner):not(.skq-favs) {
       outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
     }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
-      position: absolute; top: 6px; z-index: 3; pointer-events: none;
-      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
+    ${CARD_SEL} > .skq-corner { position: absolute; top: 6px; left: 6px; z-index: 3; display: flex; gap: 4px; }
+    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} > .skq-favs {
+      pointer-events: none; padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
-    ${CARD_SEL} > .skq-myvote { left: 6px; color: #ffb347; }
-    ${CARD_SEL} > .skq-favs { right: 6px; color: #ff8fa3; }
+    ${CARD_SEL} .skq-score { color: #9fd3ff; }
+    ${CARD_SEL} .skq-myvote { color: #ffb347; }
+    ${CARD_SEL} > .skq-favs { position: absolute; top: 6px; right: 6px; z-index: 3; color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }

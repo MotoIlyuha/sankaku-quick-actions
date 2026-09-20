@@ -177,5 +177,7 @@
  "175": "Og vis i menuen, hvilken tast der skal trykkes",
  "176": "Vis alle skjulte forhåndsvisninger / skjul igen",
  "177": "Alle skjulte forhåndsvisninger vises",
- "178": "Forhåndsvisningerne er skjult igen"
+ "178": "Forhåndsvisningerne er skjult igen",
+ "179": "Vis gennemsnitsvurderingen på kortet",
+ "180": "Gennemsnit: {n} ud af 5, stemmer: {m}"
 }

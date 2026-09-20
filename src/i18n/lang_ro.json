@@ -177,5 +177,7 @@
  "175": "Și arată în meniu ce tastă să apeși",
  "176": "Arată toate previzualizările ascunse / ascunde-le din nou",
  "177": "Toate previzualizările ascunse sunt afișate",
- "178": "Previzualizările sunt ascunse din nou"
+ "178": "Previzualizările sunt ascunse din nou",
+ "179": "Arată nota medie pe card",
+ "180": "Nota medie: {n} din 5, voturi: {m}"
 }

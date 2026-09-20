@@ -177,5 +177,7 @@
  "175": "Et indiquer dans le menu quelle touche presser",
  "176": "Afficher tous les aperçus masqués / les masquer",
  "177": "Tous les aperçus masqués sont affichés",
- "178": "Les aperçus sont de nouveau masqués"
+ "178": "Les aperçus sont de nouveau masqués",
+ "179": "Afficher la note moyenne sur la carte",
+ "180": "Note moyenne : {n} sur 5, votes : {m}"
 }

@@ -19,7 +19,7 @@ import subprocess
 import sys
 import zlib
 
-VERSION = '1.29.0'
+VERSION = '1.30.0'
 # Адрес репозитория: из него берутся ссылки на обновление в шапке юзерскрипта.
 # Пока пусто — строки со ссылками из шапки убираются.
 REPO_URL = 'https://github.com/MotoIlyuha/sankaku-quick-actions'

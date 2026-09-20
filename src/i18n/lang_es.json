@@ -177,5 +177,7 @@
  "175": "Y mostrar en el menú qué tecla pulsar",
  "176": "Mostrar todas las vistas previas ocultas / ocultarlas",
  "177": "Se muestran todas las vistas previas ocultas",
- "178": "Las vistas previas están ocultas de nuevo"
+ "178": "Las vistas previas están ocultas de nuevo",
+ "179": "Mostrar la valoración media en la tarjeta",
+ "180": "Valoración media: {n} de 5, votos: {m}"
 }

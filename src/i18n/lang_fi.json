@@ -177,5 +177,7 @@
  "175": "Ja näytä valikossa, mitä näppäintä painaa",
  "176": "Näytä kaikki piilotetut esikatselut / piilota uudelleen",
  "177": "Kaikki piilotetut esikatselut näkyvät",
- "178": "Esikatselut on piilotettu uudelleen"
+ "178": "Esikatselut on piilotettu uudelleen",
+ "179": "Näytä keskiarvosana kortissa",
+ "180": "Keskiarvo: {n}/5, ääniä: {m}"
 }

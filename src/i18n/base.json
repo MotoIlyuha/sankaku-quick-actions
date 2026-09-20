@@ -178,6 +178,8 @@
   "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press",
   "Показать все скрытые превью / скрыть обратно": "Show all hidden previews / hide them again",
   "Все скрытые превью показаны": "All hidden previews are shown",
-  "Превью снова скрыты": "Previews are hidden again"
+  "Превью снова скрыты": "Previews are hidden again",
+  "Показывать среднюю оценку на карточке": "Show the average rating on the card",
+  "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}"
  }
 }

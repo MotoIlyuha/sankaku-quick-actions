@@ -177,5 +177,7 @@
  "175": "E mostrare nel menu quale tasto premere",
  "176": "Mostra tutte le anteprime nascoste / nascondile di nuovo",
  "177": "Tutte le anteprime nascoste sono visibili",
- "178": "Le anteprime sono di nuovo nascoste"
+ "178": "Le anteprime sono di nuovo nascoste",
+ "179": "Mostra il voto medio sulla card",
+ "180": "Voto medio: {n} su 5, voti: {m}"
 }

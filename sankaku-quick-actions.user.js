@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.29.0
+// @version      1.30.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -155,6 +155,7 @@ function core(storedSettings) {
     massMaxForms: 3,
     showPoints: true,
     showReputation: true,
+    showScore: true, // средняя оценка поста в углу карточки
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
@@ -219,7 +220,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.29.0';
+  const SKQ_VERSION = '1.30.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -401,7 +402,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press",
           "Показать все скрытые превью / скрыть обратно": "Show all hidden previews / hide them again",
           "Все скрытые превью показаны": "All hidden previews are shown",
-          "Превью снова скрыты": "Previews are hidden again"
+          "Превью снова скрыты": "Previews are hidden again",
+          "Показывать среднюю оценку на карточке": "Show the average rating on the card",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -582,7 +585,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "メニューに押すキーも表示する",
           "Показать все скрытые превью / скрыть обратно": "非表示のプレビューをすべて表示／再び隠す",
           "Все скрытые превью показаны": "非表示のプレビューをすべて表示しました",
-          "Превью снова скрыты": "プレビューを再び隠しました"
+          "Превью снова скрыты": "プレビューを再び隠しました",
+          "Показывать среднюю оценку на карточке": "カードに平均評価を表示",
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均評価：5点中{n}点、投票数{m}"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -763,7 +768,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "并在菜单里提示还要按哪个键",
           "Показать все скрытые превью / скрыть обратно": "显示所有隐藏预览／重新隐藏",
           "Все скрытые превью показаны": "已显示所有隐藏预览",
-          "Превью снова скрыты": "已重新隐藏预览"
+          "Превью снова скрыты": "已重新隐藏预览",
+          "Показывать среднюю оценку на карточке": "在卡片上显示平均评分",
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均评分：{n}/5，投票 {m}"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -944,7 +951,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "並在選單裡提示還要按哪個鍵",
           "Показать все скрытые превью / скрыть обратно": "顯示所有隱藏預覽／重新隱藏",
           "Все скрытые превью показаны": "已顯示所有隱藏預覽",
-          "Превью снова скрыты": "已重新隱藏預覽"
+          "Превью снова скрыты": "已重新隱藏預覽",
+          "Показывать среднюю оценку на карточке": "在卡片上顯示平均評分",
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均評分：{n}/5，投票 {m}"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1125,7 +1134,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "그리고 메뉴에 어떤 키를 누를지 표시",
           "Показать все скрытые превью / скрыть обратно": "숨겨진 미리보기 모두 표시 / 다시 숨기기",
           "Все скрытые превью показаны": "숨겨진 미리보기를 모두 표시했습니다",
-          "Превью снова скрыты": "미리보기를 다시 숨겼습니다"
+          "Превью снова скрыты": "미리보기를 다시 숨겼습니다",
+          "Показывать среднюю оценку на карточке": "카드에 평균 평점 표시",
+          "Средняя оценка: {n} из 5, голосов: {m}": "평균 평점: 5점 만점에 {n}점, 투표 {m}"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1306,7 +1317,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Und im Menü zeigen, welche Taste zu drücken ist",
           "Показать все скрытые превью / скрыть обратно": "Alle ausgeblendeten Vorschauen anzeigen / wieder ausblenden",
           "Все скрытые превью показаны": "Alle ausgeblendeten Vorschauen werden angezeigt",
-          "Превью снова скрыты": "Vorschauen sind wieder ausgeblendet"
+          "Превью снова скрыты": "Vorschauen sind wieder ausgeblendet",
+          "Показывать среднюю оценку на карточке": "Durchschnittsbewertung auf der Karte anzeigen",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Durchschnitt: {n} von 5, Stimmen: {m}"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1487,7 +1500,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Et indiquer dans le menu quelle touche presser",
           "Показать все скрытые превью / скрыть обратно": "Afficher tous les aperçus masqués / les masquer",
           "Все скрытые превью показаны": "Tous les aperçus masqués sont affichés",
-          "Превью снова скрыты": "Les aperçus sont de nouveau masqués"
+          "Превью снова скрыты": "Les aperçus sont de nouveau masqués",
+          "Показывать среднюю оценку на карточке": "Afficher la note moyenne sur la carte",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Note moyenne : {n} sur 5, votes : {m}"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1668,7 +1683,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Y mostrar en el menú qué tecla pulsar",
           "Показать все скрытые превью / скрыть обратно": "Mostrar todas las vistas previas ocultas / ocultarlas",
           "Все скрытые превью показаны": "Se muestran todas las vistas previas ocultas",
-          "Превью снова скрыты": "Las vistas previas están ocultas de nuevo"
+          "Превью снова скрыты": "Las vistas previas están ocultas de nuevo",
+          "Показывать среднюю оценку на карточке": "Mostrar la valoración media en la tarjeta",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Valoración media: {n} de 5, votos: {m}"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1849,7 +1866,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "E mostrar no menu que tecla premir",
           "Показать все скрытые превью / скрыть обратно": "Mostrar todas as pré-visualizações ocultas / ocultar novamente",
           "Все скрытые превью показаны": "Todas as pré-visualizações ocultas estão visíveis",
-          "Превью снова скрыты": "As pré-visualizações estão ocultas novamente"
+          "Превью снова скрыты": "As pré-visualizações estão ocultas novamente",
+          "Показывать среднюю оценку на карточке": "Mostrar a avaliação média no cartão",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Avaliação média: {n} de 5, votos: {m}"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2030,7 +2049,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "E mostrare nel menu quale tasto premere",
           "Показать все скрытые превью / скрыть обратно": "Mostra tutte le anteprime nascoste / nascondile di nuovo",
           "Все скрытые превью показаны": "Tutte le anteprime nascoste sono visibili",
-          "Превью снова скрыты": "Le anteprime sono di nuovo nascoste"
+          "Превью снова скрыты": "Le anteprime sono di nuovo nascoste",
+          "Показывать среднюю оценку на карточке": "Mostra il voto medio sulla card",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Voto medio: {n} su 5, voti: {m}"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2211,7 +2232,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "En in het menu tonen welke toets je moet indrukken",
           "Показать все скрытые превью / скрыть обратно": "Alle verborgen voorbeelden tonen / weer verbergen",
           "Все скрытые превью показаны": "Alle verborgen voorbeelden zijn zichtbaar",
-          "Превью снова скрыты": "Voorbeelden zijn weer verborgen"
+          "Превью снова скрыты": "Voorbeelden zijn weer verborgen",
+          "Показывать среднюю оценку на карточке": "Gemiddelde beoordeling op de kaart tonen",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gemiddelde beoordeling: {n} van 5, stemmen: {m}"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2392,7 +2415,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "I podpowiadaj w menu, który klawisz nacisnąć",
           "Показать все скрытые превью / скрыть обратно": "Pokaż wszystkie ukryte podglądy / ukryj ponownie",
           "Все скрытые превью показаны": "Wszystkie ukryte podglądy są widoczne",
-          "Превью снова скрыты": "Podglądy są znów ukryte"
+          "Превью снова скрыты": "Podglądy są znów ukryte",
+          "Показывать среднюю оценку на карточке": "Pokaż średnią ocenę na karcie",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Średnia ocena: {n} z 5, głosów: {m}"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2573,7 +2598,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Och visa i menyn vilken tangent som ska tryckas",
           "Показать все скрытые превью / скрыть обратно": "Visa alla dolda förhandsvisningar / dölj igen",
           "Все скрытые превью показаны": "Alla dolda förhandsvisningar visas",
-          "Превью снова скрыты": "Förhandsvisningarna är dolda igen"
+          "Превью снова скрыты": "Förhandsvisningarna är dolda igen",
+          "Показывать среднюю оценку на карточке": "Visa medelbetyget på kortet",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Medelbetyg: {n} av 5, röster: {m}"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2754,7 +2781,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Og vis i menuen, hvilken tast der skal trykkes",
           "Показать все скрытые превью / скрыть обратно": "Vis alle skjulte forhåndsvisninger / skjul igen",
           "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
-          "Превью снова скрыты": "Forhåndsvisningerne er skjult igen"
+          "Превью снова скрыты": "Forhåndsvisningerne er skjult igen",
+          "Показывать среднюю оценку на карточке": "Vis gennemsnitsvurderingen på kortet",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gennemsnit: {n} ud af 5, stemmer: {m}"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2935,7 +2964,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Og vis i menyen hvilken tast som skal trykkes",
           "Показать все скрытые превью / скрыть обратно": "Vis alle skjulte forhåndsvisninger / skjul igjen",
           "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
-          "Превью снова скрыты": "Forhåndsvisningene er skjult igjen"
+          "Превью снова скрыты": "Forhåndsvisningene er skjult igjen",
+          "Показывать среднюю оценку на карточке": "Vis gjennomsnittsvurderingen på kortet",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gjennomsnitt: {n} av 5, stemmer: {m}"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3116,7 +3147,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Ja näytä valikossa, mitä näppäintä painaa",
           "Показать все скрытые превью / скрыть обратно": "Näytä kaikki piilotetut esikatselut / piilota uudelleen",
           "Все скрытые превью показаны": "Kaikki piilotetut esikatselut näkyvät",
-          "Превью снова скрыты": "Esikatselut on piilotettu uudelleen"
+          "Превью снова скрыты": "Esikatselut on piilotettu uudelleen",
+          "Показывать среднюю оценку на карточке": "Näytä keskiarvosana kortissa",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Keskiarvo: {n}/5, ääniä: {m}"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3297,7 +3330,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "És mutassa a menüben, melyik billentyűt kell megnyomni",
           "Показать все скрытые превью / скрыть обратно": "Az összes rejtett előnézet megjelenítése / újra elrejtés",
           "Все скрытые превью показаны": "Minden rejtett előnézet látszik",
-          "Превью снова скрыты": "Az előnézetek ismét rejtve vannak"
+          "Превью снова скрыты": "Az előnézetek ismét rejtve vannak",
+          "Показывать среднюю оценку на карточке": "Az átlagos értékelés megjelenítése a kártyán",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3478,7 +3513,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Și arată în meniu ce tastă să apeși",
           "Показать все скрытые превью / скрыть обратно": "Arată toate previzualizările ascunse / ascunde-le din nou",
           "Все скрытые превью показаны": "Toate previzualizările ascunse sunt afișate",
-          "Превью снова скрыты": "Previzualizările sunt ascunse din nou"
+          "Превью снова скрыты": "Previzualizările sunt ascunse din nou",
+          "Показывать среднюю оценку на карточке": "Arată nota medie pe card",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Nota medie: {n} din 5, voturi: {m}"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3659,7 +3696,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "И да подсказва в менюто кой клавиш да се натисне",
           "Показать все скрытые превью / скрыть обратно": "Показване на всички скрити визуализации / скриване",
           "Все скрытые превью показаны": "Всички скрити визуализации са показани",
-          "Превью снова скрыты": "Визуализациите отново са скрити"
+          "Превью снова скрыты": "Визуализациите отново са скрити",
+          "Показывать среднюю оценку на карточке": "Показване на средната оценка на картичката",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Средна оценка: {n} от 5, гласове: {m}"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3840,7 +3879,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Και να δείχνει στο μενού ποιο πλήκτρο να πατήσετε",
           "Показать все скрытые превью / скрыть обратно": "Εμφάνιση όλων των κρυφών προεπισκοπήσεων / απόκρυψη",
           "Все скрытые превью показаны": "Όλες οι κρυφές προεπισκοπήσεις εμφανίζονται",
-          "Превью снова скрыты": "Οι προεπισκοπήσεις κρύφτηκαν ξανά"
+          "Превью снова скрыты": "Οι προεπισκοπήσεις κρύφτηκαν ξανά",
+          "Показывать среднюю оценку на карточке": "Εμφάνιση της μέσης βαθμολογίας στην κάρτα",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Μέση βαθμολογία: {n} στα 5, ψήφοι: {m}"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4021,7 +4062,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Ve menüde hangi tuşa basılacağını göster",
           "Показать все скрытые превью / скрыть обратно": "Tüm gizli önizlemeleri göster / yeniden gizle",
           "Все скрытые превью показаны": "Tüm gizli önizlemeler gösteriliyor",
-          "Превью снова скрыты": "Önizlemeler yeniden gizlendi"
+          "Превью снова скрыты": "Önizlemeler yeniden gizlendi",
+          "Показывать среднюю оценку на карточке": "Kartta ortalama puanı göster",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Ortalama puan: 5 üzerinden {n}, oy: {m}"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4202,7 +4245,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "และบอกในเมนูว่าต้องกดปุ่มใด",
           "Показать все скрытые превью / скрыть обратно": "แสดงตัวอย่างที่ซ่อนไว้ทั้งหมด / ซ่อนอีกครั้ง",
           "Все скрытые превью показаны": "แสดงตัวอย่างที่ซ่อนไว้ทั้งหมดแล้ว",
-          "Превью снова скрыты": "ซ่อนตัวอย่างอีกครั้งแล้ว"
+          "Превью снова скрыты": "ซ่อนตัวอย่างอีกครั้งแล้ว",
+          "Показывать среднюю оценку на карточке": "แสดงคะแนนเฉลี่ยบนการ์ด",
+          "Средняя оценка: {n} из 5, голосов: {m}": "คะแนนเฉลี่ย: {n} จาก 5, โหวต: {m}"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4383,7 +4428,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "और मेन्यू में बताएँ कि कौन-सी कुंजी दबानी है",
           "Показать все скрытые превью / скрыть обратно": "सभी छिपे हुए प्रीव्यू दिखाएँ / फिर से छिपाएँ",
           "Все скрытые превью показаны": "सभी छिपे हुए प्रीव्यू दिख रहे हैं",
-          "Превью снова скрыты": "प्रीव्यू फिर से छिपा दिए गए"
+          "Превью снова скрыты": "प्रीव्यू फिर से छिपा दिए गए",
+          "Показывать среднюю оценку на карточке": "कार्ड पर औसत रेटिंग दिखाएँ",
+          "Средняя оценка: {n} из 5, голосов: {m}": "औसत रेटिंग: 5 में से {n}, वोट: {m}"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4564,7 +4611,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan di menu tombol mana yang harus ditekan",
           "Показать все скрытые превью / скрыть обратно": "Tampilkan semua pratinjau tersembunyi / sembunyikan lagi",
           "Все скрытые превью показаны": "Semua pratinjau tersembunyi ditampilkan",
-          "Превью снова скрыты": "Pratinjau disembunyikan lagi"
+          "Превью снова скрыты": "Pratinjau disembunyikan lagi",
+          "Показывать среднюю оценку на карточке": "Tampilkan rating rata-rata di kartu",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Rating rata-rata: {n} dari 5, suara: {m}"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4745,7 +4794,9 @@ function core(storedSettings) {
           "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan dalam menu kekunci mana perlu ditekan",
           "Показать все скрытые превью / скрыть обратно": "Tunjukkan semua pratonton tersembunyi / sembunyikan semula",
           "Все скрытые превью показаны": "Semua pratonton tersembunyi ditunjukkan",
-          "Превью снова скрыты": "Pratonton disembunyikan semula"
+          "Превью снова скрыты": "Pratonton disembunyikan semula",
+          "Показывать среднюю оценку на карточке": "Tunjukkan penilaian purata pada kad",
+          "Средняя оценка: {n} из 5, голосов: {m}": "Penilaian purata: {n} daripada 5, undian: {m}"
     },
   } /* SKQ_I18N_END */;
 
@@ -5639,6 +5690,13 @@ function core(storedSettings) {
     return p ? userVote(p) : Number(myVotes[String(id)]) || 0;
   }
 
+  // Средняя оценка: сайт присылает сумму баллов и число голосов
+  function scoreOfId(id) {
+    const p = posts.get(String(id));
+    if (!p || typeof p.total_score !== 'number' || !(p.vote_count > 0)) return null;
+    return { avg: p.total_score / p.vote_count, votes: p.vote_count };
+  }
+
   function favsOfId(id) {
     const p = posts.get(String(id));
     return p && typeof p.fav_count === 'number' ? p.fav_count : null;
@@ -5647,15 +5705,35 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
+  // Метки левого угла живут в общей строке, чтобы не наезжать друг на друга
+  const LEFT_BADGES = { 'skq-score': 1, 'skq-myvote': 1 };
+
+  function cornerBox(card) {
+    let box = card.querySelector(':scope > .skq-corner');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'skq-corner';
+      card.appendChild(box);
+    }
+    return box;
+  }
+
   // Одна метка на карточке: создаём, обновляем или убираем
   function cardBadge(card, cls, text, title) {
-    let badge = card.querySelector(':scope > .' + cls);
-    if (text == null) { if (badge) badge.remove(); return; }
+    let badge = card.querySelector(':scope > .' + cls + ', :scope > .skq-corner > .' + cls);
+    if (text == null) {
+      if (badge) {
+        const box = badge.parentElement;
+        badge.remove();
+        if (box.classList.contains('skq-corner') && !box.children.length) box.remove();
+      }
+      return;
+    }
     if (!badge) {
       badge = document.createElement('div');
       badge.className = cls;
       if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-      card.appendChild(badge);
+      (LEFT_BADGES[cls] ? cornerBox(card) : card).appendChild(badge);
     }
     if (badge.textContent !== text) badge.textContent = text;
     if (badge.title !== title) badge.title = title;
@@ -5663,15 +5741,19 @@ function core(storedSettings) {
 
   function markCards() {
     if (FRAME_MODE || !document.body) return;
-    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount;
+    const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
     for (const card of document.querySelectorAll(CARD_SEL)) {
-      const id = wantVote || wantFavs ? cardId(card) : null;
+      const id = wantVote || wantFavs || wantScore ? cardId(card) : null;
       // данные могли прийти в карточке, а не в перехваченном ответе
       if (id && !card.dataset.skqVoteRead) {
         card.dataset.skqVoteRead = '1';
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
+      // средняя оценка идёт первой: своя оценка привычно ближе к центру карточки
+      const score = wantScore && id ? scoreOfId(id) : null;
+      cardBadge(card, 'skq-score', score ? `★ ${score.avg.toFixed(1)}` : null,
+        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '');
       const n = wantVote && id ? voteOfId(id) : 0;
       cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
       // ноль не показываем: пустой угол спокойнее, чем «♥ 0» на половине сетки
@@ -10064,6 +10146,7 @@ function core(storedSettings) {
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
+          <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
           <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
           <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
@@ -10282,7 +10365,7 @@ function core(storedSettings) {
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
       capturingMenu = null;
       renderMenuRows();
-      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
+      for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showScore', 'showMyVote', 'showFavCount',
         'rehideOnBlur', 'menuKeyOn', 'menuHoldMod', 'menuHoldHints']) f(k).checked = !!s[k];
       syncHoldHints();
       capturingToggle = false;
@@ -10412,6 +10495,7 @@ function core(storedSettings) {
         hidePromo: f('hidePromo').checked,
         showPoints: f('showPoints').checked,
         showReputation: f('showReputation').checked,
+        showScore: f('showScore').checked,
         showMyVote: f('showMyVote').checked,
         showFavCount: f('showFavCount').checked,
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
@@ -10586,19 +10670,20 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > *:not(.skq-myvote):not(.skq-favs),
-    ${CARD_SEL}.skq-hover-active > *:not(.skq-myvote):not(.skq-favs) {
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner):not(.skq-favs),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner):not(.skq-favs) {
       outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
     }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-myvote, ${CARD_SEL} > .skq-favs {
-      position: absolute; top: 6px; z-index: 3; pointer-events: none;
-      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
+    ${CARD_SEL} > .skq-corner { position: absolute; top: 6px; left: 6px; z-index: 3; display: flex; gap: 4px; }
+    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} > .skq-favs {
+      pointer-events: none; padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
-    ${CARD_SEL} > .skq-myvote { left: 6px; color: #ffb347; }
-    ${CARD_SEL} > .skq-favs { right: 6px; color: #ff8fa3; }
+    ${CARD_SEL} .skq-score { color: #9fd3ff; }
+    ${CARD_SEL} .skq-myvote { color: #ffb347; }
+    ${CARD_SEL} > .skq-favs { position: absolute; top: 6px; right: 6px; z-index: 3; color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }

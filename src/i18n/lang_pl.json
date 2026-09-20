@@ -177,5 +177,7 @@
  "175": "I podpowiadaj w menu, który klawisz nacisnąć",
  "176": "Pokaż wszystkie ukryte podglądy / ukryj ponownie",
  "177": "Wszystkie ukryte podglądy są widoczne",
- "178": "Podglądy są znów ukryte"
+ "178": "Podglądy są znów ukryte",
+ "179": "Pokaż średnią ocenę na karcie",
+ "180": "Średnia ocena: {n} z 5, głosów: {m}"
 }
