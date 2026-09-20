@@ -128,6 +128,13 @@ listing text ready to paste). Data collection is declared in the manifest
 (`data_collection_permissions: none`), which is mandatory for new add-ons
 submitted from November 3, 2025.
 
+## The site's API
+
+Sankaku has no API documentation, so the list of endpoints is extracted from
+the site's own bundle: [`docs/api.md`](docs/api.md) (in Russian, the endpoint
+tables are language-neutral). Regenerate it after a site update with
+`python tools/scan-api.py --md`.
+
 ## Testing against the mock
 
 The site is closed to automation, so a mock of its markup and API lives next to
