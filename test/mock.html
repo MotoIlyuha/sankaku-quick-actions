@@ -67,7 +67,7 @@
 .pcard img { width: 160px; height: 160px; display: block; }
 </style>
 </head><body>
-<header class="MuiAppBar-root"><button id="menu" data-test="hamburger-menu">☰</button><div id="portal-title"><h2 id="title" class="MuiTypography-root MuiTypography-h6"></h2></div></header>
+<header class="MuiAppBar-root"><button id="menu" data-test="hamburger-menu">☰</button><div id="portal-title"><h2 id="title" class="MuiTypography-root MuiTypography-h6"></h2></div><div id="portal-buttons"></div></header>
 <nav id="drawer"><ul class="MuiList-root" id="menulist"></ul><ul class="MuiList-root"><li><div class="MuiGrid-root"><div class="MuiGrid-root"><button class="pointsbtn MuiButtonBase-root"><span class="MuiButton-label"><span class="MuiButton-startIcon"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="none" viewBox="0 0 25 24"><rect width="24" height="24" x="0.5" fill="transparent" rx="12"></rect><path fill="#fff" d="m12.5 4-8 13.177h16l-1.619-2.668H9.138l3.359-5.624 3.06 4.963h2.924z"></path></svg></span><p class="MuiTypography-root">0</p></span></button></div></div></li></ul></nav>
 <div id="app"></div>
 <script>
@@ -373,15 +373,37 @@
         ind.style.left = b.offsetLeft + 'px';
         ind.style.width = b.offsetWidth + 'px';
       });
+    } else if (p.endsWith('/books/upload')) {
+      titleEl.textContent = 'Создать книгу';
+      app.innerHTML = '<p>Форма книги</p>';
     } else {
-      titleEl.textContent = 'Просмотр';
+      // список постов или книг: заголовок зависит от фильтра
+      const tags = new URLSearchParams(location.search).get('tags') || '';
+      const books = /\/books$/.test(p);
+      titleEl.textContent = tags === 'user:ilyuxa3211'
+        ? word(books ? 'common-title__my-books' : 'common-title__my-posts')
+        : books ? word('common-title__browse_books') : 'Просмотр';
       app.innerHTML = `<div class="grid"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/100"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/101"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/102"><img src="http://127.0.0.1:8766/PreviewUnavailable.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/103"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/104"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/105"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div>`;
       fetch('http://127.0.0.1:8766/posts?lang=ru&page=1&limit=6', { headers: { Authorization: 'Bearer test-token' } });
     }
   }
   fetch('http://127.0.0.1:8766/api/me', { headers: { Authorization: 'Bearer test-token' } });
   window.__loadRanking = () => fetch('http://127.0.0.1:8766/reputation/ranking', { headers: { Authorization: 'Bearer test-token' } }).then((r) => r.json());
-  window.addEventListener('popstate', render);
-  render();
+  // сайт держит кнопки шапки в отдельном портале
+  function renderHeaderButtons() {
+    const holder = document.getElementById('portal-buttons');
+    const p = location.pathname.replace(/\/$/, '');
+    const list = !/\/(posts|books)\/upload$/.test(p);
+    holder.innerHTML = list
+      ? '<button class="MuiButtonBase-root MuiButton-root MuiButton-text" tabindex="0" type="button" data-test="add-post-button">'
+        + '<span class="MuiButton-label"><span class="MuiButton-startIcon MuiButton-iconSizeMedium">'
+        + '<svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true">'
+        + '<path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"></path></svg></span>Загрузить</span>'
+        + '<span class="MuiTouchRipple-root"></span></button>'
+      : '';
+  }
+  const renderAll = () => { render(); renderHeaderButtons(); };
+  window.addEventListener('popstate', renderAll);
+  renderAll();
 </script>
 </body></html>

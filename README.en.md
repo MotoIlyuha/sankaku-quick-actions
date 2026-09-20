@@ -94,6 +94,14 @@ Renaming also works from the page itself: the heading gets a border on hover,
 turns into a text field on click, and a changed text is saved with the check
 mark. When the heading has a menu item of its own, that item is renamed.
 
+The table's columns are labelled by a row that sticks to the top while you
+scroll, and «Save» lives in a footer pinned to the bottom edge.
+
+The header gets cross links: «Bulk upload» on the My posts page, «My posts» on
+the post upload and bulk upload pages, «My books» on the book upload page. The
+button is cloned from the site's own header button when there is one, and its
+label comes from the menu, renaming included.
+
 Items are found by their `data-test` attribute — the key from the site's own
 menu config (`post-indexes`, `my_posts`, `menu_favorites-book`…) — and their
 original names come from the site's dictionary in `window.__PRELOADED_STATE__`.

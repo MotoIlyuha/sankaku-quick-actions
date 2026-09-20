@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.27.0
+// @version      1.28.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -218,7 +218,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.27.0';
+  const SKQ_VERSION = '1.28.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -5347,7 +5347,7 @@ function core(storedSettings) {
         const v = node.nodeValue;
         if (v.length < 6 || !PROMO_RE.test(v)) continue;
         const el = node.parentElement;
-        if (!el || el.closest(`.skq-hidden, .skq-toast, [data-test="skq_mass_upload"], ${CARD_SEL}, ${POPPER_SEL}, input, textarea, script, style, a[href*="tags="]`)) continue;
+        if (!el || el.closest(`.skq-hidden, .skq-toast, [data-test="skq_mass_upload"], [data-test^="skq_hdr_"], ${CARD_SEL}, ${POPPER_SEL}, input, textarea, script, style, a[href*="tags="]`)) continue;
         if (el.isContentEditable) continue;
         hide(promoContainer(el), 'promo');
       }
@@ -5364,6 +5364,7 @@ function core(storedSettings) {
     if (!FRAME_MODE) {
       injectMassMenuItem();
       syncMassRoute();
+      injectHeaderLinks();
     }
 
     for (const svg of document.querySelectorAll('svg[data-test$="stars"]:not(.skq-star)')) {
@@ -9204,18 +9205,18 @@ function core(storedSettings) {
   const SITE_MENU = [
     { key: 'home_page', word: '', fallback: 'Home Page', path: '/homepage' },
     { key: 'post-indexes', word: 'common-title__posts', path: '/', mod: 'ctrl', children: [
-      { key: 'upload_post', word: 'common-title__upload_post', path: '/posts/upload' },
+      { key: 'upload_post', word: 'common-title__upload_post', fallback: 'Upload Post', path: '/posts/upload' },
       { key: 'menu_browse_all', word: 'common-title__browse_posts', path: '/' },
       { key: 'menu_favorites-posts', word: 'common-title__posts_favorited', path: '/', query: 'tags=fav:{me}', count: 'favPosts' },
-      { key: 'my_posts', word: 'common-title__my-posts', path: '/', query: 'tags=user:{me}', count: 'myPosts' },
+      { key: 'my_posts', word: 'common-title__my-posts', fallback: 'My Posts', path: '/', query: 'tags=user:{me}', count: 'myPosts' },
       { key: 'menu_popular_post', word: 'common-title__popular_posts', path: '/', query: 'tags=order:popularity' },
       { key: 'menu_top_post', word: 'common-title__top_posts', path: '/', query: 'tags=order:quality' },
     ] },
     { key: 'book-indexes', word: 'common-title__books', path: '/books', mod: 'alt', children: [
-      { key: 'upload_book', word: 'common-title__upload_book', path: '/books/upload' },
+      { key: 'upload_book', word: 'common-title__upload_book', fallback: 'Upload Book', path: '/books/upload' },
       { key: 'menu_books', word: 'common-title__browse_books', path: '/books' },
       { key: 'menu_favorites-book', word: 'common-title__books_favorited', path: '/books', query: 'tags=fav:{me}', count: 'favBooks' },
-      { key: 'my_books', word: 'common-title__my-books', path: '/books', query: 'tags=user:{me}', count: 'myBooks' },
+      { key: 'my_books', word: 'common-title__my-books', fallback: 'My Books', path: '/books', query: 'tags=user:{me}', count: 'myBooks' },
       { key: 'menu_popular_book', word: 'common-title__popular_books', path: '/books', query: 'tags=order:popularity' },
       { key: 'menu_top_book', word: 'common-title__top_books', path: '/books', query: 'tags=order:quality' },
     ] },
@@ -9617,15 +9618,126 @@ function core(storedSettings) {
     return location.origin + langPrefix() + cfg.path + (query ? '?' + query : '');
   }
 
+  const menuNavLink = (key) => [...document.querySelectorAll('[data-test]')].find((el) =>
+    el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]')) || null;
+
   function goToMenuItem(key) {
     menuHeldOpen = false;
-    const link = [...document.querySelectorAll('[data-test]')].find((el) =>
-      el.getAttribute('data-test') === key && el.closest('nav, [class*="MuiDrawer"], [class*="MuiList-root"]'));
-    if (link) { link.click(); return true; } // меню открыто — пусть сайт сам переходит
+    const link = menuNavLink(key);
+    if (link) { link.click(); return true; } // пункт меню на месте — пусть сайт сам переходит
     const url = menuUrl(MENU_BY_KEY.get(key));
     if (!url) return false;
     location.assign(url);
     return true;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Кнопки в шапке: со страницы своих постов — к загрузке и обратно.
+  // Рисуются по образцу кнопки самого сайта, чтобы не выбиваться из шапки.
+  // ---------------------------------------------------------------------------
+  const UPLOAD_ICON = 'M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z';
+  const HDR_ICONS = {
+    my_posts: 'M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4 2.03 2.71L16 11l4 5H8zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6z',
+    my_books: 'M4 6H2v14c0 1.1.9 2 2 2h14v-2H4zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-1 9-2.5-1.5L14 11V4h5z',
+  };
+
+  const menuLabel = (key) => {
+    const item = MENU_BY_KEY.get(key) || {};
+    return menuName(key) || menuWord(item) || item.fallback || '';
+  };
+
+  const headerHolder = () => document.getElementById('portal-buttons');
+  const siteUploadBtn = () => {
+    const holder = headerHolder();
+    return holder ? holder.querySelector('button[data-test="add-post-button"], button[data-test="add-book-button"]') : null;
+  };
+
+  // Что за страница: адрес надёжнее всего, на списках выручает и заголовок
+  function headerPage() {
+    if (mass.visible) return 'mass';
+    const path = location.pathname.slice(langPrefix().length) || '/';
+    if (/^\/posts\/upload\/?$/.test(path)) return 'upload_post';
+    if (/^\/books\/upload\/?$/.test(path)) return 'upload_book';
+    const tags = (new URLSearchParams(location.search).get('tags') || '').toLowerCase();
+    const mine = !!rep.name && tags.split(/[\s+]+/).includes('user:' + rep.name.toLowerCase());
+    if (mine) return /^\/books\/?$/.test(path) ? 'my_books' : 'my_posts';
+    const el = titleNodes()[0];
+    const key = el && titleKeyFor(el.dataset.skqTitle || (el.textContent || '').trim());
+    return key === 'my_posts' || key === 'my_books' ? key : '';
+  }
+
+  function headerLinks() {
+    const page = headerPage();
+    // адрес своих постов знаем не всегда (нужно имя) — тогда ведём через пункт меню
+    const item = (key, icon) => ({
+      id: key, label: menuLabel(key), icon, go: () => goToMenuItem(key),
+      url: menuUrl(MENU_BY_KEY.get(key)) || (menuNavLink(key) ? 'menu' : ''),
+    });
+    if (page === 'my_posts') {
+      const list = [{ id: 'mass', label: t('Массовая загрузка'), icon: UPLOAD_ICON, url: uploadPath(), go: () => openMass() }];
+      // свою кнопку загрузки добавляем, только если её нет у сайта
+      if (!siteUploadBtn()) list.unshift(item('upload_post', UPLOAD_ICON));
+      return list;
+    }
+    if (page === 'my_books') return siteUploadBtn() ? [] : [item('upload_book', UPLOAD_ICON)];
+    if (page === 'upload_post' || page === 'mass') return [item('my_posts', HDR_ICONS.my_posts)];
+    if (page === 'upload_book') return [item('my_books', HDR_ICONS.my_books)];
+    return [];
+  }
+
+  function buildHeaderBtn(holder, icon) {
+    const tpl = holder.querySelector('button:not([data-test^="skq_hdr_"])');
+    if (tpl) {
+      const btn = tpl.cloneNode(true);
+      btn.removeAttribute('id');
+      btn.querySelectorAll('.Mui-selected, [class*="Mui-selected"]').forEach((n) => n.classList.remove('Mui-selected'));
+      if (icon) btn.querySelectorAll('svg path').forEach((path) => path.setAttribute('d', icon));
+      return btn;
+    }
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'skq-hdr-btn';
+    btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path></path></svg><span></span>';
+    btn.querySelector('path').setAttribute('d', icon || UPLOAD_ICON);
+    return btn;
+  }
+
+  function setBtnLabel(btn, text) {
+    const box = btn.querySelector('[class*="MuiButton-label"]') || btn;
+    const node = [...box.childNodes].find((n) => n.nodeType === 3 && n.nodeValue.trim());
+    if (node) {
+      if (node.nodeValue !== text) node.nodeValue = text;
+      return;
+    }
+    const span = [...box.querySelectorAll('span, p')].find((el) =>
+      !el.children.length && !el.closest('[class*="startIcon"], [class*="endIcon"], [class*="TouchRipple"]'));
+    if (span) { if (span.textContent !== text) span.textContent = text; return; }
+    box.appendChild(document.createTextNode(text));
+  }
+
+  function injectHeaderLinks() {
+    const holder = headerHolder();
+    if (!holder) return;
+    const links = headerLinks().filter((link) => link.url && link.label);
+    const want = new Set(links.map((link) => 'skq_hdr_' + link.id));
+    for (const el of holder.querySelectorAll('[data-test^="skq_hdr_"]')) {
+      if (!want.has(el.getAttribute('data-test'))) el.remove();
+    }
+    for (const link of links) {
+      const id = 'skq_hdr_' + link.id;
+      let btn = holder.querySelector('[data-test="' + id + '"]');
+      if (!btn) {
+        btn = buildHeaderBtn(holder, link.icon);
+        btn.setAttribute('data-test', id);
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          link.go();
+        });
+        holder.appendChild(btn);
+      }
+      setBtnLabel(btn, link.label);
+    }
   }
 
   const HOLD_KEYS = { Control: 1, Alt: 1 };
@@ -9700,8 +9812,8 @@ function core(storedSettings) {
     .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); }
     .dlg {
       position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-      width: min(480px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
-      background: #2b2b2b; color: #eee; border-radius: 12px; padding: 20px 20px 16px;
+      width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 32px); overflow: auto;
+      background: #2b2b2b; color: #eee; border-radius: 12px; padding: 20px 20px 0;
       box-shadow: 0 12px 40px rgba(0,0,0,.6); font-size: 14px; line-height: 1.4; outline: none;
     }
     h2 { margin: 0 0 14px; font-size: 18px; font-weight: 500; color: #fff; }
@@ -9732,7 +9844,8 @@ function core(storedSettings) {
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
     .mlist { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
     .mrow { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
-    .mrow.child { padding-left: 16px; }
+    /* вложенность видно по сдвигу поля названия — столбцы остаются на местах */
+    .mrow.child .mname { margin-left: 18px; }
     .mrow.top { margin-top: 6px; }
     .mrow .mname {
       flex: 1 1 auto; min-width: 40px; padding: 5px 8px; border-radius: 6px; border: 1px solid #555;
@@ -9740,12 +9853,27 @@ function core(storedSettings) {
     }
     .mrow.top .mname { font-weight: 600; }
     .mrow.hidden .mname { opacity: .45; text-decoration: line-through; }
-    .mrow .mhk { min-width: 82px; padding: 4px 6px; font-size: 12px; }
+    .mrow .mhk { flex: 1 1 auto; min-width: 74px; padding: 4px 6px; font-size: 12px; }
     .mrow .mhk.wait { border-color: #ff8c00; color: #ff8c00; }
     .mrow .mhk[disabled] { opacity: .4; cursor: default; }
-    .mcell { display: inline-flex; align-items: center; justify-content: center; width: 20px; flex: none; cursor: pointer; }
+    .mcell { display: inline-flex; align-items: center; justify-content: center; width: 64px; flex: none; cursor: pointer; }
     .mcell.empty { cursor: default; }
-    .actions { display: flex; gap: 8px; margin-top: 4px; align-items: center; }
+    .mhkwrap { display: flex; align-items: center; gap: 6px; width: 132px; flex: none; }
+    .mhkwrap .mcell { width: 20px; }
+    /* шапка таблицы: держится наверху и подписывает столбцы */
+    .mhead {
+      position: sticky; top: var(--skq-top, 0px); z-index: 1; margin: 0 0 4px; padding: 2px 0 5px;
+      background: var(--skq-bg, #2b2b2b); border-bottom: 1px solid #444;
+      color: #999; font-size: 11px; line-height: 1.15; text-transform: uppercase; letter-spacing: .3px;
+    }
+    .mhead .mcell, .mhead .mhkwrap { justify-content: center; text-align: center; cursor: default; }
+    .mhead .mhname { flex: 1 1 auto; min-width: 40px; padding: 0 8px; }
+    /* подвал всегда на виду: «Сохранить» не надо искать прокруткой */
+    .actions {
+      display: flex; gap: 8px; align-items: center; position: sticky; bottom: 0; z-index: 2;
+      margin: 4px -20px 0; padding: 10px 20px 16px; border-radius: 0 0 12px 12px;
+      background: var(--skq-bg, #2b2b2b); border-top: 1px solid #444;
+    }
     .ver { background: none; border: 0; padding: 7px 2px; color: #999; font-size: 12px; }
     .ver:hover { background: none; color: #ddd; }
     .actions .spacer { flex: 1; }
@@ -9756,13 +9884,13 @@ function core(storedSettings) {
     @media (max-width: 600px), (hover: none) {
       .dlg {
         left: 0; top: 0; transform: none; width: 100vw; max-width: none;
-        height: 100vh; max-height: none; border-radius: 0; padding: 16px 16px 24px;
+        height: 100vh; max-height: none; border-radius: 0; padding: 16px 16px 0;
       }
       .row, .num { padding: 9px 0; }
       input[type=checkbox] { width: 20px; height: 20px; }
       input[type=number] { width: 104px; padding: 8px; font-size: 16px; }
       button { padding: 10px 16px; font-size: 15px; }
-      .actions { position: sticky; bottom: 0; background: #2b2b2b; padding: 10px 0 2px; }
+      .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
     }
   `;
 
@@ -9778,6 +9906,15 @@ function core(storedSettings) {
     host.className = 'skq-settings';
     if (!embedded) host.style.cssText = 'position:fixed;inset:0;z-index:2147483647;';
     const root = host.attachShadow({ mode: 'open' });
+    // липкие шапка и подвал закрывают текст собой, поэтому им нужен непрозрачный
+    // фон: у окна он свой, во вкладке сайта берём тот, что под нами
+    const bgUnder = (el) => {
+      for (let node = el; node instanceof Element; node = node.parentElement) {
+        const color = getComputedStyle(node).backgroundColor;
+        if (color && color !== 'transparent' && !/rgba\(\s*0,\s*0,\s*0,\s*0\s*\)/.test(color)) return color;
+      }
+      return '#2b2b2b';
+    };
     root.innerHTML = `
       <style>${SETTINGS_CSS}${embedded ? EMBEDDED_CSS : ''}</style>
       ${embedded ? '' : '<div class="backdrop"></div>'}
@@ -9852,6 +9989,13 @@ function core(storedSettings) {
     if (!embedded) document.body.appendChild(host);
 
     const form = root.querySelector('form');
+    if (embedded) {
+      form.style.setProperty('--skq-bg', bgUnder(host.parentElement || document.body));
+      // шапка сайта висит поверх страницы — наша строка столбцов встаёт под неё
+      const bar = document.querySelector('header, [class*="MuiAppBar-root"]');
+      const fixed = bar && /fixed|sticky/.test(getComputedStyle(bar).position);
+      form.style.setProperty('--skq-top', (fixed ? Math.round(bar.getBoundingClientRect().height) : 0) + 'px');
+    }
     // на сенсорном экране клавиш нет — эти настройки только мешают
     form.classList.toggle('touch', TOUCH());
     const f = (name) => form.elements.namedItem(name);
@@ -9901,9 +10045,27 @@ function core(storedSettings) {
       return String(st.hk || menuDefHk(key) || '');
     }
 
+    function menuHeadRow() {
+      const head = document.createElement('div');
+      head.className = 'mrow mhead';
+      const cell = (cls, text) => {
+        const box = document.createElement('div');
+        box.className = cls;
+        box.textContent = text;
+        return box;
+      };
+      head.append(
+        cell('mcell', t('Показывать пункт')),
+        cell('mhname', t('Своё название')),
+        cell('mcell', t('Показывать счётчик')),
+        cell('mhkwrap keys-only', t('Переход по клавише')),
+      );
+      return head;
+    }
+
     function renderMenuRows() {
       const list = root.querySelector('.mlist');
-      list.replaceChildren();
+      list.replaceChildren(menuHeadRow());
       for (const item of MENU_ITEMS) {
         const st = menuDraft[item.key] || {};
         const orig = menuWord(item) || item.fallback || item.key;
@@ -9944,8 +10106,10 @@ function core(storedSettings) {
         }
         row.appendChild(cnt);
 
+        const hkWrap = document.createElement('div');
+        hkWrap.className = 'mhkwrap keys-only';
         const hkCell = document.createElement('label');
-        hkCell.className = 'mcell keys-only';
+        hkCell.className = 'mcell';
         hkCell.title = t('Переход по клавише');
         const hkBox = document.createElement('input');
         hkBox.type = 'checkbox';
@@ -9953,18 +10117,19 @@ function core(storedSettings) {
         hkBox.checked = !!st.hkOn;
         hkBox.addEventListener('change', () => { draftOf(item.key).hkOn = hkBox.checked; renderMenuRows(); });
         hkCell.appendChild(hkBox);
-        row.appendChild(hkCell);
+        hkWrap.appendChild(hkCell);
 
         const hkBtn = document.createElement('button');
         hkBtn.type = 'button';
-        hkBtn.className = 'mhk keys-only' + (capturingMenu === item.key ? ' wait' : '');
+        hkBtn.className = 'mhk' + (capturingMenu === item.key ? ' wait' : '');
         hkBtn.textContent = capturingMenu === item.key ? t('Нажмите клавишу…') : comboLabel(menuRowHk(item.key));
         hkBtn.disabled = !st.hkOn;
         hkBtn.addEventListener('click', () => {
           setCapturingMenu(item.key);
           setHint(t('Esc — отмена.'));
         });
-        row.appendChild(hkBtn);
+        hkWrap.appendChild(hkBtn);
+        row.appendChild(hkWrap);
 
         list.appendChild(row);
       }
@@ -10150,10 +10315,10 @@ function core(storedSettings) {
   const EMBEDDED_CSS = `
     .dlg {
       position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none;
-      overflow: visible; background: none; border-radius: 0; box-shadow: none; padding: 8px 16px 24px;
+      overflow: visible; background: none; border-radius: 0; box-shadow: none; padding: 8px 16px 0;
     }
     .cancel { display: none; }
-    .actions { padding: 10px 0 2px; }
+    .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
   // ---- Вкладка «Плагин» на странице настроек сайта ----
@@ -10343,6 +10508,13 @@ function core(storedSettings) {
     .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
+    .skq-hdr-btn {
+      display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; padding: 6px 16px;
+      border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer;
+      font: 500 14px/1.75 Roboto, "Helvetica Neue", Arial, sans-serif; text-transform: uppercase; letter-spacing: .02em;
+    }
+    .skq-hdr-btn:hover { background: rgba(255, 255, 255, .12); }
+    .skq-hdr-btn svg { fill: currentColor; }
     .skq-mcount {
       margin-left: auto; padding-left: 8px; flex: none; color: #ff8c00;
       font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
