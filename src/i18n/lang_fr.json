@@ -179,5 +179,8 @@
  "177": "Tous les aperçus masqués sont affichés",
  "178": "Les aperçus sont de nouveau masqués",
  "179": "Afficher la note moyenne sur la carte",
- "180": "Note moyenne : {n} sur 5, votes : {m}"
+ "180": "Note moyenne : {n} sur 5, votes : {m}",
+ "181": "En chiffre",
+ "182": "En étoiles",
+ "183": "Faites glisser les étiquettes dans les coins de l’aperçu : un coin peut en contenir plusieurs. Un clic les déplace aussi."
 }

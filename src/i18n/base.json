@@ -180,6 +180,9 @@
   "Все скрытые превью показаны": "All hidden previews are shown",
   "Превью снова скрыты": "Previews are hidden again",
   "Показывать среднюю оценку на карточке": "Show the average rating on the card",
-  "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}"
+  "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}",
+  "Числом": "As a number",
+  "Звёздами": "As stars",
+  "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too."
  }
 }

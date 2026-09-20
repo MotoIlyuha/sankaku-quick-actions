@@ -179,5 +179,8 @@
  "177": "Se muestran todas las vistas previas ocultas",
  "178": "Las vistas previas están ocultas de nuevo",
  "179": "Mostrar la valoración media en la tarjeta",
- "180": "Valoración media: {n} de 5, votos: {m}"
+ "180": "Valoración media: {n} de 5, votos: {m}",
+ "181": "Con un número",
+ "182": "Con estrellas",
+ "183": "Arrastre las etiquetas a las esquinas de la vista previa: una esquina admite varias. Al hacer clic también se mueven."
 }

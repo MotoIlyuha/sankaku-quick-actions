@@ -120,7 +120,9 @@ version 142 and newer). On a touch screen:
   more: every form is a full copy of the site's page.
 
 The card's top-left corner shows the post's average rating and your own vote,
-the top-right one the number of likes; each badge can be switched off.
+the top-right one the number of likes; each badge can be switched off, and the
+preview next to the settings lets you drag the badges into any corner (a corner
+can hold several). Your own vote shows as a number or as stars.
 
 The «B» key reveals every hidden preview on the page at once and hides them
 again on the next press. The card under the mouse gets the same outline as the

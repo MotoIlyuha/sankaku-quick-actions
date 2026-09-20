@@ -179,5 +179,8 @@
  "177": "Minden rejtett előnézet látszik",
  "178": "Az előnézetek ismét rejtve vannak",
  "179": "Az átlagos értékelés megjelenítése a kártyán",
- "180": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}"
+ "180": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}",
+ "181": "Számmal",
+ "182": "Csillagokkal",
+ "183": "Húzza a címkéket az előnézet sarkaiba — egy sarokban több is elfér. Kattintásra is átkerülnek."
 }

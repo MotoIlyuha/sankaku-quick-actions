@@ -179,5 +179,8 @@
  "177": "Kaikki piilotetut esikatselut näkyvät",
  "178": "Esikatselut on piilotettu uudelleen",
  "179": "Näytä keskiarvosana kortissa",
- "180": "Keskiarvo: {n}/5, ääniä: {m}"
+ "180": "Keskiarvo: {n}/5, ääniä: {m}",
+ "181": "Numerona",
+ "182": "Tähtinä",
+ "183": "Vedä merkit esikatselun kulmiin — yhteen kulmaan mahtuu useita. Myös napsautus siirtää merkin."
 }

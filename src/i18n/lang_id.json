@@ -179,5 +179,8 @@
  "177": "Semua pratinjau tersembunyi ditampilkan",
  "178": "Pratinjau disembunyikan lagi",
  "179": "Tampilkan rating rata-rata di kartu",
- "180": "Rating rata-rata: {n} dari 5, suara: {m}"
+ "180": "Rating rata-rata: {n} dari 5, suara: {m}",
+ "181": "Sebagai angka",
+ "182": "Sebagai bintang",
+ "183": "Seret label ke sudut pratinjau — satu sudut bisa memuat beberapa. Mengklik label juga memindahkannya."
 }

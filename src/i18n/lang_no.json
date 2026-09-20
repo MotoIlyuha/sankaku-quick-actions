@@ -179,5 +179,8 @@
  "177": "Alle skjulte forhåndsvisninger vises",
  "178": "Forhåndsvisningene er skjult igjen",
  "179": "Vis gjennomsnittsvurderingen på kortet",
- "180": "Gjennomsnitt: {n} av 5, stemmer: {m}"
+ "180": "Gjennomsnitt: {n} av 5, stemmer: {m}",
+ "181": "Som tall",
+ "182": "Som stjerner",
+ "183": "Dra merkene til hjørnene i forhåndsvisningen — ett hjørne kan ha flere. Et klikk flytter dem også."
 }

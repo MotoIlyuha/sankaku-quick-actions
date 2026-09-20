@@ -56,6 +56,8 @@ function core(storedSettings) {
     showScore: true, // средняя оценка поста в углу карточки
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
+    voteStars: false, // свою оценку показывать звёздами, а не числом
+    badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -1027,39 +1029,64 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
-  // Метки левого угла живут в общей строке, чтобы не наезжать друг на друга
-  const LEFT_BADGES = { 'skq-score': 1, 'skq-myvote': 1 };
+  // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
+  const CORNERS = ['tl', 'tr', 'bl', 'br'];
+  const BADGES = [
+    { id: 'score', cls: 'skq-score' },
+    { id: 'vote', cls: 'skq-myvote' },
+    { id: 'favs', cls: 'skq-favs' },
+  ];
+  const cornerCls = (corner) => 'skq-c-' + corner;
 
-  function cornerBox(card) {
-    let box = card.querySelector(':scope > .skq-corner');
+  const badgeCorner = (id) => {
+    const pos = isObj(settings.badges) ? settings.badges[id] : null;
+    return CORNERS.includes(pos) ? pos : DEFAULTS.badges[id];
+  };
+
+  function cornerBox(card, corner) {
+    let box = card.querySelector(':scope > .' + cornerCls(corner));
     if (!box) {
       box = document.createElement('div');
-      box.className = 'skq-corner';
+      box.className = 'skq-corner ' + cornerCls(corner);
       card.appendChild(box);
     }
     return box;
   }
 
-  // Одна метка на карточке: создаём, обновляем или убираем
-  function cardBadge(card, cls, text, title) {
-    let badge = card.querySelector(':scope > .' + cls + ', :scope > .skq-corner > .' + cls);
+  // Одна метка на карточке: создаём, обновляем, переносим в другой угол или убираем
+  function cardBadge(card, badge, text, title, corner) {
+    let el = card.querySelector(':scope > .skq-corner > .' + badge.cls);
     if (text == null) {
-      if (badge) {
-        const box = badge.parentElement;
-        badge.remove();
-        if (box.classList.contains('skq-corner') && !box.children.length) box.remove();
-      }
+      if (el) el.remove();
       return;
     }
-    if (!badge) {
-      badge = document.createElement('div');
-      badge.className = cls;
+    const box = cornerBox(card, corner);
+    if (!el) {
+      el = document.createElement('div');
+      el.className = badge.cls;
+      el.dataset.skqBadge = badge.id;
       if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-      (LEFT_BADGES[cls] ? cornerBox(card) : card).appendChild(badge);
     }
-    if (badge.textContent !== text) badge.textContent = text;
-    if (badge.title !== title) badge.title = title;
+    if (el.parentElement !== box) box.appendChild(el);
+    if (el.textContent !== text) el.textContent = text;
+    if (el.title !== title) el.title = title;
   }
+
+  // Порядок внутри угла всегда один: средняя оценка, своя, лайки
+  function tidyCorners(card) {
+    for (const box of card.querySelectorAll(':scope > .skq-corner')) {
+      if (!box.children.length) { box.remove(); continue; }
+      let prev = null;
+      for (const b of BADGES) {
+        const el = box.querySelector(':scope > .' + b.cls);
+        if (!el) continue;
+        if (el.previousElementSibling !== prev) box.insertBefore(el, prev ? prev.nextSibling : box.firstChild);
+        prev = el;
+      }
+    }
+  }
+
+  const voteText = (n) => (settings.voteStars ? '★'.repeat(n) + '☆'.repeat(5 - n) : `★ ${n}`);
 
   function markCards() {
     if (FRAME_MODE || !document.body) return;
@@ -1072,16 +1099,18 @@ function core(storedSettings) {
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
-      // средняя оценка идёт первой: своя оценка привычно ближе к центру карточки
       const score = wantScore && id ? scoreOfId(id) : null;
-      cardBadge(card, 'skq-score', score ? `★ ${score.avg.toFixed(1)}` : null,
-        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '');
+      cardBadge(card, BADGES[0], score ? `★ ${score.avg.toFixed(1)}` : null,
+        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '',
+        badgeCorner('score'));
       const n = wantVote && id ? voteOfId(id) : 0;
-      cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
+      cardBadge(card, BADGES[1], n ? voteText(n) : null, n ? t('Ваша оценка: {n} из 5', { n }) : '',
+        badgeCorner('vote'));
       // ноль не показываем: пустой угол спокойнее, чем «♥ 0» на половине сетки
       const favs = wantFavs && id ? favsOfId(id) : null;
-      cardBadge(card, 'skq-favs', favs ? `♥ ${shortCount(favs)}` : null,
-        favs ? t('Лайков: {n}', { n: favs }) : '');
+      cardBadge(card, BADGES[2], favs ? `♥ ${shortCount(favs)}` : null,
+        favs ? t('Лайков: {n}', { n: favs }) : '', badgeCorner('favs'));
+      tidyCorners(card);
     }
   }
 
@@ -5373,6 +5402,38 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    /* превью карточки: метки перетаскиваются по углам */
+    .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
+    .cardsopts { flex: 1 1 auto; min-width: 0; }
+    .cardprev {
+      position: relative; flex: none; width: 150px; height: 150px; margin-top: 4px;
+      border-radius: 8px; background: repeating-linear-gradient(135deg, #4a4a4a 0 12px, #444 12px 24px);
+      box-shadow: inset 0 0 0 1px #555;
+    }
+    /* угол занимает четверть превью: попасть в него мышью проще */
+    .cardprev .zone {
+      position: absolute; width: 50%; height: 50%; display: flex; gap: 3px;
+      padding: 5px; border-radius: 6px;
+    }
+    .cardprev .z-tl { top: 0; left: 0; align-items: flex-start; }
+    .cardprev .z-tr { top: 0; right: 0; align-items: flex-start; flex-direction: row-reverse; }
+    .cardprev .z-bl { bottom: 0; left: 0; align-items: flex-end; }
+    .cardprev .z-br { bottom: 0; right: 0; align-items: flex-end; flex-direction: row-reverse; }
+    .cardprev .zone.over { background: rgba(255, 140, 0, .25); box-shadow: inset 0 0 0 1px #ff8c00; }
+    .pbadge {
+      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72); cursor: grab;
+      font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
+    }
+    .pbadge.off { opacity: .35; }
+    .pbadge.skq-score { color: #9fd3ff; }
+    .pbadge.skq-myvote { color: #ffb347; }
+    .pbadge.skq-favs { color: #ff8fa3; }
+    .votemode { gap: 16px; cursor: default; }
+    .pick { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    input[type=radio] { width: 16px; height: 16px; accent-color: #ff8c00; margin: 0; }
+    @media (max-width: 600px), (hover: none) {
+      .cardsbox { flex-direction: column; align-items: center; }
+    }
     .mlist { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
     .mrow { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
     /* вложенность видно по сдвигу поля названия — столбцы остаются на местах */
@@ -5468,9 +5529,21 @@ function core(storedSettings) {
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
-          <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
-          <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
-          <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
+          <div class="cardsbox">
+            <div class="cardsopts">
+              <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
+              <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
+              <div class="row sub votemode">
+                <label class="pick"><input type="radio" name="voteStars" value="num"> ${T('Числом')}</label>
+                <label class="pick"><input type="radio" name="voteStars" value="stars"> ${T('Звёздами')}</label>
+              </div>
+              <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
+            </div>
+            <div class="cardprev" aria-hidden="true">
+              ${CORNERS.map((c) => `<div class="zone z-${c}" data-corner="${c}"></div>`).join('')}
+            </div>
+          </div>
+          <p class="hint">${T('Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.')}</p>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
         </fieldset>
         <fieldset>
@@ -5540,6 +5613,7 @@ function core(storedSettings) {
     let capturingMenu = null; // ... и то же для пункта меню
     let capturingToggle = false; // ... и для клавиши, открывающей меню
     let menuDraft = {};
+    let badgeDraft = { ...DEFAULTS.badges }; // по каким углам разложены метки карточки
     let menuKeyDraft = settings.menuKey || DEFAULTS.menuKey;
     const menuKeyBtn = root.querySelector('.menukey');
 
@@ -5685,6 +5759,10 @@ function core(storedSettings) {
     function fill(s) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      badgeDraft = { ...DEFAULTS.badges };
+      if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
+      f('voteStars').value = s.voteStars ? 'stars' : 'num';
+      renderPreview();
       capturingMenu = null;
       renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showScore', 'showMyVote', 'showFavCount',
@@ -5699,6 +5777,78 @@ function core(storedSettings) {
       renderKey();
       syncRehide();
     }
+    // ---- Превью карточки: метки раскладываются по углам ----
+    const BADGE_SAMPLE = {
+      score: () => '★ 4.3',
+      vote: () => (f('voteStars').value === 'stars' ? '★★★★☆' : '★ 4'),
+      favs: () => '♥ 71',
+    };
+    const BADGE_ON = { score: 'showScore', vote: 'showMyVote', favs: 'showFavCount' };
+    const prev = root.querySelector('.cardprev');
+    let dragBadge = '';
+
+    function renderPreview() {
+      for (const zone of prev.querySelectorAll('.zone')) {
+        const corner = zone.dataset.corner;
+        for (const b of BADGES) {
+          const mine = badgeDraft[b.id] === corner;
+          let chip = prev.querySelector('.pbadge[data-badge="' + b.id + '"]');
+          if (!mine) {
+            if (chip && chip.parentElement === zone) chip.remove();
+            continue;
+          }
+          if (!chip) {
+            chip = document.createElement('div');
+            chip.className = 'pbadge ' + b.cls;
+            chip.dataset.badge = b.id;
+            chip.draggable = true;
+            chip.addEventListener('dragstart', (e) => {
+              dragBadge = b.id;
+              try { e.dataTransfer.setData('text/plain', b.id); } catch { /* ignore */ }
+            });
+            // на сенсорном экране перетаскивания нет — клик переставляет по кругу
+            chip.addEventListener('click', () => {
+              const next = CORNERS[(CORNERS.indexOf(badgeDraft[b.id]) + 1) % CORNERS.length];
+              badgeDraft[b.id] = next;
+              renderPreview();
+            });
+          }
+          if (chip.parentElement !== zone) zone.appendChild(chip);
+          chip.textContent = BADGE_SAMPLE[b.id]();
+          chip.classList.toggle('off', !f(BADGE_ON[b.id]).checked);
+        }
+      }
+      // порядок внутри угла тот же, что и на карточке
+      for (const zone of prev.querySelectorAll('.zone')) {
+        let prevEl = null;
+        for (const b of BADGES) {
+          const chip = zone.querySelector(':scope > .pbadge[data-badge="' + b.id + '"]');
+          if (!chip) continue;
+          if (chip.previousElementSibling !== prevEl) zone.insertBefore(chip, prevEl ? prevEl.nextSibling : zone.firstChild);
+          prevEl = chip;
+        }
+      }
+    }
+
+    for (const zone of prev.querySelectorAll('.zone')) {
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        const id = dragBadge || (() => { try { return e.dataTransfer.getData('text/plain'); } catch { return ''; } })();
+        dragBadge = '';
+        if (!BADGE_ON[id]) return;
+        badgeDraft[id] = zone.dataset.corner;
+        renderPreview();
+      });
+    }
+
+    for (const name of ['showScore', 'showMyVote', 'showFavCount']) {
+      f(name).addEventListener('change', renderPreview);
+    }
+    for (const el of root.querySelectorAll('[name=voteStars]')) el.addEventListener('change', renderPreview);
+
     function renderKey() {
       for (const btn of keyBtns) {
         const id = btn.dataset.setting;
@@ -5820,6 +5970,8 @@ function core(storedSettings) {
         showScore: f('showScore').checked,
         showMyVote: f('showMyVote').checked,
         showFavCount: f('showFavCount').checked,
+        voteStars: f('voteStars').value === 'stars',
+        badges: { ...badgeDraft },
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
         revealKeyboardMs: ms('revealKeyboardMs', DEFAULTS.revealKeyboardMs),
         rehideOnBlur: f('rehideOnBlur').checked,
@@ -5992,20 +6144,24 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner):not(.skq-favs),
-    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner):not(.skq-favs) {
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner) {
       outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
     }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-corner { position: absolute; top: 6px; left: 6px; z-index: 3; display: flex; gap: 4px; }
-    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} > .skq-favs {
+    ${CARD_SEL} > .skq-corner { position: absolute; z-index: 3; display: flex; gap: 4px; }
+    ${CARD_SEL} > .skq-c-tl { top: 6px; left: 6px; }
+    ${CARD_SEL} > .skq-c-tr { top: 6px; right: 6px; }
+    ${CARD_SEL} > .skq-c-bl { bottom: 6px; left: 6px; }
+    ${CARD_SEL} > .skq-c-br { bottom: 6px; right: 6px; }
+    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} .skq-favs {
       pointer-events: none; padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
     ${CARD_SEL} .skq-score { color: #9fd3ff; }
     ${CARD_SEL} .skq-myvote { color: #ffb347; }
-    ${CARD_SEL} > .skq-favs { position: absolute; top: 6px; right: 6px; z-index: 3; color: #ff8fa3; }
+    ${CARD_SEL} .skq-favs { color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }

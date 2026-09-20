@@ -179,5 +179,8 @@
  "177": "Alla dolda förhandsvisningar visas",
  "178": "Förhandsvisningarna är dolda igen",
  "179": "Visa medelbetyget på kortet",
- "180": "Medelbetyg: {n} av 5, röster: {m}"
+ "180": "Medelbetyg: {n} av 5, röster: {m}",
+ "181": "Som siffra",
+ "182": "Som stjärnor",
+ "183": "Dra märkena till förhandsvisningens hörn — ett hörn rymmer flera. Ett klick flyttar dem också."
 }

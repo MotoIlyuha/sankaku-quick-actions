@@ -179,5 +179,8 @@
  "177": "Alle ausgeblendeten Vorschauen werden angezeigt",
  "178": "Vorschauen sind wieder ausgeblendet",
  "179": "Durchschnittsbewertung auf der Karte anzeigen",
- "180": "Durchschnitt: {n} von 5, Stimmen: {m}"
+ "180": "Durchschnitt: {n} von 5, Stimmen: {m}",
+ "181": "Als Zahl",
+ "182": "Als Sterne",
+ "183": "Ziehen Sie die Marken in die Ecken der Vorschau — eine Ecke kann mehrere aufnehmen. Ein Klick verschiebt sie ebenfalls."
 }

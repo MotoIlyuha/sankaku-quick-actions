@@ -179,5 +179,8 @@
  "177": "Tutte le anteprime nascoste sono visibili",
  "178": "Le anteprime sono di nuovo nascoste",
  "179": "Mostra il voto medio sulla card",
- "180": "Voto medio: {n} su 5, voti: {m}"
+ "180": "Voto medio: {n} su 5, voti: {m}",
+ "181": "Con un numero",
+ "182": "Con le stelle",
+ "183": "Trascina le etichette negli angoli dell’anteprima: un angolo può contenerne più di una. Anche il clic le sposta."
 }

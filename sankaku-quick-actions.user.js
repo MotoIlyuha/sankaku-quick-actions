@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.30.0
+// @version      1.31.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -158,6 +158,8 @@ function core(storedSettings) {
     showScore: true, // средняя оценка поста в углу карточки
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
+    voteStars: false, // свою оценку показывать звёздами, а не числом
+    badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
     menu: {}, // пункты бокового меню: { ключ: {name, off, hk, hkOn, count} }
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
@@ -220,7 +222,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.30.0';
+  const SKQ_VERSION = '1.31.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -404,7 +406,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "All hidden previews are shown",
           "Превью снова скрыты": "Previews are hidden again",
           "Показывать среднюю оценку на карточке": "Show the average rating on the card",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Average rating: {n} out of 5, votes: {m}",
+          "Числом": "As a number",
+          "Звёздами": "As stars",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Drag the badges to the corners of the preview — a corner can hold several. Clicking a badge moves it too."
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -587,7 +592,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "非表示のプレビューをすべて表示しました",
           "Превью снова скрыты": "プレビューを再び隠しました",
           "Показывать среднюю оценку на карточке": "カードに平均評価を表示",
-          "Средняя оценка: {n} из 5, голосов: {m}": "平均評価：5点中{n}点、投票数{m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均評価：5点中{n}点、投票数{m}",
+          "Числом": "数字で",
+          "Звёздами": "星で",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "プレビューの角にラベルをドラッグしてください。1つの角に複数置けます。クリックでも移動します。"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -770,7 +778,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "已显示所有隐藏预览",
           "Превью снова скрыты": "已重新隐藏预览",
           "Показывать среднюю оценку на карточке": "在卡片上显示平均评分",
-          "Средняя оценка: {n} из 5, голосов: {m}": "平均评分：{n}/5，投票 {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均评分：{n}/5，投票 {m}",
+          "Числом": "用数字",
+          "Звёздами": "用星星",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把标签拖到预览的各个角落，一个角可以放多个；点击标签也会移动它。"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -953,7 +964,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "已顯示所有隱藏預覽",
           "Превью снова скрыты": "已重新隱藏預覽",
           "Показывать среднюю оценку на карточке": "在卡片上顯示平均評分",
-          "Средняя оценка: {n} из 5, голосов: {m}": "平均評分：{n}/5，投票 {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "平均評分：{n}/5，投票 {m}",
+          "Числом": "用數字",
+          "Звёздами": "用星星",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "把標籤拖到預覽的各個角落，一個角可以放多個；點擊標籤也會移動它。"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1136,7 +1150,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "숨겨진 미리보기를 모두 표시했습니다",
           "Превью снова скрыты": "미리보기를 다시 숨겼습니다",
           "Показывать среднюю оценку на карточке": "카드에 평균 평점 표시",
-          "Средняя оценка: {n} из 5, голосов: {m}": "평균 평점: 5점 만점에 {n}점, 투표 {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "평균 평점: 5점 만점에 {n}점, 투표 {m}",
+          "Числом": "숫자로",
+          "Звёздами": "별로",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "미리보기의 모서리로 배지를 끌어다 놓으세요. 한 모서리에 여러 개를 둘 수 있고, 클릭해도 옮겨집니다."
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1319,7 +1336,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Alle ausgeblendeten Vorschauen werden angezeigt",
           "Превью снова скрыты": "Vorschauen sind wieder ausgeblendet",
           "Показывать среднюю оценку на карточке": "Durchschnittsbewertung auf der Karte anzeigen",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Durchschnitt: {n} von 5, Stimmen: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Durchschnitt: {n} von 5, Stimmen: {m}",
+          "Числом": "Als Zahl",
+          "Звёздами": "Als Sterne",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Ziehen Sie die Marken in die Ecken der Vorschau — eine Ecke kann mehrere aufnehmen. Ein Klick verschiebt sie ebenfalls."
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1502,7 +1522,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Tous les aperçus masqués sont affichés",
           "Превью снова скрыты": "Les aperçus sont de nouveau masqués",
           "Показывать среднюю оценку на карточке": "Afficher la note moyenne sur la carte",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Note moyenne : {n} sur 5, votes : {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Note moyenne : {n} sur 5, votes : {m}",
+          "Числом": "En chiffre",
+          "Звёздами": "En étoiles",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Faites glisser les étiquettes dans les coins de l’aperçu : un coin peut en contenir plusieurs. Un clic les déplace aussi."
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1685,7 +1708,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Se muestran todas las vistas previas ocultas",
           "Превью снова скрыты": "Las vistas previas están ocultas de nuevo",
           "Показывать среднюю оценку на карточке": "Mostrar la valoración media en la tarjeta",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Valoración media: {n} de 5, votos: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Valoración media: {n} de 5, votos: {m}",
+          "Числом": "Con un número",
+          "Звёздами": "Con estrellas",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arrastre las etiquetas a las esquinas de la vista previa: una esquina admite varias. Al hacer clic también se mueven."
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1868,7 +1894,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Todas as pré-visualizações ocultas estão visíveis",
           "Превью снова скрыты": "As pré-visualizações estão ocultas novamente",
           "Показывать среднюю оценку на карточке": "Mostrar a avaliação média no cartão",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Avaliação média: {n} de 5, votos: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Avaliação média: {n} de 5, votos: {m}",
+          "Числом": "Como número",
+          "Звёздами": "Como estrelas",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Arraste as etiquetas para os cantos da pré-visualização — um canto aceita várias. Clicar também as move."
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2051,7 +2080,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Tutte le anteprime nascoste sono visibili",
           "Превью снова скрыты": "Le anteprime sono di nuovo nascoste",
           "Показывать среднюю оценку на карточке": "Mostra il voto medio sulla card",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Voto medio: {n} su 5, voti: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Voto medio: {n} su 5, voti: {m}",
+          "Числом": "Con un numero",
+          "Звёздами": "Con le stelle",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trascina le etichette negli angoli dell’anteprima: un angolo può contenerne più di una. Anche il clic le sposta."
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2234,7 +2266,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Alle verborgen voorbeelden zijn zichtbaar",
           "Превью снова скрыты": "Voorbeelden zijn weer verborgen",
           "Показывать среднюю оценку на карточке": "Gemiddelde beoordeling op de kaart tonen",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Gemiddelde beoordeling: {n} van 5, stemmen: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gemiddelde beoordeling: {n} van 5, stemmen: {m}",
+          "Числом": "Als getal",
+          "Звёздами": "Als sterren",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Sleep de labels naar de hoeken van het voorbeeld — in één hoek passen er meerdere. Klikken verplaatst ze ook."
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2417,7 +2452,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Wszystkie ukryte podglądy są widoczne",
           "Превью снова скрыты": "Podglądy są znów ukryte",
           "Показывать среднюю оценку на карточке": "Pokaż średnią ocenę na karcie",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Średnia ocena: {n} z 5, głosów: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Średnia ocena: {n} z 5, głosów: {m}",
+          "Числом": "Liczbą",
+          "Звёздами": "Gwiazdkami",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Przeciągnij etykiety w rogi podglądu — w jednym rogu może być kilka. Kliknięcie również je przenosi."
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2600,7 +2638,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Alla dolda förhandsvisningar visas",
           "Превью снова скрыты": "Förhandsvisningarna är dolda igen",
           "Показывать среднюю оценку на карточке": "Visa medelbetyget på kortet",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Medelbetyg: {n} av 5, röster: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Medelbetyg: {n} av 5, röster: {m}",
+          "Числом": "Som siffra",
+          "Звёздами": "Som stjärnor",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra märkena till förhandsvisningens hörn — ett hörn rymmer flera. Ett klick flyttar dem också."
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2783,7 +2824,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
           "Превью снова скрыты": "Forhåndsvisningerne er skjult igen",
           "Показывать среднюю оценку на карточке": "Vis gennemsnitsvurderingen på kortet",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Gennemsnit: {n} ud af 5, stemmer: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gennemsnit: {n} ud af 5, stemmer: {m}",
+          "Числом": "Som tal",
+          "Звёздами": "Som stjerner",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Træk mærkaterne hen i hjørnerne af forhåndsvisningen — et hjørne kan rumme flere. Et klik flytter dem også."
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2966,7 +3010,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Alle skjulte forhåndsvisninger vises",
           "Превью снова скрыты": "Forhåndsvisningene er skjult igjen",
           "Показывать среднюю оценку на карточке": "Vis gjennomsnittsvurderingen på kortet",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Gjennomsnitt: {n} av 5, stemmer: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Gjennomsnitt: {n} av 5, stemmer: {m}",
+          "Числом": "Som tall",
+          "Звёздами": "Som stjerner",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Dra merkene til hjørnene i forhåndsvisningen — ett hjørne kan ha flere. Et klikk flytter dem også."
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3149,7 +3196,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Kaikki piilotetut esikatselut näkyvät",
           "Превью снова скрыты": "Esikatselut on piilotettu uudelleen",
           "Показывать среднюю оценку на карточке": "Näytä keskiarvosana kortissa",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Keskiarvo: {n}/5, ääniä: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Keskiarvo: {n}/5, ääniä: {m}",
+          "Числом": "Numerona",
+          "Звёздами": "Tähtinä",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Vedä merkit esikatselun kulmiin — yhteen kulmaan mahtuu useita. Myös napsautus siirtää merkin."
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3332,7 +3382,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Minden rejtett előnézet látszik",
           "Превью снова скрыты": "Az előnézetek ismét rejtve vannak",
           "Показывать среднюю оценку на карточке": "Az átlagos értékelés megjelenítése a kártyán",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Átlagos értékelés: {n} az 5-ből, szavazatok: {m}",
+          "Числом": "Számmal",
+          "Звёздами": "Csillagokkal",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Húzza a címkéket az előnézet sarkaiba — egy sarokban több is elfér. Kattintásra is átkerülnek."
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3515,7 +3568,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Toate previzualizările ascunse sunt afișate",
           "Превью снова скрыты": "Previzualizările sunt ascunse din nou",
           "Показывать среднюю оценку на карточке": "Arată nota medie pe card",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Nota medie: {n} din 5, voturi: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Nota medie: {n} din 5, voturi: {m}",
+          "Числом": "Ca număr",
+          "Звёздами": "Ca stele",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Trageți etichetele în colțurile previzualizării — într-un colț încap mai multe. Clicul le mută de asemenea."
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3698,7 +3754,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Всички скрити визуализации са показани",
           "Превью снова скрыты": "Визуализациите отново са скрити",
           "Показывать среднюю оценку на карточке": "Показване на средната оценка на картичката",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Средна оценка: {n} от 5, гласове: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Средна оценка: {n} от 5, гласове: {m}",
+          "Числом": "С число",
+          "Звёздами": "Със звезди",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Плъзнете етикетите по ъглите на визуализацията — в един ъгъл може да има няколко. Кликването също ги мести."
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3881,7 +3940,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Όλες οι κρυφές προεπισκοπήσεις εμφανίζονται",
           "Превью снова скрыты": "Οι προεπισκοπήσεις κρύφτηκαν ξανά",
           "Показывать среднюю оценку на карточке": "Εμφάνιση της μέσης βαθμολογίας στην κάρτα",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Μέση βαθμολογία: {n} στα 5, ψήφοι: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Μέση βαθμολογία: {n} στα 5, ψήφοι: {m}",
+          "Числом": "Ως αριθμός",
+          "Звёздами": "Ως αστέρια",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Σύρετε τις ετικέτες στις γωνίες της προεπισκόπησης — μια γωνία χωράει πολλές. Το κλικ τις μετακινεί επίσης."
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4064,7 +4126,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Tüm gizli önizlemeler gösteriliyor",
           "Превью снова скрыты": "Önizlemeler yeniden gizlendi",
           "Показывать среднюю оценку на карточке": "Kartta ortalama puanı göster",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Ortalama puan: 5 üzerinden {n}, oy: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Ortalama puan: 5 üzerinden {n}, oy: {m}",
+          "Числом": "Sayı olarak",
+          "Звёздами": "Yıldız olarak",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Etiketleri önizlemenin köşelerine sürükleyin — bir köşede birden fazla olabilir. Tıklamak da taşır."
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4247,7 +4312,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "แสดงตัวอย่างที่ซ่อนไว้ทั้งหมดแล้ว",
           "Превью снова скрыты": "ซ่อนตัวอย่างอีกครั้งแล้ว",
           "Показывать среднюю оценку на карточке": "แสดงคะแนนเฉลี่ยบนการ์ด",
-          "Средняя оценка: {n} из 5, голосов: {m}": "คะแนนเฉลี่ย: {n} จาก 5, โหวต: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "คะแนนเฉลี่ย: {n} จาก 5, โหวต: {m}",
+          "Числом": "เป็นตัวเลข",
+          "Звёздами": "เป็นดาว",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "ลากป้ายไปยังมุมของตัวอย่าง — มุมเดียวใส่ได้หลายป้าย คลิกที่ป้ายก็ย้ายได้เช่นกัน"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4430,7 +4498,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "सभी छिपे हुए प्रीव्यू दिख रहे हैं",
           "Превью снова скрыты": "प्रीव्यू फिर से छिपा दिए गए",
           "Показывать среднюю оценку на карточке": "कार्ड पर औसत रेटिंग दिखाएँ",
-          "Средняя оценка: {n} из 5, голосов: {m}": "औसत रेटिंग: 5 में से {n}, वोट: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "औसत रेटिंग: 5 में से {n}, वोट: {m}",
+          "Числом": "संख्या में",
+          "Звёздами": "तारों में",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "लेबल को प्रीव्यू के कोनों में खींचें — एक कोने में कई हो सकते हैं। क्लिक करने पर भी वे खिसकते हैं।"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4613,7 +4684,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Semua pratinjau tersembunyi ditampilkan",
           "Превью снова скрыты": "Pratinjau disembunyikan lagi",
           "Показывать среднюю оценку на карточке": "Tampilkan rating rata-rata di kartu",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Rating rata-rata: {n} dari 5, suara: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Rating rata-rata: {n} dari 5, suara: {m}",
+          "Числом": "Sebagai angka",
+          "Звёздами": "Sebagai bintang",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratinjau — satu sudut bisa memuat beberapa. Mengklik label juga memindahkannya."
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4796,7 +4870,10 @@ function core(storedSettings) {
           "Все скрытые превью показаны": "Semua pratonton tersembunyi ditunjukkan",
           "Превью снова скрыты": "Pratonton disembunyikan semula",
           "Показывать среднюю оценку на карточке": "Tunjukkan penilaian purata pada kad",
-          "Средняя оценка: {n} из 5, голосов: {m}": "Penilaian purata: {n} daripada 5, undian: {m}"
+          "Средняя оценка: {n} из 5, голосов: {m}": "Penilaian purata: {n} daripada 5, undian: {m}",
+          "Числом": "Sebagai nombor",
+          "Звёздами": "Sebagai bintang",
+          "Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.": "Seret label ke sudut pratonton — satu sudut boleh memuatkan beberapa. Klik juga memindahkannya."
     },
   } /* SKQ_I18N_END */;
 
@@ -5705,39 +5782,64 @@ function core(storedSettings) {
   // большие числа сайт тоже сокращает: 12 300 → 12.3K
   const shortCount = (n) => (n >= 10000 ? (n / 1000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '') + 'K' : String(n));
 
-  // Метки левого угла живут в общей строке, чтобы не наезжать друг на друга
-  const LEFT_BADGES = { 'skq-score': 1, 'skq-myvote': 1 };
+  // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
+  const CORNERS = ['tl', 'tr', 'bl', 'br'];
+  const BADGES = [
+    { id: 'score', cls: 'skq-score' },
+    { id: 'vote', cls: 'skq-myvote' },
+    { id: 'favs', cls: 'skq-favs' },
+  ];
+  const cornerCls = (corner) => 'skq-c-' + corner;
 
-  function cornerBox(card) {
-    let box = card.querySelector(':scope > .skq-corner');
+  const badgeCorner = (id) => {
+    const pos = isObj(settings.badges) ? settings.badges[id] : null;
+    return CORNERS.includes(pos) ? pos : DEFAULTS.badges[id];
+  };
+
+  function cornerBox(card, corner) {
+    let box = card.querySelector(':scope > .' + cornerCls(corner));
     if (!box) {
       box = document.createElement('div');
-      box.className = 'skq-corner';
+      box.className = 'skq-corner ' + cornerCls(corner);
       card.appendChild(box);
     }
     return box;
   }
 
-  // Одна метка на карточке: создаём, обновляем или убираем
-  function cardBadge(card, cls, text, title) {
-    let badge = card.querySelector(':scope > .' + cls + ', :scope > .skq-corner > .' + cls);
+  // Одна метка на карточке: создаём, обновляем, переносим в другой угол или убираем
+  function cardBadge(card, badge, text, title, corner) {
+    let el = card.querySelector(':scope > .skq-corner > .' + badge.cls);
     if (text == null) {
-      if (badge) {
-        const box = badge.parentElement;
-        badge.remove();
-        if (box.classList.contains('skq-corner') && !box.children.length) box.remove();
-      }
+      if (el) el.remove();
       return;
     }
-    if (!badge) {
-      badge = document.createElement('div');
-      badge.className = cls;
+    const box = cornerBox(card, corner);
+    if (!el) {
+      el = document.createElement('div');
+      el.className = badge.cls;
+      el.dataset.skqBadge = badge.id;
       if (getComputedStyle(card).position === 'static') card.style.position = 'relative';
-      (LEFT_BADGES[cls] ? cornerBox(card) : card).appendChild(badge);
     }
-    if (badge.textContent !== text) badge.textContent = text;
-    if (badge.title !== title) badge.title = title;
+    if (el.parentElement !== box) box.appendChild(el);
+    if (el.textContent !== text) el.textContent = text;
+    if (el.title !== title) el.title = title;
   }
+
+  // Порядок внутри угла всегда один: средняя оценка, своя, лайки
+  function tidyCorners(card) {
+    for (const box of card.querySelectorAll(':scope > .skq-corner')) {
+      if (!box.children.length) { box.remove(); continue; }
+      let prev = null;
+      for (const b of BADGES) {
+        const el = box.querySelector(':scope > .' + b.cls);
+        if (!el) continue;
+        if (el.previousElementSibling !== prev) box.insertBefore(el, prev ? prev.nextSibling : box.firstChild);
+        prev = el;
+      }
+    }
+  }
+
+  const voteText = (n) => (settings.voteStars ? '★'.repeat(n) + '☆'.repeat(5 - n) : `★ ${n}`);
 
   function markCards() {
     if (FRAME_MODE || !document.body) return;
@@ -5750,16 +5852,18 @@ function core(storedSettings) {
         const fp = postFromFiber(hoverTarget(card));
         if (fp && String(fp.id) === id) remember(fp, true);
       }
-      // средняя оценка идёт первой: своя оценка привычно ближе к центру карточки
       const score = wantScore && id ? scoreOfId(id) : null;
-      cardBadge(card, 'skq-score', score ? `★ ${score.avg.toFixed(1)}` : null,
-        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '');
+      cardBadge(card, BADGES[0], score ? `★ ${score.avg.toFixed(1)}` : null,
+        score ? t('Средняя оценка: {n} из 5, голосов: {m}', { n: score.avg.toFixed(1), m: score.votes }) : '',
+        badgeCorner('score'));
       const n = wantVote && id ? voteOfId(id) : 0;
-      cardBadge(card, 'skq-myvote', n ? `★ ${n}` : null, n ? t('Ваша оценка: {n} из 5', { n }) : '');
+      cardBadge(card, BADGES[1], n ? voteText(n) : null, n ? t('Ваша оценка: {n} из 5', { n }) : '',
+        badgeCorner('vote'));
       // ноль не показываем: пустой угол спокойнее, чем «♥ 0» на половине сетки
       const favs = wantFavs && id ? favsOfId(id) : null;
-      cardBadge(card, 'skq-favs', favs ? `♥ ${shortCount(favs)}` : null,
-        favs ? t('Лайков: {n}', { n: favs }) : '');
+      cardBadge(card, BADGES[2], favs ? `♥ ${shortCount(favs)}` : null,
+        favs ? t('Лайков: {n}', { n: favs }) : '', badgeCorner('favs'));
+      tidyCorners(card);
     }
   }
 
@@ -10051,6 +10155,38 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    /* превью карточки: метки перетаскиваются по углам */
+    .cardsbox { display: flex; gap: 14px; align-items: flex-start; }
+    .cardsopts { flex: 1 1 auto; min-width: 0; }
+    .cardprev {
+      position: relative; flex: none; width: 150px; height: 150px; margin-top: 4px;
+      border-radius: 8px; background: repeating-linear-gradient(135deg, #4a4a4a 0 12px, #444 12px 24px);
+      box-shadow: inset 0 0 0 1px #555;
+    }
+    /* угол занимает четверть превью: попасть в него мышью проще */
+    .cardprev .zone {
+      position: absolute; width: 50%; height: 50%; display: flex; gap: 3px;
+      padding: 5px; border-radius: 6px;
+    }
+    .cardprev .z-tl { top: 0; left: 0; align-items: flex-start; }
+    .cardprev .z-tr { top: 0; right: 0; align-items: flex-start; flex-direction: row-reverse; }
+    .cardprev .z-bl { bottom: 0; left: 0; align-items: flex-end; }
+    .cardprev .z-br { bottom: 0; right: 0; align-items: flex-end; flex-direction: row-reverse; }
+    .cardprev .zone.over { background: rgba(255, 140, 0, .25); box-shadow: inset 0 0 0 1px #ff8c00; }
+    .pbadge {
+      padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72); cursor: grab;
+      font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
+    }
+    .pbadge.off { opacity: .35; }
+    .pbadge.skq-score { color: #9fd3ff; }
+    .pbadge.skq-myvote { color: #ffb347; }
+    .pbadge.skq-favs { color: #ff8fa3; }
+    .votemode { gap: 16px; cursor: default; }
+    .pick { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    input[type=radio] { width: 16px; height: 16px; accent-color: #ff8c00; margin: 0; }
+    @media (max-width: 600px), (hover: none) {
+      .cardsbox { flex-direction: column; align-items: center; }
+    }
     .mlist { display: flex; flex-direction: column; gap: 1px; margin-bottom: 12px; }
     .mrow { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
     /* вложенность видно по сдвигу поля названия — столбцы остаются на местах */
@@ -10146,9 +10282,21 @@ function core(storedSettings) {
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
-          <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
-          <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
-          <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
+          <div class="cardsbox">
+            <div class="cardsopts">
+              <label class="row"><input type="checkbox" name="showScore"> ${T('Показывать среднюю оценку на карточке')}</label>
+              <label class="row"><input type="checkbox" name="showMyVote"> ${T('Показывать мою оценку (1–5) на карточке')}</label>
+              <div class="row sub votemode">
+                <label class="pick"><input type="radio" name="voteStars" value="num"> ${T('Числом')}</label>
+                <label class="pick"><input type="radio" name="voteStars" value="stars"> ${T('Звёздами')}</label>
+              </div>
+              <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
+            </div>
+            <div class="cardprev" aria-hidden="true">
+              ${CORNERS.map((c) => `<div class="zone z-${c}" data-corner="${c}"></div>`).join('')}
+            </div>
+          </div>
+          <p class="hint">${T('Перетащите метки по углам превью — в одном углу их может быть несколько. Клик по метке тоже переставляет её.')}</p>
           <p class="hint">${T('Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.')}</p>
         </fieldset>
         <fieldset>
@@ -10218,6 +10366,7 @@ function core(storedSettings) {
     let capturingMenu = null; // ... и то же для пункта меню
     let capturingToggle = false; // ... и для клавиши, открывающей меню
     let menuDraft = {};
+    let badgeDraft = { ...DEFAULTS.badges }; // по каким углам разложены метки карточки
     let menuKeyDraft = settings.menuKey || DEFAULTS.menuKey;
     const menuKeyBtn = root.querySelector('.menukey');
 
@@ -10363,6 +10512,10 @@ function core(storedSettings) {
     function fill(s) {
       menuDraft = {};
       if (isObj(s.menu)) for (const key in s.menu) if (isObj(s.menu[key])) menuDraft[key] = { ...s.menu[key] };
+      badgeDraft = { ...DEFAULTS.badges };
+      if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
+      f('voteStars').value = s.voteStars ? 'stars' : 'num';
+      renderPreview();
       capturingMenu = null;
       renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showScore', 'showMyVote', 'showFavCount',
@@ -10377,6 +10530,78 @@ function core(storedSettings) {
       renderKey();
       syncRehide();
     }
+    // ---- Превью карточки: метки раскладываются по углам ----
+    const BADGE_SAMPLE = {
+      score: () => '★ 4.3',
+      vote: () => (f('voteStars').value === 'stars' ? '★★★★☆' : '★ 4'),
+      favs: () => '♥ 71',
+    };
+    const BADGE_ON = { score: 'showScore', vote: 'showMyVote', favs: 'showFavCount' };
+    const prev = root.querySelector('.cardprev');
+    let dragBadge = '';
+
+    function renderPreview() {
+      for (const zone of prev.querySelectorAll('.zone')) {
+        const corner = zone.dataset.corner;
+        for (const b of BADGES) {
+          const mine = badgeDraft[b.id] === corner;
+          let chip = prev.querySelector('.pbadge[data-badge="' + b.id + '"]');
+          if (!mine) {
+            if (chip && chip.parentElement === zone) chip.remove();
+            continue;
+          }
+          if (!chip) {
+            chip = document.createElement('div');
+            chip.className = 'pbadge ' + b.cls;
+            chip.dataset.badge = b.id;
+            chip.draggable = true;
+            chip.addEventListener('dragstart', (e) => {
+              dragBadge = b.id;
+              try { e.dataTransfer.setData('text/plain', b.id); } catch { /* ignore */ }
+            });
+            // на сенсорном экране перетаскивания нет — клик переставляет по кругу
+            chip.addEventListener('click', () => {
+              const next = CORNERS[(CORNERS.indexOf(badgeDraft[b.id]) + 1) % CORNERS.length];
+              badgeDraft[b.id] = next;
+              renderPreview();
+            });
+          }
+          if (chip.parentElement !== zone) zone.appendChild(chip);
+          chip.textContent = BADGE_SAMPLE[b.id]();
+          chip.classList.toggle('off', !f(BADGE_ON[b.id]).checked);
+        }
+      }
+      // порядок внутри угла тот же, что и на карточке
+      for (const zone of prev.querySelectorAll('.zone')) {
+        let prevEl = null;
+        for (const b of BADGES) {
+          const chip = zone.querySelector(':scope > .pbadge[data-badge="' + b.id + '"]');
+          if (!chip) continue;
+          if (chip.previousElementSibling !== prevEl) zone.insertBefore(chip, prevEl ? prevEl.nextSibling : zone.firstChild);
+          prevEl = chip;
+        }
+      }
+    }
+
+    for (const zone of prev.querySelectorAll('.zone')) {
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('over');
+        const id = dragBadge || (() => { try { return e.dataTransfer.getData('text/plain'); } catch { return ''; } })();
+        dragBadge = '';
+        if (!BADGE_ON[id]) return;
+        badgeDraft[id] = zone.dataset.corner;
+        renderPreview();
+      });
+    }
+
+    for (const name of ['showScore', 'showMyVote', 'showFavCount']) {
+      f(name).addEventListener('change', renderPreview);
+    }
+    for (const el of root.querySelectorAll('[name=voteStars]')) el.addEventListener('change', renderPreview);
+
     function renderKey() {
       for (const btn of keyBtns) {
         const id = btn.dataset.setting;
@@ -10498,6 +10723,8 @@ function core(storedSettings) {
         showScore: f('showScore').checked,
         showMyVote: f('showMyVote').checked,
         showFavCount: f('showFavCount').checked,
+        voteStars: f('voteStars').value === 'stars',
+        badges: { ...badgeDraft },
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
         revealKeyboardMs: ms('revealKeyboardMs', DEFAULTS.revealKeyboardMs),
         rehideOnBlur: f('rehideOnBlur').checked,
@@ -10670,20 +10897,24 @@ function core(storedSettings) {
   const css = `
     .skq-hidden { display: none !important; }
     html.skq-noads ins.adsbygoogle, html.skq-noads ins[data-zoneid], html.skq-noads [id^="div-gpt-ad"] { display: none !important; }
-    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner):not(.skq-favs),
-    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner):not(.skq-favs) {
+    ${CARD_SEL}.skq-kb-active > *:not(.skq-corner),
+    ${CARD_SEL}.skq-hover-active > *:not(.skq-corner) {
       outline: 3px solid #ff8c00; outline-offset: 3px; border-radius: 6px;
     }
     ${CARD_SEL}.skq-card-busy > * { opacity: .6; transition: opacity .15s; }
-    ${CARD_SEL} > .skq-corner { position: absolute; top: 6px; left: 6px; z-index: 3; display: flex; gap: 4px; }
-    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} > .skq-favs {
+    ${CARD_SEL} > .skq-corner { position: absolute; z-index: 3; display: flex; gap: 4px; }
+    ${CARD_SEL} > .skq-c-tl { top: 6px; left: 6px; }
+    ${CARD_SEL} > .skq-c-tr { top: 6px; right: 6px; }
+    ${CARD_SEL} > .skq-c-bl { bottom: 6px; left: 6px; }
+    ${CARD_SEL} > .skq-c-br { bottom: 6px; right: 6px; }
+    ${CARD_SEL} .skq-score, ${CARD_SEL} .skq-myvote, ${CARD_SEL} .skq-favs {
       pointer-events: none; padding: 1px 6px 2px; border-radius: 10px; background: rgba(0, 0, 0, .72);
       font: 700 12px/16px Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
     }
     ${CARD_SEL} .skq-score { color: #9fd3ff; }
     ${CARD_SEL} .skq-myvote { color: #ffb347; }
-    ${CARD_SEL} > .skq-favs { position: absolute; top: 6px; right: 6px; z-index: 3; color: #ff8fa3; }
+    ${CARD_SEL} .skq-favs { color: #ff8fa3; }
     html.skq-frame header, html.skq-frame [class*="MuiAppBar-root"] { display: none !important; }
     ${CARD_SEL}.skq-revealed, ${CARD_SEL}.skq-revealed * { filter: none !important; backdrop-filter: none !important; }
     ${CARD_SEL}.skq-revealed .skq-eye { display: none !important; }
