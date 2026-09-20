@@ -248,12 +248,9 @@ function core(storedSettings) {
   }
   const ensurePost = (id) => posts.get(String(id)) || remember({ id });
 
-  let harvestUrl = '';
-
-  function harvest(data, depth = 0, url) {
+  function harvest(data, depth = 0) {
     if (!isObj(data) || depth > 7) return;
     if (depth === 0) {
-      harvestUrl = url || '';
       sniffReputation(data);
       harvest(data, 1);
       // в ответе могла прийти наша оценка — обновляем метки на карточках
@@ -318,7 +315,7 @@ function core(storedSettings) {
       res.then(netEnd, netEnd);
     }
     if (url && shouldHarvest(url)) {
-      res.then((r) => r.clone().json().then((d) => harvest(d, 0, url))).catch(() => {});
+      res.then((r) => r.clone().json().then(harvest)).catch(() => {});
     }
     if (FRAME_MODE && url) {
       const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
@@ -353,8 +350,8 @@ function core(storedSettings) {
       if (shouldHarvest(meta.url)) {
         this.addEventListener('load', () => {
           try {
-            if (this.responseType === 'json') harvest(this.response, 0, meta.url);
-            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText), 0, meta.url);
+            if (this.responseType === 'json') harvest(this.response);
+            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText));
           } catch { /* ignore */ }
         });
       }
@@ -4383,7 +4380,7 @@ function core(storedSettings) {
   const REP_CACHE_KEY = 'skq:reputation';
   const REP_TTL = 5 * 60 * 1000;
 
-  const rep = { value: null, at: 0, userId: null, name: null, source: '', loading: false, debug: [] };
+  const rep = { value: null, at: 0, userId: null, name: null, source: '', loading: false };
   try {
     const saved = JSON.parse(localStorage.getItem(REP_CACHE_KEY));
     if (saved && typeof saved.value === 'number') {
@@ -4447,36 +4444,15 @@ function core(storedSettings) {
     if (!isObj(data) || depth > 6) return;
     // ответ страницы рейтинга: эта запись про нас, сверять имя и id не нужно
     if (depth === 0 && data.user_reputation !== undefined) {
-      const mine = myRepField(data.user_reputation);
-      noteRepDebug({
-        where: harvestUrl || 'ответ сайта', key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
-        value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
-      });
       // это прямой ответ сайта про нас — надёжнее, чем число, считанное со страницы
+      const mine = myRepField(data.user_reputation);
       if (mine) { setReputation(mine.value, 'api', true); return; }
     }
     if (rep.userId == null && !rep.name) return;
     if (Array.isArray(data)) { for (const x of data) sniffReputation(x, depth + 1); return; }
     const found = repFieldValue(data);
-    if (found) {
-      noteRepDebug({ where: harvestUrl || 'ответ сайта', key: found.key, value: found.value, name: userName(data), id: data.id, userId: data.user_id, mine: isMe(data) });
-      if (isMe(data)) { setReputation(found.value, 'api'); return; }
-    }
+    if (found && isMe(data)) { setReputation(found.value, 'api'); return; }
     for (const v of Object.values(data)) if (isObj(v)) sniffReputation(v, depth + 1);
-  }
-
-  // Одинаковые записи не копим: иначе повторные осмотры страницы вытесняют ответы сайта
-  const repKeys = (o) => (isObj(o) && !Array.isArray(o) ? Object.keys(o).join(', ').slice(0, 300) : typeof o);
-
-  function noteRepDebug(entry) {
-    const same = rep.debug.find((d) => d.where === entry.where && d.key === entry.key && d.value === entry.value);
-    if (same) {
-      same.at = new Date().toISOString();
-      same.times = (same.times || 1) + 1;
-      return;
-    }
-    rep.debug.unshift({ ...entry, at: new Date().toISOString() });
-    rep.debug.length = Math.min(rep.debug.length, 20);
   }
 
   // ---- Число со страницы рейтинга ----
@@ -4515,7 +4491,6 @@ function core(storedSettings) {
         if (diamondsIn(row.parentElement) > 1) break;
         row = row.parentElement;
         if (!rowIsMine(row)) continue;
-        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true, row: rowText(row).slice(0, 120) });
         if (value !== lastDom.value) {
           // первая встреча числа ничего не доказывает: страница могла отрисоваться до ответа сайта
           const first = lastDom.value === null && rep.source === 'api';
@@ -4547,17 +4522,9 @@ function core(storedSettings) {
       // репутация в профиле не приходит, поэтому это единственный точный источник
       for (const path of ['/reputation/ranking', '/users/me', '/user/me', '/users/me/reputation']) {
         let data = null;
-        try { data = await api('GET', path); } catch (e) {
-          log('reputation', path, e.message);
-          noteRepDebug({ where: path, key: 'запрос не удался', error: e.message });
-          continue;
-        }
+        try { data = await api('GET', path); } catch (e) { log('reputation', path, e.message); continue; }
         if (isObj(data) && data.user_reputation !== undefined) {
           const mine = myRepField(data.user_reputation);
-          noteRepDebug({
-            where: path, key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
-            value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
-          });
           if (mine) { setReputation(mine.value, 'api', force); return mine.value; }
           continue;
         }
@@ -4566,11 +4533,8 @@ function core(storedSettings) {
           if (me.id != null) rep.userId = me.id;
           if (userName(me)) rep.name = userName(me);
         }
-        const found = isObj(me) ? repFieldValue(me) : null;
-        if (found) noteRepDebug({ where: path, key: found.key, value: found.value, name: userName(me), id: me.id, mine: true });
         const value = findReputation(data);
         if (value != null) { setReputation(value, 'api', force); return value; }
-        noteRepDebug({ where: path, key: '(поля репутации нет)', keys: Object.keys(isObj(me) ? me : {}).slice(0, 40).join(', ') });
       }
     } finally {
       rep.loading = false;
@@ -4614,19 +4578,6 @@ function core(storedSettings) {
       refreshReputation(true);
     });
     repWatcher.observe(badge);
-  }
-
-  // Данные для разбора, если число всё равно неверное
-  function copyReputationDebug() {
-    const info = {
-      show: rep.value, source: rep.source, at: new Date(rep.at || Date.now()).toISOString(),
-      me: { id: rep.userId, name: rep.name }, api: auth.base || null, found: rep.debug,
-    };
-    const text = JSON.stringify(info, null, 2);
-    copyText(text).then((ok) => {
-      if (!ok) console.log('[skq] данные о репутации:', text);
-      toast(ok ? t('Данные о репутации скопированы — пришлите их мне') : t('Не удалось скопировать — данные выведены в консоль (F12)'), !ok);
-    });
   }
 
   function pointsButton() {
@@ -5293,8 +5244,6 @@ function core(storedSettings) {
           <legend>${T('Счётчики в меню')}</legend>
           <label class="row"><input type="checkbox" name="showPoints"> ${T('Показывать очки сайта')}</label>
           <label class="row"><input type="checkbox" name="showReputation"> ${T('Показывать репутацию')}</label>
-          <div class="num"><span class="grow">${T('Если число неверное')}</span>
-            <button type="button" class="btn repdebug">${T('Скопировать данные')}</button></div>
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
@@ -5599,7 +5548,6 @@ function core(storedSettings) {
         setHint(t('Esc — отмена.'));
       });
     }
-    root.querySelector('.repdebug').addEventListener('click', copyReputationDebug);
     root.querySelector('.ver').addEventListener('click', () => {
       copyText(SKQ_VERSION).then((ok) => toast(ok
         ? t('Версия скопирована: {v}', { v: SKQ_VERSION })
@@ -5644,10 +5592,15 @@ function core(storedSettings) {
     return { host, root, fill };
   }
 
+  // На странице настроек сайта окно встроено во вкладку: ни фона, ни тени,
+  // ни скруглений — только отступы, чтобы не липнуть к краям панели
   const EMBEDDED_CSS = `
-    .dlg { position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none; overflow: visible; padding: 0; }
+    .dlg {
+      position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none;
+      overflow: visible; background: none; border-radius: 0; box-shadow: none; padding: 8px 16px 24px;
+    }
     .cancel { display: none; }
-    .actions { position: sticky; bottom: 0; background: #2b2b2b; padding: 10px 0 2px; }
+    .actions { padding: 10px 0 2px; }
   `;
 
   // ---- Вкладка «Плагин» на странице настроек сайта ----

@@ -337,8 +337,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Published: {ok}",
           ", с ошибкой: {fail}": ", failed: {fail}",
           " (остановлено)": " (stopped)",
-          "Данные о репутации скопированы — пришлите их мне": "Reputation data copied — send it to me",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Could not copy — the data was printed to the console (F12)",
           "Репутация: {n}": "Reputation: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputation: not available yet — it will appear once the site sends it",
           "Добавить в избранное / убрать": "Add to / remove from favorites",
@@ -352,8 +350,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Counters in the menu",
           "Показывать очки сайта": "Show site points",
           "Показывать репутацию": "Show reputation",
-          "Если число неверное": "If the number is wrong",
-          "Скопировать данные": "Copy data",
           "Карточки в сетке": "Grid cards",
           "Показывать мою оценку (1–5) на карточке": "Show my rating (1–5) on the card",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "The badge appears on posts whose rating the script already knows: you set it here, or the site sent it with the posts.",
@@ -519,8 +515,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "公開: {ok}",
           ", с ошибкой: {fail}": "、失敗: {fail}",
           " (остановлено)": "（停止しました）",
-          "Данные о репутации скопированы — пришлите их мне": "レピュテーションのデータをコピーしました — 送ってください",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "コピーできませんでした — データはコンソール（F12）に出力しました",
           "Репутация: {n}": "レピュテーション: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "レピュテーション: まだ取得できていません — サイトから届き次第表示されます",
           "Добавить в избранное / убрать": "お気に入りに追加 / 解除",
@@ -534,8 +528,6 @@ function core(storedSettings) {
           "Счётчики в меню": "メニューのカウンター",
           "Показывать очки сайта": "サイトポイントを表示",
           "Показывать репутацию": "レピュテーションを表示",
-          "Если число неверное": "数値が正しくない場合",
-          "Скопировать данные": "データをコピー",
           "Карточки в сетке": "グリッドのカード",
           "Показывать мою оценку (1–5) на карточке": "自分の評価（1–5）をカードに表示",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "バッジはスクリプトが評価を把握している投稿に表示されます。ここで付けた評価、またはサイトが投稿と一緒に送ってきた評価です。",
@@ -701,8 +693,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "已发布：{ok}",
           ", с ошибкой: {fail}": "，失败：{fail}",
           " (остановлено)": "（已停止）",
-          "Данные о репутации скопированы — пришлите их мне": "已复制声望数据 — 请发给我",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "无法复制 — 数据已输出到控制台（F12）",
           "Репутация: {n}": "声望：{n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "声望：暂时无法获取 — 网站返回后会显示",
           "Добавить в избранное / убрать": "添加 / 移出收藏",
@@ -716,8 +706,6 @@ function core(storedSettings) {
           "Счётчики в меню": "菜单中的计数",
           "Показывать очки сайта": "显示站点积分",
           "Показывать репутацию": "显示声望",
-          "Если число неверное": "如果数字不对",
-          "Скопировать данные": "复制数据",
           "Карточки в сетке": "网格卡片",
           "Показывать мою оценку (1–5) на карточке": "在卡片上显示我的评分（1–5）",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "只有脚本已知评分的帖子才会显示标记：你在这里评过分，或网站随帖子一起返回了评分。",
@@ -883,8 +871,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "已發布：{ok}",
           ", с ошибкой: {fail}": "，失敗：{fail}",
           " (остановлено)": "（已停止）",
-          "Данные о репутации скопированы — пришлите их мне": "已複製聲望資料 — 請傳給我",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "無法複製 — 資料已輸出到主控台（F12）",
           "Репутация: {n}": "聲望：{n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "聲望：暫時無法取得 — 網站回傳後就會顯示",
           "Добавить в избранное / убрать": "加入 / 移出收藏",
@@ -898,8 +884,6 @@ function core(storedSettings) {
           "Счётчики в меню": "選單中的計數",
           "Показывать очки сайта": "顯示站點點數",
           "Показывать репутацию": "顯示聲望",
-          "Если число неверное": "如果數字不正確",
-          "Скопировать данные": "複製資料",
           "Карточки в сетке": "格狀卡片",
           "Показывать мою оценку (1–5) на карточке": "在卡片上顯示我的評分（1–5）",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "只有腳本已知評分的貼文才會顯示標記：你在這裡評過分，或網站隨貼文一起回傳了評分。",
@@ -1065,8 +1049,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "게시됨: {ok}",
           ", с ошибкой: {fail}": ", 실패: {fail}",
           " (остановлено)": " (중지됨)",
-          "Данные о репутации скопированы — пришлите их мне": "평판 데이터를 복사했습니다 — 저에게 보내주세요",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "복사하지 못했습니다 — 데이터를 콘솔(F12)에 출력했습니다",
           "Репутация: {n}": "평판: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "평판: 아직 가져오지 못했습니다 — 사이트가 보내면 표시됩니다",
           "Добавить в избранное / убрать": "즐겨찾기 추가 / 제거",
@@ -1080,8 +1062,6 @@ function core(storedSettings) {
           "Счётчики в меню": "메뉴의 카운터",
           "Показывать очки сайта": "사이트 포인트 표시",
           "Показывать репутацию": "평판 표시",
-          "Если число неверное": "숫자가 틀리다면",
-          "Скопировать данные": "데이터 복사",
           "Карточки в сетке": "그리드 카드",
           "Показывать мою оценку (1–5) на карточке": "카드에 내 평가(1–5) 표시",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "스크립트가 평가를 알고 있는 게시물에만 표시됩니다: 여기서 평가했거나, 사이트가 게시물과 함께 보내준 경우입니다.",
@@ -1247,8 +1227,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Veröffentlicht: {ok}",
           ", с ошибкой: {fail}": ", fehlgeschlagen: {fail}",
           " (остановлено)": " (gestoppt)",
-          "Данные о репутации скопированы — пришлите их мне": "Reputationsdaten kopiert — schick sie mir",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kopieren nicht möglich — die Daten stehen in der Konsole (F12)",
           "Репутация: {n}": "Reputation: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputation: noch nicht verfügbar — sie erscheint, sobald die Seite sie liefert",
           "Добавить в избранное / убрать": "Favorit hinzufügen / entfernen",
@@ -1262,8 +1240,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Zähler im Menü",
           "Показывать очки сайта": "Seiten-Punkte anzeigen",
           "Показывать репутацию": "Reputation anzeigen",
-          "Если число неверное": "Wenn die Zahl falsch ist",
-          "Скопировать данные": "Daten kopieren",
           "Карточки в сетке": "Karten im Raster",
           "Показывать мою оценку (1–5) на карточке": "Meine Bewertung (1–5) auf der Karte anzeigen",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Die Markierung erscheint bei Beiträgen, deren Bewertung das Skript kennt: von dir hier vergeben oder von der Seite mitgeliefert.",
@@ -1429,8 +1405,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publiés : {ok}",
           ", с ошибкой: {fail}": ", en échec : {fail}",
           " (остановлено)": " (arrêté)",
-          "Данные о репутации скопированы — пришлите их мне": "Données de réputation copiées — envoyez-les-moi",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Copie impossible — les données sont dans la console (F12)",
           "Репутация: {n}": "Réputation : {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Réputation : pas encore disponible — elle s’affichera dès que le site l’enverra",
           "Добавить в избранное / убрать": "Ajouter aux / retirer des favoris",
@@ -1444,8 +1418,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Compteurs dans le menu",
           "Показывать очки сайта": "Afficher les points du site",
           "Показывать репутацию": "Afficher la réputation",
-          "Если число неверное": "Si le nombre est faux",
-          "Скопировать данные": "Copier les données",
           "Карточки в сетке": "Cartes de la grille",
           "Показывать мою оценку (1–5) на карточке": "Afficher ma note (1–5) sur la carte",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Le badge apparaît sur les posts dont le script connaît déjà la note : vous l’avez mise ici, ou le site l’a envoyée avec les posts.",
@@ -1611,8 +1583,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publicados: {ok}",
           ", с ошибкой: {fail}": ", con error: {fail}",
           " (остановлено)": " (detenido)",
-          "Данные о репутации скопированы — пришлите их мне": "Datos de reputación copiados — envíamelos",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "No se pudo copiar — los datos están en la consola (F12)",
           "Репутация: {n}": "Reputación: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputación: aún no disponible — aparecerá cuando el sitio la envíe",
           "Добавить в избранное / убрать": "Añadir a / quitar de favoritos",
@@ -1626,8 +1596,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Contadores del menú",
           "Показывать очки сайта": "Mostrar los puntos del sitio",
           "Показывать репутацию": "Mostrar la reputación",
-          "Если число неверное": "Si el número es incorrecto",
-          "Скопировать данные": "Copiar los datos",
           "Карточки в сетке": "Tarjetas de la cuadrícula",
           "Показывать мою оценку (1–5) на карточке": "Mostrar mi puntuación (1–5) en la tarjeta",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "La marca aparece en las publicaciones cuya puntuación ya conoce el script: la pusiste aquí o el sitio la envió junto con las publicaciones.",
@@ -1793,8 +1761,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publicados: {ok}",
           ", с ошибкой: {fail}": ", com erro: {fail}",
           " (остановлено)": " (parado)",
-          "Данные о репутации скопированы — пришлите их мне": "Dados de reputação copiados — me envie",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Não foi possível copiar — os dados estão no console (F12)",
           "Репутация: {n}": "Reputação: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputação: ainda não disponível — aparecerá quando o site enviar",
           "Добавить в избранное / убрать": "Adicionar aos / remover dos favoritos",
@@ -1808,8 +1774,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Contadores no menu",
           "Показывать очки сайта": "Mostrar os pontos do site",
           "Показывать репутацию": "Mostrar a reputação",
-          "Если число неверное": "Se o número estiver errado",
-          "Скопировать данные": "Copiar os dados",
           "Карточки в сетке": "Cartões da grade",
           "Показывать мою оценку (1–5) на карточке": "Mostrar minha avaliação (1–5) no cartão",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "A marca aparece nos posts cuja avaliação o script já conhece: você avaliou aqui ou o site enviou junto com os posts.",
@@ -1975,8 +1939,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Pubblicati: {ok}",
           ", с ошибкой: {fail}": ", con errore: {fail}",
           " (остановлено)": " (fermato)",
-          "Данные о репутации скопированы — пришлите их мне": "Dati sulla reputazione copiati — mandameli",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Non sono riuscito a copiare — i dati sono nella console (F12)",
           "Репутация: {n}": "Reputazione: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputazione: non ancora disponibile — comparirà appena il sito la manda",
           "Добавить в избранное / убрать": "Aggiungi ai / togli dai preferiti",
@@ -1990,8 +1952,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Contatori nel menu",
           "Показывать очки сайта": "Mostra i punti del sito",
           "Показывать репутацию": "Mostra la reputazione",
-          "Если число неверное": "Se il numero è sbagliato",
-          "Скопировать данные": "Copia i dati",
           "Карточки в сетке": "Schede della griglia",
           "Показывать мою оценку (1–5) на карточке": "Mostra il mio voto (1–5) sulla scheda",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Il contrassegno compare sui post di cui lo script conosce già il voto: l’hai messo qui oppure il sito l’ha inviato insieme ai post.",
@@ -2157,8 +2117,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Gepubliceerd: {ok}",
           ", с ошибкой: {fail}": ", mislukt: {fail}",
           " (остановлено)": " (gestopt)",
-          "Данные о репутации скопированы — пришлите их мне": "Reputatiegegevens gekopieerd — stuur ze naar mij",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kopiëren lukte niet — de gegevens staan in de console (F12)",
           "Репутация: {n}": "Reputatie: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputatie: nog niet beschikbaar — verschijnt zodra de site hem stuurt",
           "Добавить в избранное / убрать": "Aan favorieten toevoegen / eruit halen",
@@ -2172,8 +2130,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Tellers in het menu",
           "Показывать очки сайта": "Sitepunten tonen",
           "Показывать репутацию": "Reputatie tonen",
-          "Если число неверное": "Als het getal niet klopt",
-          "Скопировать данные": "Gegevens kopiëren",
           "Карточки в сетке": "Kaarten in het raster",
           "Показывать мою оценку (1–5) на карточке": "Mijn beoordeling (1–5) op de kaart tonen",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Het label verschijnt bij posts waarvan het script de beoordeling al kent: jij hebt hem hier gegeven of de site stuurde hem mee met de posts.",
@@ -2339,8 +2295,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Opublikowano: {ok}",
           ", с ошибкой: {fail}": ", z błędem: {fail}",
           " (остановлено)": " (zatrzymano)",
-          "Данные о репутации скопированы — пришлите их мне": "Dane o reputacji skopiowane — prześlij mi je",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Nie udało się skopiować — dane są w konsoli (F12)",
           "Репутация: {n}": "Reputacja: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputacja: jeszcze niedostępna — pojawi się, gdy serwis ją przyśle",
           "Добавить в избранное / убрать": "Dodaj do / usuń z ulubionych",
@@ -2354,8 +2308,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Liczniki w menu",
           "Показывать очки сайта": "Pokazuj punkty serwisu",
           "Показывать репутацию": "Pokazuj reputację",
-          "Если число неверное": "Jeśli liczba jest błędna",
-          "Скопировать данные": "Kopiuj dane",
           "Карточки в сетке": "Kafelki w siatce",
           "Показывать мою оценку (1–5) на карточке": "Pokazuj moją ocenę (1–5) na kafelku",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Znacznik pojawia się przy postach, których ocenę skrypt już zna: wystawiłeś ją tutaj albo serwis przysłał ją razem z postami.",
@@ -2521,8 +2473,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publicerade: {ok}",
           ", с ошибкой: {fail}": ", med fel: {fail}",
           " (остановлено)": " (stoppat)",
-          "Данные о репутации скопированы — пришлите их мне": "Ryktesdata kopierade — skicka dem till mig",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kunde inte kopiera — data finns i konsolen (F12)",
           "Репутация: {n}": "Rykte: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Rykte: inte tillgängligt än — visas när webbplatsen skickar det",
           "Добавить в избранное / убрать": "Lägg till i / ta bort från favoriter",
@@ -2536,8 +2486,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Räknare i menyn",
           "Показывать очки сайта": "Visa webbplatsens poäng",
           "Показывать репутацию": "Visa rykte",
-          "Если число неверное": "Om siffran är fel",
-          "Скопировать данные": "Kopiera data",
           "Карточки в сетке": "Kort i rutnätet",
           "Показывать мою оценку (1–5) на карточке": "Visa mitt betyg (1–5) på kortet",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Märket visas på inlägg vars betyg skriptet redan känner till: du satte det här, eller webbplatsen skickade det med inläggen.",
@@ -2703,8 +2651,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Udgivet: {ok}",
           ", с ошибкой: {fail}": ", med fejl: {fail}",
           " (остановлено)": " (stoppet)",
-          "Данные о репутации скопированы — пришлите их мне": "Omdømmedata er kopieret — send dem til mig",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kunne ikke kopiere — dataene står i konsollen (F12)",
           "Репутация: {n}": "Omdømme: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Omdømme: endnu ikke hentet — vises, når siden sender det",
           "Добавить в избранное / убрать": "Føj til / fjern fra favoritter",
@@ -2718,8 +2664,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Tællere i menuen",
           "Показывать очки сайта": "Vis sidens point",
           "Показывать репутацию": "Vis omdømme",
-          "Если число неверное": "Hvis tallet er forkert",
-          "Скопировать данные": "Kopiér data",
           "Карточки в сетке": "Kort i gitteret",
           "Показывать мою оценку (1–5) на карточке": "Vis min bedømmelse (1–5) på kortet",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Mærket vises på opslag, hvis bedømmelse scriptet allerede kender: du gav den her, eller siden sendte den sammen med opslagene.",
@@ -2885,8 +2829,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publisert: {ok}",
           ", с ошибкой: {fail}": ", med feil: {fail}",
           " (остановлено)": " (stoppet)",
-          "Данные о репутации скопированы — пришлите их мне": "Omdømmedata kopiert — send dem til meg",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Klarte ikke å kopiere — dataene ligger i konsollen (F12)",
           "Репутация: {n}": "Omdømme: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Omdømme: ikke hentet ennå — vises når nettstedet sender det",
           "Добавить в избранное / убрать": "Legg til i / fjern fra favoritter",
@@ -2900,8 +2842,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Tellere i menyen",
           "Показывать очки сайта": "Vis nettstedets poeng",
           "Показывать репутацию": "Vis omdømme",
-          "Если число неверное": "Hvis tallet er feil",
-          "Скопировать данные": "Kopier data",
           "Карточки в сетке": "Kort i rutenettet",
           "Показывать мою оценку (1–5) на карточке": "Vis min vurdering (1–5) på kortet",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Merket vises på innlegg der skriptet allerede kjenner vurderingen: du ga den her, eller nettstedet sendte den sammen med innleggene.",
@@ -3067,8 +3007,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Julkaistu: {ok}",
           ", с ошибкой: {fail}": ", virheitä: {fail}",
           " (остановлено)": " (pysäytetty)",
-          "Данные о репутации скопированы — пришлите их мне": "Mainetiedot kopioitu — lähetä ne minulle",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kopiointi ei onnistunut — tiedot tulostettiin konsoliin (F12)",
           "Репутация: {n}": "Maine: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Maine: ei vielä saatavilla — näkyy, kun sivusto lähettää sen",
           "Добавить в избранное / убрать": "Lisää suosikkeihin / poista",
@@ -3082,8 +3020,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Laskurit valikossa",
           "Показывать очки сайта": "Näytä sivuston pisteet",
           "Показывать репутацию": "Näytä maine",
-          "Если число неверное": "Jos luku on väärin",
-          "Скопировать данные": "Kopioi tiedot",
           "Карточки в сетке": "Ruudukon kortit",
           "Показывать мою оценку (1–5) на карточке": "Näytä oma arvioni (1–5) kortissa",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Merkki näkyy julkaisuissa, joiden arvion skripti jo tietää: annoit sen täällä tai sivusto lähetti sen julkaisujen mukana.",
@@ -3249,8 +3185,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Közzétéve: {ok}",
           ", с ошибкой: {fail}": ", hibával: {fail}",
           " (остановлено)": " (leállítva)",
-          "Данные о репутации скопированы — пришлите их мне": "A hírnév-adatok kimásolva — küldd el nekem",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Nem sikerült másolni — az adatok a konzolban vannak (F12)",
           "Репутация: {n}": "Hírnév: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Hírnév: még nem érhető el — megjelenik, amint az oldal elküldi",
           "Добавить в избранное / убрать": "Kedvencekhez adás / eltávolítás",
@@ -3264,8 +3198,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Számlálók a menüben",
           "Показывать очки сайта": "Oldalpontok megjelenítése",
           "Показывать репутацию": "Hírnév megjelenítése",
-          "Если число неверное": "Ha a szám hibás",
-          "Скопировать данные": "Adatok másolása",
           "Карточки в сетке": "Kártyák a rácsban",
           "Показывать мою оценку (1–5) на карточке": "A saját értékelésem (1–5) a kártyán",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "A jelölés azoknál a bejegyzéseknél jelenik meg, amelyek értékelését a szkript már ismeri: itt adtad meg, vagy az oldal küldte a bejegyzésekkel.",
@@ -3431,8 +3363,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Publicate: {ok}",
           ", с ошибкой: {fail}": ", cu eroare: {fail}",
           " (остановлено)": " (oprit)",
-          "Данные о репутации скопированы — пришлите их мне": "Datele despre reputație au fost copiate — trimite-mi-le",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Nu am putut copia — datele sunt în consolă (F12)",
           "Репутация: {n}": "Reputație: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputație: încă indisponibilă — va apărea când o trimite site-ul",
           "Добавить в избранное / убрать": "Adaugă la / scoate din favorite",
@@ -3446,8 +3376,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Contoare în meniu",
           "Показывать очки сайта": "Arată punctele site-ului",
           "Показывать репутацию": "Arată reputația",
-          "Если число неверное": "Dacă numărul este greșit",
-          "Скопировать данные": "Copiază datele",
           "Карточки в сетке": "Carduri în grilă",
           "Показывать мою оценку (1–5) на карточке": "Arată nota mea (1–5) pe card",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Marcajul apare la postările a căror notă o cunoaște deja scriptul: ai dat-o aici sau site-ul a trimis-o odată cu postările.",
@@ -3613,8 +3541,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Публикувани: {ok}",
           ", с ошибкой: {fail}": ", с грешка: {fail}",
           " (остановлено)": " (спряно)",
-          "Данные о репутации скопированы — пришлите их мне": "Данните за репутацията са копирани — изпратете ми ги",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Копирането не успя — данните са изведени в конзолата (F12)",
           "Репутация: {n}": "Репутация: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Репутация: още не е получена — ще се покаже, щом сайтът я изпрати",
           "Добавить в избранное / убрать": "Добави към / премахни от любими",
@@ -3628,8 +3554,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Броячи в менюто",
           "Показывать очки сайта": "Показвай точките на сайта",
           "Показывать репутацию": "Показвай репутацията",
-          "Если число неверное": "Ако числото е грешно",
-          "Скопировать данные": "Копирай данните",
           "Карточки в сетке": "Карти в мрежата",
           "Показывать мою оценку (1–5) на карточке": "Показвай моята оценка (1–5) върху картата",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Маркерът се появява при публикации, чиято оценка скриптът вече знае: поставили сте я тук или сайтът я е изпратил заедно с публикациите.",
@@ -3795,8 +3719,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Δημοσιεύτηκαν: {ok}",
           ", с ошибкой: {fail}": ", με σφάλμα: {fail}",
           " (остановлено)": " (σταμάτησε)",
-          "Данные о репутации скопированы — пришлите их мне": "Τα δεδομένα φήμης αντιγράφηκαν — στείλτε τα μου",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Η αντιγραφή απέτυχε — τα δεδομένα τυπώθηκαν στην κονσόλα (F12)",
           "Репутация: {n}": "Φήμη: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Φήμη: δεν είναι ακόμη διαθέσιμη — θα εμφανιστεί μόλις τη στείλει ο ιστότοπος",
           "Добавить в избранное / убрать": "Προσθήκη στα / αφαίρεση από τα αγαπημένα",
@@ -3810,8 +3732,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Μετρητές στο μενού",
           "Показывать очки сайта": "Εμφάνιση πόντων του ιστότοπου",
           "Показывать репутацию": "Εμφάνιση φήμης",
-          "Если число неверное": "Αν ο αριθμός είναι λάθος",
-          "Скопировать данные": "Αντιγραφή δεδομένων",
           "Карточки в сетке": "Κάρτες στο πλέγμα",
           "Показывать мою оценку (1–5) на карточке": "Εμφάνιση της βαθμολογίας μου (1–5) στην κάρτα",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Η σήμανση εμφανίζεται σε αναρτήσεις των οποίων τη βαθμολογία γνωρίζει ήδη το σενάριο: την δώσατε εδώ ή τη έστειλε ο ιστότοπος μαζί με τις αναρτήσεις.",
@@ -3977,8 +3897,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Yayımlanan: {ok}",
           ", с ошибкой: {fail}": ", hatalı: {fail}",
           " (остановлено)": " (durduruldu)",
-          "Данные о репутации скопированы — пришлите их мне": "İtibar verileri kopyalandı — bana gönderin",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Kopyalanamadı — veriler konsola yazıldı (F12)",
           "Репутация: {n}": "İtibar: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "İtibar: henüz alınamadı — site gönderdiğinde görünecek",
           "Добавить в избранное / убрать": "Favorilere ekle / çıkar",
@@ -3992,8 +3910,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Menüdeki sayaçlar",
           "Показывать очки сайта": "Site puanlarını göster",
           "Показывать репутацию": "İtibarı göster",
-          "Если число неверное": "Sayı yanlışsa",
-          "Скопировать данные": "Verileri kopyala",
           "Карточки в сетке": "Izgaradaki kartlar",
           "Показывать мою оценку (1–5) на карточке": "Kendi puanımı (1–5) kartta göster",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "İşaret, betiğin puanını zaten bildiği gönderilerde görünür: puanı burada verdiniz ya da site gönderilerle birlikte gönderdi.",
@@ -4159,8 +4075,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "เผยแพร่แล้ว: {ok}",
           ", с ошибкой: {fail}": ", ผิดพลาด: {fail}",
           " (остановлено)": " (หยุดแล้ว)",
-          "Данные о репутации скопированы — пришлите их мне": "คัดลอกข้อมูลชื่อเสียงแล้ว — ส่งมาให้ผมได้เลย",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "คัดลอกไม่สำเร็จ — ข้อมูลแสดงในคอนโซล (F12)",
           "Репутация: {n}": "ชื่อเสียง: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "ชื่อเสียง: ยังไม่ได้ข้อมูล — จะแสดงเมื่อเว็บไซต์ส่งมา",
           "Добавить в избранное / убрать": "เพิ่ม / เอาออกจากรายการโปรด",
@@ -4174,8 +4088,6 @@ function core(storedSettings) {
           "Счётчики в меню": "ตัวนับในเมนู",
           "Показывать очки сайта": "แสดงแต้มของเว็บไซต์",
           "Показывать репутацию": "แสดงชื่อเสียง",
-          "Если число неверное": "ถ้าตัวเลขไม่ถูกต้อง",
-          "Скопировать данные": "คัดลอกข้อมูล",
           "Карточки в сетке": "การ์ดในตาราง",
           "Показывать мою оценку (1–5) на карточке": "แสดงคะแนนของฉัน (1–5) บนการ์ด",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "ป้ายจะแสดงบนโพสต์ที่สคริปต์รู้คะแนนอยู่แล้ว เช่น คุณให้คะแนนที่นี่ หรือเว็บไซต์ส่งมาพร้อมกับโพสต์",
@@ -4341,8 +4253,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "प्रकाशित: {ok}",
           ", с ошибкой: {fail}": ", विफल: {fail}",
           " (остановлено)": " (रोका गया)",
-          "Данные о репутации скопированы — пришлите их мне": "प्रतिष्ठा का डेटा कॉपी हो गया — मुझे भेज दें",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "कॉपी नहीं हो सका — डेटा कंसोल (F12) में है",
           "Репутация: {n}": "प्रतिष्ठा: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "प्रतिष्ठा: अभी नहीं मिली — साइट भेजते ही दिख जाएगी",
           "Добавить в избранное / убрать": "पसंदीदा में जोड़ें / हटाएँ",
@@ -4356,8 +4266,6 @@ function core(storedSettings) {
           "Счётчики в меню": "मेन्यू में काउंटर",
           "Показывать очки сайта": "साइट के अंक दिखाएँ",
           "Показывать репутацию": "प्रतिष्ठा दिखाएँ",
-          "Если число неверное": "अगर संख्या गलत है",
-          "Скопировать данные": "डेटा कॉपी करें",
           "Карточки в сетке": "ग्रिड के कार्ड",
           "Показывать мою оценку (1–5) на карточке": "कार्ड पर मेरी रेटिंग (1–5) दिखाएँ",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "निशान उन पोस्ट पर दिखता है जिनकी रेटिंग स्क्रिप्ट को पहले से पता है: आपने यहाँ दी हो, या साइट ने पोस्ट के साथ भेजी हो।",
@@ -4523,8 +4431,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Terbit: {ok}",
           ", с ошибкой: {fail}": ", gagal: {fail}",
           " (остановлено)": " (dihentikan)",
-          "Данные о репутации скопированы — пришлите их мне": "Data reputasi disalin — kirimkan ke saya",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Gagal menyalin — datanya ada di konsol (F12)",
           "Репутация: {n}": "Reputasi: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputasi: belum tersedia — akan muncul begitu situs mengirimkannya",
           "Добавить в избранное / убрать": "Tambah ke / hapus dari favorit",
@@ -4538,8 +4444,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Penghitung di menu",
           "Показывать очки сайта": "Tampilkan poin situs",
           "Показывать репутацию": "Tampilkan reputasi",
-          "Если число неверное": "Jika angkanya salah",
-          "Скопировать данные": "Salin data",
           "Карточки в сетке": "Kartu di kisi",
           "Показывать мою оценку (1–5) на карточке": "Tampilkan nilai saya (1–5) di kartu",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Tanda muncul pada kiriman yang nilainya sudah diketahui skrip: Anda memberinya di sini, atau situs mengirimkannya bersama kiriman.",
@@ -4705,8 +4609,6 @@ function core(storedSettings) {
           "Опубликовано: {ok}": "Diterbitkan: {ok}",
           ", с ошибкой: {fail}": ", gagal: {fail}",
           " (остановлено)": " (dihentikan)",
-          "Данные о репутации скопированы — пришлите их мне": "Data reputasi disalin — hantarkan kepada saya",
-          "Не удалось скопировать — данные выведены в консоль (F12)": "Gagal menyalin — data dicetak pada konsol (F12)",
           "Репутация: {n}": "Reputasi: {n}",
           "Репутация: пока не удалось получить — значение появится, когда сайт её пришлёт": "Reputasi: belum tersedia — akan muncul sebaik laman menghantarnya",
           "Добавить в избранное / убрать": "Tambah ke / buang daripada kegemaran",
@@ -4720,8 +4622,6 @@ function core(storedSettings) {
           "Счётчики в меню": "Pembilang dalam menu",
           "Показывать очки сайта": "Tunjukkan mata laman",
           "Показывать репутацию": "Tunjukkan reputasi",
-          "Если число неверное": "Jika nombornya salah",
-          "Скопировать данные": "Salin data",
           "Карточки в сетке": "Kad dalam grid",
           "Показывать мою оценку (1–5) на карточке": "Tunjukkan penilaian saya (1–5) pada kad",
           "Метка появляется у постов, чья оценка уже известна скрипту: вы поставили её здесь или сайт прислал её вместе с постами.": "Tanda muncul pada kiriman yang penilaiannya sudah diketahui skrip: anda memberikannya di sini, atau laman menghantarnya bersama kiriman.",
@@ -4901,12 +4801,9 @@ function core(storedSettings) {
   }
   const ensurePost = (id) => posts.get(String(id)) || remember({ id });
 
-  let harvestUrl = '';
-
-  function harvest(data, depth = 0, url) {
+  function harvest(data, depth = 0) {
     if (!isObj(data) || depth > 7) return;
     if (depth === 0) {
-      harvestUrl = url || '';
       sniffReputation(data);
       harvest(data, 1);
       // в ответе могла прийти наша оценка — обновляем метки на карточках
@@ -4971,7 +4868,7 @@ function core(storedSettings) {
       res.then(netEnd, netEnd);
     }
     if (url && shouldHarvest(url)) {
-      res.then((r) => r.clone().json().then((d) => harvest(d, 0, url))).catch(() => {});
+      res.then((r) => r.clone().json().then(harvest)).catch(() => {});
     }
     if (FRAME_MODE && url) {
       const method = String((init && init.method) || (input && input.method) || 'GET').toUpperCase();
@@ -5006,8 +4903,8 @@ function core(storedSettings) {
       if (shouldHarvest(meta.url)) {
         this.addEventListener('load', () => {
           try {
-            if (this.responseType === 'json') harvest(this.response, 0, meta.url);
-            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText), 0, meta.url);
+            if (this.responseType === 'json') harvest(this.response);
+            else if (this.responseType === '' || this.responseType === 'text') harvest(JSON.parse(this.responseText));
           } catch { /* ignore */ }
         });
       }
@@ -9036,7 +8933,7 @@ function core(storedSettings) {
   const REP_CACHE_KEY = 'skq:reputation';
   const REP_TTL = 5 * 60 * 1000;
 
-  const rep = { value: null, at: 0, userId: null, name: null, source: '', loading: false, debug: [] };
+  const rep = { value: null, at: 0, userId: null, name: null, source: '', loading: false };
   try {
     const saved = JSON.parse(localStorage.getItem(REP_CACHE_KEY));
     if (saved && typeof saved.value === 'number') {
@@ -9100,36 +8997,15 @@ function core(storedSettings) {
     if (!isObj(data) || depth > 6) return;
     // ответ страницы рейтинга: эта запись про нас, сверять имя и id не нужно
     if (depth === 0 && data.user_reputation !== undefined) {
-      const mine = myRepField(data.user_reputation);
-      noteRepDebug({
-        where: harvestUrl || 'ответ сайта', key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
-        value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
-      });
       // это прямой ответ сайта про нас — надёжнее, чем число, считанное со страницы
+      const mine = myRepField(data.user_reputation);
       if (mine) { setReputation(mine.value, 'api', true); return; }
     }
     if (rep.userId == null && !rep.name) return;
     if (Array.isArray(data)) { for (const x of data) sniffReputation(x, depth + 1); return; }
     const found = repFieldValue(data);
-    if (found) {
-      noteRepDebug({ where: harvestUrl || 'ответ сайта', key: found.key, value: found.value, name: userName(data), id: data.id, userId: data.user_id, mine: isMe(data) });
-      if (isMe(data)) { setReputation(found.value, 'api'); return; }
-    }
+    if (found && isMe(data)) { setReputation(found.value, 'api'); return; }
     for (const v of Object.values(data)) if (isObj(v)) sniffReputation(v, depth + 1);
-  }
-
-  // Одинаковые записи не копим: иначе повторные осмотры страницы вытесняют ответы сайта
-  const repKeys = (o) => (isObj(o) && !Array.isArray(o) ? Object.keys(o).join(', ').slice(0, 300) : typeof o);
-
-  function noteRepDebug(entry) {
-    const same = rep.debug.find((d) => d.where === entry.where && d.key === entry.key && d.value === entry.value);
-    if (same) {
-      same.at = new Date().toISOString();
-      same.times = (same.times || 1) + 1;
-      return;
-    }
-    rep.debug.unshift({ ...entry, at: new Date().toISOString() });
-    rep.debug.length = Math.min(rep.debug.length, 20);
   }
 
   // ---- Число со страницы рейтинга ----
@@ -9168,7 +9044,6 @@ function core(storedSettings) {
         if (diamondsIn(row.parentElement) > 1) break;
         row = row.parentElement;
         if (!rowIsMine(row)) continue;
-        noteRepDebug({ where: 'страница рейтинга', key: 'DOM', value, mine: true, row: rowText(row).slice(0, 120) });
         if (value !== lastDom.value) {
           // первая встреча числа ничего не доказывает: страница могла отрисоваться до ответа сайта
           const first = lastDom.value === null && rep.source === 'api';
@@ -9200,17 +9075,9 @@ function core(storedSettings) {
       // репутация в профиле не приходит, поэтому это единственный точный источник
       for (const path of ['/reputation/ranking', '/users/me', '/user/me', '/users/me/reputation']) {
         let data = null;
-        try { data = await api('GET', path); } catch (e) {
-          log('reputation', path, e.message);
-          noteRepDebug({ where: path, key: 'запрос не удался', error: e.message });
-          continue;
-        }
+        try { data = await api('GET', path); } catch (e) { log('reputation', path, e.message); continue; }
         if (isObj(data) && data.user_reputation !== undefined) {
           const mine = myRepField(data.user_reputation);
-          noteRepDebug({
-            where: path, key: mine ? 'user_reputation.' + mine.key : 'user_reputation: поля нет',
-            value: mine ? mine.value : undefined, keys: repKeys(data.user_reputation), mine: true,
-          });
           if (mine) { setReputation(mine.value, 'api', force); return mine.value; }
           continue;
         }
@@ -9219,11 +9086,8 @@ function core(storedSettings) {
           if (me.id != null) rep.userId = me.id;
           if (userName(me)) rep.name = userName(me);
         }
-        const found = isObj(me) ? repFieldValue(me) : null;
-        if (found) noteRepDebug({ where: path, key: found.key, value: found.value, name: userName(me), id: me.id, mine: true });
         const value = findReputation(data);
         if (value != null) { setReputation(value, 'api', force); return value; }
-        noteRepDebug({ where: path, key: '(поля репутации нет)', keys: Object.keys(isObj(me) ? me : {}).slice(0, 40).join(', ') });
       }
     } finally {
       rep.loading = false;
@@ -9267,19 +9131,6 @@ function core(storedSettings) {
       refreshReputation(true);
     });
     repWatcher.observe(badge);
-  }
-
-  // Данные для разбора, если число всё равно неверное
-  function copyReputationDebug() {
-    const info = {
-      show: rep.value, source: rep.source, at: new Date(rep.at || Date.now()).toISOString(),
-      me: { id: rep.userId, name: rep.name }, api: auth.base || null, found: rep.debug,
-    };
-    const text = JSON.stringify(info, null, 2);
-    copyText(text).then((ok) => {
-      if (!ok) console.log('[skq] данные о репутации:', text);
-      toast(ok ? t('Данные о репутации скопированы — пришлите их мне') : t('Не удалось скопировать — данные выведены в консоль (F12)'), !ok);
-    });
   }
 
   function pointsButton() {
@@ -9946,8 +9797,6 @@ function core(storedSettings) {
           <legend>${T('Счётчики в меню')}</legend>
           <label class="row"><input type="checkbox" name="showPoints"> ${T('Показывать очки сайта')}</label>
           <label class="row"><input type="checkbox" name="showReputation"> ${T('Показывать репутацию')}</label>
-          <div class="num"><span class="grow">${T('Если число неверное')}</span>
-            <button type="button" class="btn repdebug">${T('Скопировать данные')}</button></div>
         </fieldset>
         <fieldset>
           <legend>${T('Карточки в сетке')}</legend>
@@ -10252,7 +10101,6 @@ function core(storedSettings) {
         setHint(t('Esc — отмена.'));
       });
     }
-    root.querySelector('.repdebug').addEventListener('click', copyReputationDebug);
     root.querySelector('.ver').addEventListener('click', () => {
       copyText(SKQ_VERSION).then((ok) => toast(ok
         ? t('Версия скопирована: {v}', { v: SKQ_VERSION })
@@ -10297,10 +10145,15 @@ function core(storedSettings) {
     return { host, root, fill };
   }
 
+  // На странице настроек сайта окно встроено во вкладку: ни фона, ни тени,
+  // ни скруглений — только отступы, чтобы не липнуть к краям панели
   const EMBEDDED_CSS = `
-    .dlg { position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none; overflow: visible; padding: 0; }
+    .dlg {
+      position: static; transform: none; width: auto; max-width: none; height: auto; max-height: none;
+      overflow: visible; background: none; border-radius: 0; box-shadow: none; padding: 8px 16px 24px;
+    }
     .cancel { display: none; }
-    .actions { position: sticky; bottom: 0; background: #2b2b2b; padding: 10px 0 2px; }
+    .actions { padding: 10px 0 2px; }
   `;
 
   // ---- Вкладка «Плагин» на странице настроек сайта ----
