@@ -174,5 +174,8 @@
  "172": "Ouvrir par une touche",
  "173": "Je ne sais pas où mène cet élément — ouvrez le menu",
  "174": "Ouvrir et fermer le menu avec une touche",
- "175": "Afficher le menu tant que Ctrl ou Alt est maintenu"
+ "175": "Afficher le menu tant que Ctrl ou Alt est maintenu",
+ "176": "Modifier",
+ "177": "Titre modifié : {name}",
+ "178": "Le nom est revenu à l’original"
 }

@@ -88,6 +88,10 @@ The same tab has two keys for the menu itself: one opens and closes it (a
 single key with no modifiers is allowed), and a separate setting shows the menu
 while Ctrl or Alt is held and hides it on release. Both are off by default.
 
+Renaming also works from the page itself: the heading gets a border on hover,
+turns into a text field on click, and a changed text is saved with the check
+mark. When the heading has a menu item of its own, that item is renamed.
+
 Items are found by their `data-test` attribute — the key from the site's own
 menu config (`post-indexes`, `my_posts`, `menu_favorites-book`…) — and their
 original names come from the site's dictionary in `window.__PRELOADED_STATE__`.

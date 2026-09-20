@@ -58,6 +58,7 @@ function core(storedSettings) {
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
     menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
+    titles: {}, // заголовки страниц без пункта меню: { исходный текст: своё название }
   };
   const settings = {
     ...DEFAULTS,
@@ -808,6 +809,7 @@ function core(storedSettings) {
     scanReputationDom();
     mountReputation();
     applySiteMenu();
+    markTitles();
     if (!FRAME_MODE) {
       injectMassMenuItem();
       syncMassRoute();
@@ -4937,14 +4939,126 @@ function core(storedSettings) {
 
   function applyMenuTitles() {
     const holder = document.getElementById('portal-title');
-    if (!holder) return;
+    if (!holder || titleEdit.on) return;
     const renamed = renamedTitles();
-    if (!renamed.size) return;
+    const own = isObj(settings.titles) ? settings.titles : {};
     for (const el of holder.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span')) {
       if (el.children.length) continue;
-      const want = renamed.get((el.textContent || '').trim());
-      if (want) el.textContent = want;
+      const text = (el.textContent || '').trim();
+      if (!text) continue;
+      // Исходное название запоминаем: по нему ищется пункт меню и к нему же
+      // возвращаемся. Заодно помним, что написали сами, — если текст сменил
+      // сайт (открыли другую страницу), наши пометки больше не про него
+      const saved = el.dataset.skqTitle;
+      const ours = !!saved && el.dataset.skqShown === text;
+      const orig = ours ? saved : text;
+      const want = renamed.get(orig) || own[orig] || '';
+      if (want) {
+        if (text !== want) el.textContent = want;
+        el.dataset.skqTitle = orig;
+        el.dataset.skqShown = want;
+      } else {
+        if (ours && text !== orig) el.textContent = orig;
+        if (saved) { delete el.dataset.skqTitle; delete el.dataset.skqShown; }
+      }
     }
+  }
+
+  // ---- Правка заголовка прямо на странице ----
+  const titleEdit = { on: false, box: null, el: null, orig: '' };
+
+  const titleNodes = () => {
+    const holder = document.getElementById('portal-title');
+    return holder ? [...holder.querySelectorAll('h1, h2, h3, h4, h5, h6')].filter((el) => !el.children.length) : [];
+  };
+
+  function titleKeyFor(orig) {
+    for (const item of MENU_ITEMS) if (menuWord(item) === orig) return item.key;
+    return '';
+  }
+
+  function markTitles() {
+    if (FRAME_MODE) return;
+    for (const el of titleNodes()) {
+      if (!el.classList.contains('skq-title')) {
+        el.classList.add('skq-title');
+        el.title = t('Редактировать');
+        el.addEventListener('click', () => startTitleEdit(el));
+      }
+      el.classList.toggle('skq-hidden-title', titleEdit.on && titleEdit.el === el);
+    }
+    if (titleEdit.on && titleEdit.box && !titleEdit.box.isConnected) stopTitleEdit();
+  }
+
+  function stopTitleEdit() {
+    if (titleEdit.box) titleEdit.box.remove();
+    if (titleEdit.el) titleEdit.el.classList.remove('skq-hidden-title');
+    Object.assign(titleEdit, { on: false, box: null, el: null, orig: '' });
+    scheduleScan();
+  }
+
+  function startTitleEdit(el) {
+    if (titleEdit.on) return;
+    const shown = (el.textContent || '').trim();
+    const orig = el.dataset.skqTitle || shown;
+    const box = document.createElement('span');
+    box.className = 'skq-title-edit';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = shown;
+    const ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'skq-title-btn skq-title-ok';
+    ok.title = t('Сохранить');
+    ok.textContent = '✓';
+    const no = document.createElement('button');
+    no.type = 'button';
+    no.className = 'skq-title-btn skq-title-cancel';
+    no.title = t('Отмена');
+    no.textContent = '✕';
+    box.append(input, ok, no);
+    el.after(box);
+    Object.assign(titleEdit, { on: true, box, el, orig });
+    el.classList.add('skq-hidden-title');
+
+    const sync = () => box.classList.toggle('changed', input.value.trim() !== shown);
+    input.addEventListener('input', sync);
+    input.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); save(); }
+      else if (e.key === 'Escape') { e.preventDefault(); stopTitleEdit(); }
+    });
+    ok.addEventListener('click', save);
+    no.addEventListener('click', stopTitleEdit);
+    input.focus();
+    input.select();
+    sync();
+
+    function save() {
+      const value = input.value.trim();
+      stopTitleEdit();
+      saveTitleName(orig, value);
+    }
+  }
+
+  // Сохранение: у пункта меню меняется название, у прочих заголовков — своя запись
+  function saveTitleName(orig, value) {
+    const key = titleKeyFor(orig);
+    if (key) {
+      const menu = { ...(isObj(settings.menu) ? settings.menu : {}) };
+      const item = { ...(isObj(menu[key]) ? menu[key] : {}) };
+      if (value && value !== orig) item.name = value;
+      else delete item.name;
+      if (Object.keys(item).length) menu[key] = item;
+      else delete menu[key];
+      saveSettings({ menu });
+    } else {
+      const titles = { ...(isObj(settings.titles) ? settings.titles : {}) };
+      if (value && value !== orig) titles[orig] = value;
+      else delete titles[orig];
+      saveSettings({ titles });
+    }
+    toast(value && value !== orig ? t('Заголовок изменён: {name}', { name: value }) : t('Название вернулось к исходному'));
   }
 
   // ---- Клавиши перехода ----
@@ -5658,6 +5772,27 @@ function core(storedSettings) {
     .skq-busy { opacity: .5; pointer-events: none !important; }
     .skq-off { display: none !important; }
     .skq-menu-off { display: none !important; }
+    .skq-hidden-title { display: none !important; }
+    #portal-title .skq-title {
+      display: inline-block; padding: 0 6px; margin: 0 -6px; border: 1px dashed transparent;
+      border-radius: 6px; cursor: text;
+    }
+    #portal-title .skq-title:hover { border-color: rgba(255, 255, 255, .5); background: rgba(255, 255, 255, .08); }
+    @media (hover: none) { #portal-title .skq-title { border-color: rgba(255, 255, 255, .25); } }
+    .skq-title-edit { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; }
+    .skq-title-edit input {
+      font: inherit; color: inherit; min-width: 140px; padding: 1px 8px;
+      background: rgba(0, 0, 0, .3); border: 1px solid #ff8c00; border-radius: 6px;
+    }
+    .skq-title-edit .skq-title-btn {
+      display: none; align-items: center; justify-content: center; width: 26px; height: 26px;
+      padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+      background: rgba(255, 255, 255, .16); color: #fff; font-size: 15px; line-height: 1;
+    }
+    .skq-title-edit .skq-title-btn:hover { background: rgba(255, 255, 255, .3); }
+    .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
+    .skq-title-edit .skq-title-ok { background: #ff8c00; }
+    .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
     .skq-mcount {
       margin-left: auto; padding-left: 8px; flex: none; color: #ff8c00;
       font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;

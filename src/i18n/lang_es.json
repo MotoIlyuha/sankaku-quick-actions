@@ -174,5 +174,8 @@
  "172": "Abrir con una tecla",
  "173": "No sé adónde lleva este elemento: abra el menú",
  "174": "Abrir y cerrar el menú con una tecla",
- "175": "Mostrar el menú mientras se mantiene Ctrl o Alt"
+ "175": "Mostrar el menú mientras se mantiene Ctrl o Alt",
+ "176": "Editar",
+ "177": "Título cambiado: {name}",
+ "178": "El nombre volvió al original"
 }

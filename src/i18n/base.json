@@ -175,6 +175,9 @@
   "Переход по клавише": "Open by key",
   "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu",
   "Открывать и закрывать меню клавишей": "Open and close the menu with a key",
-  "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held"
+  "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held",
+  "Редактировать": "Edit",
+  "Заголовок изменён: {name}": "Heading changed: {name}",
+  "Название вернулось к исходному": "The name is back to the original"
  }
 }

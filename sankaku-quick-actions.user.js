@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.26.0
+// @version      1.27.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -160,6 +160,7 @@ function core(storedSettings) {
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
     menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
+    titles: {}, // заголовки страниц без пункта меню: { исходный текст: своё название }
   };
   const settings = {
     ...DEFAULTS,
@@ -216,7 +217,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.26.0';
+  const SKQ_VERSION = '1.27.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -395,7 +396,10 @@ function core(storedSettings) {
           "Переход по клавише": "Open by key",
           "Не знаю, куда вести этот пункт — откройте меню": "I do not know where this item leads — open the menu",
           "Открывать и закрывать меню клавишей": "Open and close the menu with a key",
-          "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held"
+          "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held",
+          "Редактировать": "Edit",
+          "Заголовок изменён: {name}": "Heading changed: {name}",
+          "Название вернулось к исходному": "The name is back to the original"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -573,7 +577,10 @@ function core(storedSettings) {
           "Переход по клавише": "キーで開く",
           "Не знаю, куда вести этот пункт — откройте меню": "この項目の行き先が分かりません。メニューを開いてください",
           "Открывать и закрывать меню клавишей": "キーでメニューを開閉する",
-          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl か Alt を押している間メニューを表示"
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl か Alt を押している間メニューを表示",
+          "Редактировать": "編集",
+          "Заголовок изменён: {name}": "見出しを変更しました: {name}",
+          "Название вернулось к исходному": "名前を元に戻しました"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -751,7 +758,10 @@ function core(storedSettings) {
           "Переход по клавише": "用按键打开",
           "Не знаю, куда вести этот пункт — откройте меню": "不知道这个条目通向哪里，请先打开菜单",
           "Открывать и закрывать меню клавишей": "用按键打开和关闭菜单",
-          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 时显示菜单"
+          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 时显示菜单",
+          "Редактировать": "编辑",
+          "Заголовок изменён: {name}": "标题已改为：{name}",
+          "Название вернулось к исходному": "名称已恢复为原来的"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -929,7 +939,10 @@ function core(storedSettings) {
           "Переход по клавише": "用按鍵開啟",
           "Не знаю, куда вести этот пункт — откройте меню": "不知道這個項目通向哪裡，請先開啟選單",
           "Открывать и закрывать меню клавишей": "用按鍵開啟和關閉選單",
-          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 時顯示選單"
+          "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 時顯示選單",
+          "Редактировать": "編輯",
+          "Заголовок изменён: {name}": "標題已改為：{name}",
+          "Название вернулось к исходному": "名稱已恢復為原來的"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1107,7 +1120,10 @@ function core(storedSettings) {
           "Переход по клавише": "키로 열기",
           "Не знаю, куда вести этот пункт — откройте меню": "이 항목이 어디로 가는지 모릅니다 — 메뉴를 열어 주세요",
           "Открывать и закрывать меню клавишей": "키로 메뉴 열고 닫기",
-          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl 또는 Alt를 누르고 있는 동안 메뉴 표시"
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl 또는 Alt를 누르고 있는 동안 메뉴 표시",
+          "Редактировать": "편집",
+          "Заголовок изменён: {name}": "제목을 바꿨습니다: {name}",
+          "Название вернулось к исходному": "이름을 원래대로 되돌렸습니다"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1285,7 +1301,10 @@ function core(storedSettings) {
           "Переход по клавише": "Mit Taste öffnen",
           "Не знаю, куда вести этот пункт — откройте меню": "Ich weiß nicht, wohin dieser Eintrag führt — öffnen Sie das Menü",
           "Открывать и закрывать меню клавишей": "Menü mit einer Taste öffnen und schließen",
-          "Показывать меню, пока зажат Ctrl или Alt": "Menü anzeigen, solange Strg oder Alt gedrückt ist"
+          "Показывать меню, пока зажат Ctrl или Alt": "Menü anzeigen, solange Strg oder Alt gedrückt ist",
+          "Редактировать": "Bearbeiten",
+          "Заголовок изменён: {name}": "Überschrift geändert: {name}",
+          "Название вернулось к исходному": "Der Name ist wieder der ursprüngliche"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1463,7 +1482,10 @@ function core(storedSettings) {
           "Переход по клавише": "Ouvrir par une touche",
           "Не знаю, куда вести этот пункт — откройте меню": "Je ne sais pas où mène cet élément — ouvrez le menu",
           "Открывать и закрывать меню клавишей": "Ouvrir et fermer le menu avec une touche",
-          "Показывать меню, пока зажат Ctrl или Alt": "Afficher le menu tant que Ctrl ou Alt est maintenu"
+          "Показывать меню, пока зажат Ctrl или Alt": "Afficher le menu tant que Ctrl ou Alt est maintenu",
+          "Редактировать": "Modifier",
+          "Заголовок изменён: {name}": "Titre modifié : {name}",
+          "Название вернулось к исходному": "Le nom est revenu à l’original"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1641,7 +1663,10 @@ function core(storedSettings) {
           "Переход по клавише": "Abrir con una tecla",
           "Не знаю, куда вести этот пункт — откройте меню": "No sé adónde lleva este elemento: abra el menú",
           "Открывать и закрывать меню клавишей": "Abrir y cerrar el menú con una tecla",
-          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar el menú mientras se mantiene Ctrl o Alt"
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar el menú mientras se mantiene Ctrl o Alt",
+          "Редактировать": "Editar",
+          "Заголовок изменён: {name}": "Título cambiado: {name}",
+          "Название вернулось к исходному": "El nombre volvió al original"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1819,7 +1844,10 @@ function core(storedSettings) {
           "Переход по клавише": "Abrir por tecla",
           "Не знаю, куда вести этот пункт — откройте меню": "Não sei para onde leva este item — abra o menu",
           "Открывать и закрывать меню клавишей": "Abrir e fechar o menu com uma tecla",
-          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar o menu enquanto Ctrl ou Alt estiver premido"
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrar o menu enquanto Ctrl ou Alt estiver premido",
+          "Редактировать": "Editar",
+          "Заголовок изменён: {name}": "Título alterado: {name}",
+          "Название вернулось к исходному": "O nome voltou ao original"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -1997,7 +2025,10 @@ function core(storedSettings) {
           "Переход по клавише": "Apri con un tasto",
           "Не знаю, куда вести этот пункт — откройте меню": "Non so dove porta questa voce: apri il menu",
           "Открывать и закрывать меню клавишей": "Aprire e chiudere il menu con un tasto",
-          "Показывать меню, пока зажат Ctrl или Alt": "Mostrare il menu finché Ctrl o Alt è premuto"
+          "Показывать меню, пока зажат Ctrl или Alt": "Mostrare il menu finché Ctrl o Alt è premuto",
+          "Редактировать": "Modifica",
+          "Заголовок изменён: {name}": "Titolo cambiato: {name}",
+          "Название вернулось к исходному": "Il nome è tornato all’originale"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2175,7 +2206,10 @@ function core(storedSettings) {
           "Переход по клавише": "Openen met een toets",
           "Не знаю, куда вести этот пункт — откройте меню": "Ik weet niet waar dit item heen gaat — open het menu",
           "Открывать и закрывать меню клавишей": "Menu openen en sluiten met een toets",
-          "Показывать меню, пока зажат Ctrl или Alt": "Menu tonen zolang Ctrl of Alt ingedrukt is"
+          "Показывать меню, пока зажат Ctrl или Alt": "Menu tonen zolang Ctrl of Alt ingedrukt is",
+          "Редактировать": "Bewerken",
+          "Заголовок изменён: {name}": "Kop gewijzigd: {name}",
+          "Название вернулось к исходному": "De naam is weer de oorspronkelijke"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2353,7 +2387,10 @@ function core(storedSettings) {
           "Переход по клавише": "Otwieranie klawiszem",
           "Не знаю, куда вести этот пункт — откройте меню": "Nie wiem, dokąd prowadzi ta pozycja — otwórz menu",
           "Открывать и закрывать меню клавишей": "Otwieranie i zamykanie menu klawiszem",
-          "Показывать меню, пока зажат Ctrl или Alt": "Pokazuj menu, dopóki wciśnięty jest Ctrl lub Alt"
+          "Показывать меню, пока зажат Ctrl или Alt": "Pokazuj menu, dopóki wciśnięty jest Ctrl lub Alt",
+          "Редактировать": "Edytuj",
+          "Заголовок изменён: {name}": "Nagłówek zmieniony: {name}",
+          "Название вернулось к исходному": "Nazwa wróciła do pierwotnej"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2531,7 +2568,10 @@ function core(storedSettings) {
           "Переход по клавише": "Öppna med tangent",
           "Не знаю, куда вести этот пункт — откройте меню": "Jag vet inte vart posten leder — öppna menyn",
           "Открывать и закрывать меню клавишей": "Öppna och stäng menyn med en tangent",
-          "Показывать меню, пока зажат Ctrl или Alt": "Visa menyn medan Ctrl eller Alt hålls nere"
+          "Показывать меню, пока зажат Ctrl или Alt": "Visa menyn medan Ctrl eller Alt hålls nere",
+          "Редактировать": "Redigera",
+          "Заголовок изменён: {name}": "Rubriken ändrad: {name}",
+          "Название вернулось к исходному": "Namnet är tillbaka till det ursprungliga"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2709,7 +2749,10 @@ function core(storedSettings) {
           "Переход по клавише": "Åbn med tast",
           "Не знаю, куда вести этот пункт — откройте меню": "Jeg ved ikke, hvor punktet fører hen — åbn menuen",
           "Открывать и закрывать меню клавишей": "Åbn og luk menuen med en tast",
-          "Показывать меню, пока зажат Ctrl или Alt": "Vis menuen, mens Ctrl eller Alt holdes nede"
+          "Показывать меню, пока зажат Ctrl или Alt": "Vis menuen, mens Ctrl eller Alt holdes nede",
+          "Редактировать": "Rediger",
+          "Заголовок изменён: {name}": "Overskriften er ændret: {name}",
+          "Название вернулось к исходному": "Navnet er tilbage til det oprindelige"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2887,7 +2930,10 @@ function core(storedSettings) {
           "Переход по клавише": "Åpne med tast",
           "Не знаю, куда вести этот пункт — откройте меню": "Jeg vet ikke hvor dette punktet fører — åpne menyen",
           "Открывать и закрывать меню клавишей": "Åpne og lukke menyen med en tast",
-          "Показывать меню, пока зажат Ctrl или Alt": "Vis menyen mens Ctrl eller Alt holdes inne"
+          "Показывать меню, пока зажат Ctrl или Alt": "Vis menyen mens Ctrl eller Alt holdes inne",
+          "Редактировать": "Rediger",
+          "Заголовок изменён: {name}": "Overskriften er endret: {name}",
+          "Название вернулось к исходному": "Navnet er tilbake til det opprinnelige"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3065,7 +3111,10 @@ function core(storedSettings) {
           "Переход по клавише": "Avaa näppäimellä",
           "Не знаю, куда вести этот пункт — откройте меню": "En tiedä, mihin tämä kohta vie — avaa valikko",
           "Открывать и закрывать меню клавишей": "Avaa ja sulje valikko näppäimellä",
-          "Показывать меню, пока зажат Ctrl или Alt": "Näytä valikko, kun Ctrl tai Alt on pohjassa"
+          "Показывать меню, пока зажат Ctrl или Alt": "Näytä valikko, kun Ctrl tai Alt on pohjassa",
+          "Редактировать": "Muokkaa",
+          "Заголовок изменён: {name}": "Otsikko vaihdettu: {name}",
+          "Название вернулось к исходному": "Nimi palasi alkuperäiseen"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3243,7 +3292,10 @@ function core(storedSettings) {
           "Переход по клавише": "Megnyitás billentyűvel",
           "Не знаю, куда вести этот пункт — откройте меню": "Nem tudom, hová vezet ez az elem — nyissa meg a menüt",
           "Открывать и закрывать меню клавишей": "Menü megnyitása és bezárása billentyűvel",
-          "Показывать меню, пока зажат Ctrl или Alt": "Menü megjelenítése, amíg a Ctrl vagy az Alt nyomva van"
+          "Показывать меню, пока зажат Ctrl или Alt": "Menü megjelenítése, amíg a Ctrl vagy az Alt nyomva van",
+          "Редактировать": "Szerkesztés",
+          "Заголовок изменён: {name}": "A cím megváltozott: {name}",
+          "Название вернулось к исходному": "A név visszaállt az eredetire"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3421,7 +3473,10 @@ function core(storedSettings) {
           "Переход по клавише": "Deschide cu o tastă",
           "Не знаю, куда вести этот пункт — откройте меню": "Nu știu unde duce acest element — deschideți meniul",
           "Открывать и закрывать меню клавишей": "Deschide și închide meniul cu o tastă",
-          "Показывать меню, пока зажат Ctrl или Alt": "Arată meniul cât timp este ținut Ctrl sau Alt"
+          "Показывать меню, пока зажат Ctrl или Alt": "Arată meniul cât timp este ținut Ctrl sau Alt",
+          "Редактировать": "Editează",
+          "Заголовок изменён: {name}": "Titlul a fost schimbat: {name}",
+          "Название вернулось к исходному": "Numele a revenit la cel inițial"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3599,7 +3654,10 @@ function core(storedSettings) {
           "Переход по клавише": "Отваряне с клавиш",
           "Не знаю, куда вести этот пункт — откройте меню": "Не знам накъде води този елемент — отворете менюто",
           "Открывать и закрывать меню клавишей": "Отваряне и затваряне на менюто с клавиш",
-          "Показывать меню, пока зажат Ctrl или Alt": "Показване на менюто, докато е задържан Ctrl или Alt"
+          "Показывать меню, пока зажат Ctrl или Alt": "Показване на менюто, докато е задържан Ctrl или Alt",
+          "Редактировать": "Редактиране",
+          "Заголовок изменён: {name}": "Заглавието е променено: {name}",
+          "Название вернулось к исходному": "Името се върна към изходното"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3777,7 +3835,10 @@ function core(storedSettings) {
           "Переход по клавише": "Άνοιγμα με πλήκτρο",
           "Не знаю, куда вести этот пункт — откройте меню": "Δεν ξέρω πού οδηγεί αυτό το στοιχείο — ανοίξτε το μενού",
           "Открывать и закрывать меню клавишей": "Άνοιγμα και κλείσιμο του μενού με πλήκτρο",
-          "Показывать меню, пока зажат Ctrl или Alt": "Εμφάνιση του μενού όσο κρατάτε Ctrl ή Alt"
+          "Показывать меню, пока зажат Ctrl или Alt": "Εμφάνιση του μενού όσο κρατάτε Ctrl ή Alt",
+          "Редактировать": "Επεξεργασία",
+          "Заголовок изменён: {name}": "Ο τίτλος άλλαξε: {name}",
+          "Название вернулось к исходному": "Το όνομα επανήλθε στο αρχικό"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -3955,7 +4016,10 @@ function core(storedSettings) {
           "Переход по клавише": "Tuşla aç",
           "Не знаю, куда вести этот пункт — откройте меню": "Bu ögenin nereye gittiğini bilmiyorum — menüyü açın",
           "Открывать и закрывать меню клавишей": "Menüyü bir tuşla aç ve kapat",
-          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl veya Alt basılıyken menüyü göster"
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl veya Alt basılıyken menüyü göster",
+          "Редактировать": "Düzenle",
+          "Заголовок изменён: {name}": "Başlık değişti: {name}",
+          "Название вернулось к исходному": "Ad özgün haline döndü"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4133,7 +4197,10 @@ function core(storedSettings) {
           "Переход по клавише": "เปิดด้วยปุ่ม",
           "Не знаю, куда вести этот пункт — откройте меню": "ไม่ทราบว่ารายการนี้ไปที่ใด — เปิดเมนูก่อน",
           "Открывать и закрывать меню клавишей": "เปิดและปิดเมนูด้วยปุ่ม",
-          "Показывать меню, пока зажат Ctrl или Alt": "แสดงเมนูขณะกด Ctrl หรือ Alt ค้างไว้"
+          "Показывать меню, пока зажат Ctrl или Alt": "แสดงเมนูขณะกด Ctrl หรือ Alt ค้างไว้",
+          "Редактировать": "แก้ไข",
+          "Заголовок изменён: {name}": "เปลี่ยนหัวข้อแล้ว: {name}",
+          "Название вернулось к исходному": "ชื่อกลับเป็นค่าเดิมแล้ว"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4311,7 +4378,10 @@ function core(storedSettings) {
           "Переход по клавише": "कुंजी से खोलें",
           "Не знаю, куда вести этот пункт — откройте меню": "पता नहीं यह आइटम कहाँ ले जाता है — मेन्यू खोलें",
           "Открывать и закрывать меню клавишей": "मेन्यू को एक कुंजी से खोलें और बंद करें",
-          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl या Alt दबाए रखने पर मेन्यू दिखाएँ"
+          "Показывать меню, пока зажат Ctrl или Alt": "Ctrl या Alt दबाए रखने पर मेन्यू दिखाएँ",
+          "Редактировать": "संपादित करें",
+          "Заголовок изменён: {name}": "शीर्षक बदला गया: {name}",
+          "Название вернулось к исходному": "नाम मूल पर लौट आया"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4489,7 +4559,10 @@ function core(storedSettings) {
           "Переход по клавише": "Buka dengan tombol",
           "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini menuju — buka menunya",
           "Открывать и закрывать меню клавишей": "Buka dan tutup menu dengan tombol",
-          "Показывать меню, пока зажат Ctrl или Alt": "Tampilkan menu selama Ctrl atau Alt ditahan"
+          "Показывать меню, пока зажат Ctrl или Alt": "Tampilkan menu selama Ctrl atau Alt ditahan",
+          "Редактировать": "Ubah",
+          "Заголовок изменён: {name}": "Judul diubah: {name}",
+          "Название вернулось к исходному": "Nama kembali ke aslinya"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4667,7 +4740,10 @@ function core(storedSettings) {
           "Переход по клавише": "Buka dengan kekunci",
           "Не знаю, куда вести этот пункт — откройте меню": "Saya tidak tahu ke mana item ini pergi — buka menu",
           "Открывать и закрывать меню клавишей": "Buka dan tutup menu dengan kekunci",
-          "Показывать меню, пока зажат Ctrl или Alt": "Tunjukkan menu selagi Ctrl atau Alt ditekan"
+          "Показывать меню, пока зажат Ctrl или Alt": "Tunjukkan menu selagi Ctrl atau Alt ditekan",
+          "Редактировать": "Sunting",
+          "Заголовок изменён: {name}": "Tajuk ditukar: {name}",
+          "Название вернулось к исходному": "Nama kembali kepada asal"
     },
   } /* SKQ_I18N_END */;
 
@@ -5361,6 +5437,7 @@ function core(storedSettings) {
     scanReputationDom();
     mountReputation();
     applySiteMenu();
+    markTitles();
     if (!FRAME_MODE) {
       injectMassMenuItem();
       syncMassRoute();
@@ -9490,14 +9567,126 @@ function core(storedSettings) {
 
   function applyMenuTitles() {
     const holder = document.getElementById('portal-title');
-    if (!holder) return;
+    if (!holder || titleEdit.on) return;
     const renamed = renamedTitles();
-    if (!renamed.size) return;
+    const own = isObj(settings.titles) ? settings.titles : {};
     for (const el of holder.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span')) {
       if (el.children.length) continue;
-      const want = renamed.get((el.textContent || '').trim());
-      if (want) el.textContent = want;
+      const text = (el.textContent || '').trim();
+      if (!text) continue;
+      // Исходное название запоминаем: по нему ищется пункт меню и к нему же
+      // возвращаемся. Заодно помним, что написали сами, — если текст сменил
+      // сайт (открыли другую страницу), наши пометки больше не про него
+      const saved = el.dataset.skqTitle;
+      const ours = !!saved && el.dataset.skqShown === text;
+      const orig = ours ? saved : text;
+      const want = renamed.get(orig) || own[orig] || '';
+      if (want) {
+        if (text !== want) el.textContent = want;
+        el.dataset.skqTitle = orig;
+        el.dataset.skqShown = want;
+      } else {
+        if (ours && text !== orig) el.textContent = orig;
+        if (saved) { delete el.dataset.skqTitle; delete el.dataset.skqShown; }
+      }
     }
+  }
+
+  // ---- Правка заголовка прямо на странице ----
+  const titleEdit = { on: false, box: null, el: null, orig: '' };
+
+  const titleNodes = () => {
+    const holder = document.getElementById('portal-title');
+    return holder ? [...holder.querySelectorAll('h1, h2, h3, h4, h5, h6')].filter((el) => !el.children.length) : [];
+  };
+
+  function titleKeyFor(orig) {
+    for (const item of MENU_ITEMS) if (menuWord(item) === orig) return item.key;
+    return '';
+  }
+
+  function markTitles() {
+    if (FRAME_MODE) return;
+    for (const el of titleNodes()) {
+      if (!el.classList.contains('skq-title')) {
+        el.classList.add('skq-title');
+        el.title = t('Редактировать');
+        el.addEventListener('click', () => startTitleEdit(el));
+      }
+      el.classList.toggle('skq-hidden-title', titleEdit.on && titleEdit.el === el);
+    }
+    if (titleEdit.on && titleEdit.box && !titleEdit.box.isConnected) stopTitleEdit();
+  }
+
+  function stopTitleEdit() {
+    if (titleEdit.box) titleEdit.box.remove();
+    if (titleEdit.el) titleEdit.el.classList.remove('skq-hidden-title');
+    Object.assign(titleEdit, { on: false, box: null, el: null, orig: '' });
+    scheduleScan();
+  }
+
+  function startTitleEdit(el) {
+    if (titleEdit.on) return;
+    const shown = (el.textContent || '').trim();
+    const orig = el.dataset.skqTitle || shown;
+    const box = document.createElement('span');
+    box.className = 'skq-title-edit';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = shown;
+    const ok = document.createElement('button');
+    ok.type = 'button';
+    ok.className = 'skq-title-btn skq-title-ok';
+    ok.title = t('Сохранить');
+    ok.textContent = '✓';
+    const no = document.createElement('button');
+    no.type = 'button';
+    no.className = 'skq-title-btn skq-title-cancel';
+    no.title = t('Отмена');
+    no.textContent = '✕';
+    box.append(input, ok, no);
+    el.after(box);
+    Object.assign(titleEdit, { on: true, box, el, orig });
+    el.classList.add('skq-hidden-title');
+
+    const sync = () => box.classList.toggle('changed', input.value.trim() !== shown);
+    input.addEventListener('input', sync);
+    input.addEventListener('keydown', (e) => {
+      e.stopPropagation();
+      if (e.key === 'Enter') { e.preventDefault(); save(); }
+      else if (e.key === 'Escape') { e.preventDefault(); stopTitleEdit(); }
+    });
+    ok.addEventListener('click', save);
+    no.addEventListener('click', stopTitleEdit);
+    input.focus();
+    input.select();
+    sync();
+
+    function save() {
+      const value = input.value.trim();
+      stopTitleEdit();
+      saveTitleName(orig, value);
+    }
+  }
+
+  // Сохранение: у пункта меню меняется название, у прочих заголовков — своя запись
+  function saveTitleName(orig, value) {
+    const key = titleKeyFor(orig);
+    if (key) {
+      const menu = { ...(isObj(settings.menu) ? settings.menu : {}) };
+      const item = { ...(isObj(menu[key]) ? menu[key] : {}) };
+      if (value && value !== orig) item.name = value;
+      else delete item.name;
+      if (Object.keys(item).length) menu[key] = item;
+      else delete menu[key];
+      saveSettings({ menu });
+    } else {
+      const titles = { ...(isObj(settings.titles) ? settings.titles : {}) };
+      if (value && value !== orig) titles[orig] = value;
+      else delete titles[orig];
+      saveSettings({ titles });
+    }
+    toast(value && value !== orig ? t('Заголовок изменён: {name}', { name: value }) : t('Название вернулось к исходному'));
   }
 
   // ---- Клавиши перехода ----
@@ -10211,6 +10400,27 @@ function core(storedSettings) {
     .skq-busy { opacity: .5; pointer-events: none !important; }
     .skq-off { display: none !important; }
     .skq-menu-off { display: none !important; }
+    .skq-hidden-title { display: none !important; }
+    #portal-title .skq-title {
+      display: inline-block; padding: 0 6px; margin: 0 -6px; border: 1px dashed transparent;
+      border-radius: 6px; cursor: text;
+    }
+    #portal-title .skq-title:hover { border-color: rgba(255, 255, 255, .5); background: rgba(255, 255, 255, .08); }
+    @media (hover: none) { #portal-title .skq-title { border-color: rgba(255, 255, 255, .25); } }
+    .skq-title-edit { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; }
+    .skq-title-edit input {
+      font: inherit; color: inherit; min-width: 140px; padding: 1px 8px;
+      background: rgba(0, 0, 0, .3); border: 1px solid #ff8c00; border-radius: 6px;
+    }
+    .skq-title-edit .skq-title-btn {
+      display: none; align-items: center; justify-content: center; width: 26px; height: 26px;
+      padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+      background: rgba(255, 255, 255, .16); color: #fff; font-size: 15px; line-height: 1;
+    }
+    .skq-title-edit .skq-title-btn:hover { background: rgba(255, 255, 255, .3); }
+    .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
+    .skq-title-edit .skq-title-ok { background: #ff8c00; }
+    .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
     .skq-mcount {
       margin-left: auto; padding-left: 8px; flex: none; color: #ff8c00;
       font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
