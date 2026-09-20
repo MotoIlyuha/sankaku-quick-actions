@@ -177,5 +177,6 @@
  "175": "Afficher le menu tant que Ctrl ou Alt est maintenu",
  "176": "Modifier",
  "177": "Titre modifié : {name}",
- "178": "Le nom est revenu à l’original"
+ "178": "Le nom est revenu à l’original",
+ "179": "Et indiquer dans le menu quelle touche presser"
 }

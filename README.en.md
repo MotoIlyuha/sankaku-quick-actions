@@ -87,6 +87,8 @@ reputation; the counters refresh when the menu opens.
 The same tab has two keys for the menu itself: one opens and closes it (a
 single key with no modifiers is allowed), and a separate setting shows the menu
 while Ctrl or Alt is held and hides it on release. Both are off by default.
+While the modifier is held, the items show which digit to press — a checkbox
+of its own under that setting.
 
 Renaming also works from the page itself: the heading gets a border on hover,
 turns into a text field on click, and a changed text is saved with the check

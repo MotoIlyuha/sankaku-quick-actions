@@ -178,6 +178,7 @@
   "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held",
   "Редактировать": "Edit",
   "Заголовок изменён: {name}": "Heading changed: {name}",
-  "Название вернулось к исходному": "The name is back to the original"
+  "Название вернулось к исходному": "The name is back to the original",
+  "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press"
  }
 }

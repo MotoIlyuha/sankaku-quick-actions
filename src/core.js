@@ -58,6 +58,7 @@ function core(storedSettings) {
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
     menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
+    menuHoldHints: true, // ... и рядом с пунктами видно, какую клавишу нажать
     titles: {}, // заголовки страниц без пункта меню: { исходный текст: своё название }
   };
   const settings = {
@@ -4879,6 +4880,22 @@ function core(storedSettings) {
     refreshReputation(true);
   }
 
+  let heldMod = ''; // какой модификатор сейчас держат: 'ctrl' или 'alt'
+
+  // Что ещё нажать, чтобы попасть в этот пункт, пока держат модификатор
+  function heldHint(key) {
+    if (!heldMod || !settings.menuHoldMod || !settings.menuHoldHints) return '';
+    const combo = menuHotkey(key);
+    if (!combo || combo.indexOf(heldMod + '+') !== 0) return '';
+    return comboLabel(combo.slice(heldMod.length + 1));
+  }
+
+  function setHeldMod(mod) {
+    if (mod === heldMod) return;
+    heldMod = mod;
+    applySiteMenu();
+  }
+
   const menuTextEl = (el) =>
     el.querySelector('[class*="MuiListItemText-primary"]')
     || el.querySelector('[class*="MuiListItemText"] p, [class*="MuiListItemText"] span')
@@ -4892,6 +4909,20 @@ function core(storedSettings) {
       el.appendChild(badge);
     }
     return badge;
+  }
+
+  function menuKeyHintEl(el, text) {
+    let badge = el.querySelector(':scope > .skq-mkey');
+    if (!text) {
+      if (badge) badge.remove();
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'skq-mkey';
+      el.insertBefore(badge, el.querySelector(':scope > .skq-mcount'));
+    }
+    if (badge.textContent !== text) badge.textContent = text;
   }
 
   function applySiteMenu() {
@@ -4918,6 +4949,7 @@ function core(storedSettings) {
         const text = typeof value === 'number' ? shortCount(value) : '';
         if (badge.textContent !== text) badge.textContent = text;
       }
+      menuKeyHintEl(el, heldHint(key));
     }
     const open = seen > 0 && shownItems > 0;
     if (open && !menuVisible) onMenuOpened();
@@ -5099,6 +5131,8 @@ function core(storedSettings) {
     const node = e.composedPath ? e.composedPath()[0] : e.target;
     if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
 
+    setHeldMod(e.ctrlKey ? 'ctrl' : e.altKey ? 'alt' : '');
+
     // меню показывается, пока держат Ctrl или Alt — чтобы видеть, что под какой цифрой
     if (settings.menuHoldMod && HOLD_KEYS[e.key] && !e.repeat && !menuVisible && !menuHeldOpen) {
       menuHeldOpen = toggleSiteMenu();
@@ -5122,12 +5156,14 @@ function core(storedSettings) {
   }, true);
 
   function releaseHeldMenu() {
+    setHeldMod('');
     if (!menuHeldOpen) return;
     menuHeldOpen = false;
     setSiteMenu(false);
   }
 
   document.addEventListener('keyup', (e) => {
+    setHeldMod(e.ctrlKey ? 'ctrl' : e.altKey ? 'alt' : '');
     if (HOLD_KEYS[e.key]) releaseHeldMenu();
   }, true);
   // Alt+Tab и переход по клавише уводят фокус, а клавишу отпускают уже не здесь
@@ -5297,6 +5333,8 @@ function core(storedSettings) {
               <button type="button" class="key menukey"></button></div>
             <label class="row"><input type="checkbox" name="menuHoldMod">
               ${T('Показывать меню, пока зажат Ctrl или Alt')}</label>
+            <label class="row sub holdhints"><input type="checkbox" name="menuHoldHints">
+              ${T('И подсказывать в меню, какую клавишу нажать')}</label>
           </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
@@ -5451,7 +5489,8 @@ function core(storedSettings) {
       capturingMenu = null;
       renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
-        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod']) f(k).checked = !!s[k];
+        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod', 'menuHoldHints']) f(k).checked = !!s[k];
+      syncHoldHints();
       capturingToggle = false;
       menuKeyDraft = s.menuKey || DEFAULTS.menuKey;
       renderMenuKey();
@@ -5468,6 +5507,9 @@ function core(storedSettings) {
         btn.textContent = waiting ? t('Нажмите клавишу…') : keyLabel(keys[id]);
         btn.classList.toggle('wait', waiting);
       }
+    }
+    function syncHoldHints() {
+      root.querySelector('.holdhints').hidden = !f('menuHoldMod').checked;
     }
     function syncRehide() {
       const on = f('rehideOnBlur').checked;
@@ -5565,6 +5607,7 @@ function core(storedSettings) {
     });
     f('rehideOnBlur').addEventListener('change', syncRehide);
     f('menuKeyOn').addEventListener('change', renderMenuKey);
+    f('menuHoldMod').addEventListener('change', syncHoldHints);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);
     root.querySelector('.cancel').addEventListener('click', close);
@@ -5587,6 +5630,7 @@ function core(storedSettings) {
         menuKey: menuKeyDraft,
         menuKeyOn: f('menuKeyOn').checked,
         menuHoldMod: f('menuHoldMod').checked,
+        menuHoldHints: f('menuHoldHints').checked,
         ...keys,
       });
       setCapturing(null);
@@ -5798,6 +5842,12 @@ function core(storedSettings) {
       font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
     }
     .skq-mcount:empty { display: none; }
+    .skq-mkey {
+      margin-left: auto; padding: 1px 7px; flex: none; border-radius: 6px;
+      background: #ff8c00; color: #fff; white-space: nowrap;
+      font: 700 12px/1.5 Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .skq-mkey + .skq-mcount { margin-left: 8px; }
     .skq-settings-panel { padding: 8px 0 24px; }
     .skq-rep {
       display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; vertical-align: middle;

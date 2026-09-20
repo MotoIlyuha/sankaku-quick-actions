@@ -160,6 +160,7 @@ function core(storedSettings) {
     menuKey: 'KeyM', // клавиша, открывающая и закрывающая боковое меню
     menuKeyOn: false,
     menuHoldMod: false, // меню видно, пока зажат Ctrl или Alt
+    menuHoldHints: true, // ... и рядом с пунктами видно, какую клавишу нажать
     titles: {}, // заголовки страниц без пункта меню: { исходный текст: своё название }
   };
   const settings = {
@@ -399,7 +400,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Show the menu while Ctrl or Alt is held",
           "Редактировать": "Edit",
           "Заголовок изменён: {name}": "Heading changed: {name}",
-          "Название вернулось к исходному": "The name is back to the original"
+          "Название вернулось к исходному": "The name is back to the original",
+          "И подсказывать в меню, какую клавишу нажать": "And hint in the menu which key to press"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -580,7 +582,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Ctrl か Alt を押している間メニューを表示",
           "Редактировать": "編集",
           "Заголовок изменён: {name}": "見出しを変更しました: {name}",
-          "Название вернулось к исходному": "名前を元に戻しました"
+          "Название вернулось к исходному": "名前を元に戻しました",
+          "И подсказывать в меню, какую клавишу нажать": "メニューに押すキーも表示する"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -761,7 +764,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 时显示菜单",
           "Редактировать": "编辑",
           "Заголовок изменён: {name}": "标题已改为：{name}",
-          "Название вернулось к исходному": "名称已恢复为原来的"
+          "Название вернулось к исходному": "名称已恢复为原来的",
+          "И подсказывать в меню, какую клавишу нажать": "并在菜单里提示还要按哪个键"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -942,7 +946,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "按住 Ctrl 或 Alt 時顯示選單",
           "Редактировать": "編輯",
           "Заголовок изменён: {name}": "標題已改為：{name}",
-          "Название вернулось к исходному": "名稱已恢復為原來的"
+          "Название вернулось к исходному": "名稱已恢復為原來的",
+          "И подсказывать в меню, какую клавишу нажать": "並在選單裡提示還要按哪個鍵"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1123,7 +1128,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Ctrl 또는 Alt를 누르고 있는 동안 메뉴 표시",
           "Редактировать": "편집",
           "Заголовок изменён: {name}": "제목을 바꿨습니다: {name}",
-          "Название вернулось к исходному": "이름을 원래대로 되돌렸습니다"
+          "Название вернулось к исходному": "이름을 원래대로 되돌렸습니다",
+          "И подсказывать в меню, какую клавишу нажать": "그리고 메뉴에 어떤 키를 누를지 표시"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1304,7 +1310,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Menü anzeigen, solange Strg oder Alt gedrückt ist",
           "Редактировать": "Bearbeiten",
           "Заголовок изменён: {name}": "Überschrift geändert: {name}",
-          "Название вернулось к исходному": "Der Name ist wieder der ursprüngliche"
+          "Название вернулось к исходному": "Der Name ist wieder der ursprüngliche",
+          "И подсказывать в меню, какую клавишу нажать": "Und im Menü zeigen, welche Taste zu drücken ist"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1485,7 +1492,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Afficher le menu tant que Ctrl ou Alt est maintenu",
           "Редактировать": "Modifier",
           "Заголовок изменён: {name}": "Titre modifié : {name}",
-          "Название вернулось к исходному": "Le nom est revenu à l’original"
+          "Название вернулось к исходному": "Le nom est revenu à l’original",
+          "И подсказывать в меню, какую клавишу нажать": "Et indiquer dans le menu quelle touche presser"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1666,7 +1674,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Mostrar el menú mientras se mantiene Ctrl o Alt",
           "Редактировать": "Editar",
           "Заголовок изменён: {name}": "Título cambiado: {name}",
-          "Название вернулось к исходному": "El nombre volvió al original"
+          "Название вернулось к исходному": "El nombre volvió al original",
+          "И подсказывать в меню, какую клавишу нажать": "Y mostrar en el menú qué tecla pulsar"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -1847,7 +1856,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Mostrar o menu enquanto Ctrl ou Alt estiver premido",
           "Редактировать": "Editar",
           "Заголовок изменён: {name}": "Título alterado: {name}",
-          "Название вернулось к исходному": "O nome voltou ao original"
+          "Название вернулось к исходному": "O nome voltou ao original",
+          "И подсказывать в меню, какую клавишу нажать": "E mostrar no menu que tecla premir"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2028,7 +2038,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Mostrare il menu finché Ctrl o Alt è premuto",
           "Редактировать": "Modifica",
           "Заголовок изменён: {name}": "Titolo cambiato: {name}",
-          "Название вернулось к исходному": "Il nome è tornato all’originale"
+          "Название вернулось к исходному": "Il nome è tornato all’originale",
+          "И подсказывать в меню, какую клавишу нажать": "E mostrare nel menu quale tasto premere"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2209,7 +2220,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Menu tonen zolang Ctrl of Alt ingedrukt is",
           "Редактировать": "Bewerken",
           "Заголовок изменён: {name}": "Kop gewijzigd: {name}",
-          "Название вернулось к исходному": "De naam is weer de oorspronkelijke"
+          "Название вернулось к исходному": "De naam is weer de oorspronkelijke",
+          "И подсказывать в меню, какую клавишу нажать": "En in het menu tonen welke toets je moet indrukken"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2390,7 +2402,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Pokazuj menu, dopóki wciśnięty jest Ctrl lub Alt",
           "Редактировать": "Edytuj",
           "Заголовок изменён: {name}": "Nagłówek zmieniony: {name}",
-          "Название вернулось к исходному": "Nazwa wróciła do pierwotnej"
+          "Название вернулось к исходному": "Nazwa wróciła do pierwotnej",
+          "И подсказывать в меню, какую клавишу нажать": "I podpowiadaj w menu, który klawisz nacisnąć"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2571,7 +2584,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Visa menyn medan Ctrl eller Alt hålls nere",
           "Редактировать": "Redigera",
           "Заголовок изменён: {name}": "Rubriken ändrad: {name}",
-          "Название вернулось к исходному": "Namnet är tillbaka till det ursprungliga"
+          "Название вернулось к исходному": "Namnet är tillbaka till det ursprungliga",
+          "И подсказывать в меню, какую клавишу нажать": "Och visa i menyn vilken tangent som ska tryckas"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -2752,7 +2766,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Vis menuen, mens Ctrl eller Alt holdes nede",
           "Редактировать": "Rediger",
           "Заголовок изменён: {name}": "Overskriften er ændret: {name}",
-          "Название вернулось к исходному": "Navnet er tilbage til det oprindelige"
+          "Название вернулось к исходному": "Navnet er tilbage til det oprindelige",
+          "И подсказывать в меню, какую клавишу нажать": "Og vis i menuen, hvilken tast der skal trykkes"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -2933,7 +2948,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Vis menyen mens Ctrl eller Alt holdes inne",
           "Редактировать": "Rediger",
           "Заголовок изменён: {name}": "Overskriften er endret: {name}",
-          "Название вернулось к исходному": "Navnet er tilbake til det opprinnelige"
+          "Название вернулось к исходному": "Navnet er tilbake til det opprinnelige",
+          "И подсказывать в меню, какую клавишу нажать": "Og vis i menyen hvilken tast som skal trykkes"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3114,7 +3130,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Näytä valikko, kun Ctrl tai Alt on pohjassa",
           "Редактировать": "Muokkaa",
           "Заголовок изменён: {name}": "Otsikko vaihdettu: {name}",
-          "Название вернулось к исходному": "Nimi palasi alkuperäiseen"
+          "Название вернулось к исходному": "Nimi palasi alkuperäiseen",
+          "И подсказывать в меню, какую клавишу нажать": "Ja näytä valikossa, mitä näppäintä painaa"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3295,7 +3312,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Menü megjelenítése, amíg a Ctrl vagy az Alt nyomva van",
           "Редактировать": "Szerkesztés",
           "Заголовок изменён: {name}": "A cím megváltozott: {name}",
-          "Название вернулось к исходному": "A név visszaállt az eredetire"
+          "Название вернулось к исходному": "A név visszaállt az eredetire",
+          "И подсказывать в меню, какую клавишу нажать": "És mutassa a menüben, melyik billentyűt kell megnyomni"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -3476,7 +3494,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Arată meniul cât timp este ținut Ctrl sau Alt",
           "Редактировать": "Editează",
           "Заголовок изменён: {name}": "Titlul a fost schimbat: {name}",
-          "Название вернулось к исходному": "Numele a revenit la cel inițial"
+          "Название вернулось к исходному": "Numele a revenit la cel inițial",
+          "И подсказывать в меню, какую клавишу нажать": "Și arată în meniu ce tastă să apeși"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -3657,7 +3676,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Показване на менюто, докато е задържан Ctrl или Alt",
           "Редактировать": "Редактиране",
           "Заголовок изменён: {name}": "Заглавието е променено: {name}",
-          "Название вернулось к исходному": "Името се върна към изходното"
+          "Название вернулось к исходному": "Името се върна към изходното",
+          "И подсказывать в меню, какую клавишу нажать": "И да подсказва в менюто кой клавиш да се натисне"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -3838,7 +3858,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Εμφάνιση του μενού όσο κρατάτε Ctrl ή Alt",
           "Редактировать": "Επεξεργασία",
           "Заголовок изменён: {name}": "Ο τίτλος άλλαξε: {name}",
-          "Название вернулось к исходному": "Το όνομα επανήλθε στο αρχικό"
+          "Название вернулось к исходному": "Το όνομα επανήλθε στο αρχικό",
+          "И подсказывать в меню, какую клавишу нажать": "Και να δείχνει στο μενού ποιο πλήκτρο να πατήσετε"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4019,7 +4040,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Ctrl veya Alt basılıyken menüyü göster",
           "Редактировать": "Düzenle",
           "Заголовок изменён: {name}": "Başlık değişti: {name}",
-          "Название вернулось к исходному": "Ad özgün haline döndü"
+          "Название вернулось к исходному": "Ad özgün haline döndü",
+          "И подсказывать в меню, какую клавишу нажать": "Ve menüde hangi tuşa basılacağını göster"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4200,7 +4222,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "แสดงเมนูขณะกด Ctrl หรือ Alt ค้างไว้",
           "Редактировать": "แก้ไข",
           "Заголовок изменён: {name}": "เปลี่ยนหัวข้อแล้ว: {name}",
-          "Название вернулось к исходному": "ชื่อกลับเป็นค่าเดิมแล้ว"
+          "Название вернулось к исходному": "ชื่อกลับเป็นค่าเดิมแล้ว",
+          "И подсказывать в меню, какую клавишу нажать": "และบอกในเมนูว่าต้องกดปุ่มใด"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -4381,7 +4404,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Ctrl या Alt दबाए रखने पर मेन्यू दिखाएँ",
           "Редактировать": "संपादित करें",
           "Заголовок изменён: {name}": "शीर्षक बदला गया: {name}",
-          "Название вернулось к исходному": "नाम मूल पर लौट आया"
+          "Название вернулось к исходному": "नाम मूल पर लौट आया",
+          "И подсказывать в меню, какую клавишу нажать": "और मेन्यू में बताएँ कि कौन-सी कुंजी दबानी है"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -4562,7 +4586,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Tampilkan menu selama Ctrl atau Alt ditahan",
           "Редактировать": "Ubah",
           "Заголовок изменён: {name}": "Judul diubah: {name}",
-          "Название вернулось к исходному": "Nama kembali ke aslinya"
+          "Название вернулось к исходному": "Nama kembali ke aslinya",
+          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan di menu tombol mana yang harus ditekan"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -4743,7 +4768,8 @@ function core(storedSettings) {
           "Показывать меню, пока зажат Ctrl или Alt": "Tunjukkan menu selagi Ctrl atau Alt ditekan",
           "Редактировать": "Sunting",
           "Заголовок изменён: {name}": "Tajuk ditukar: {name}",
-          "Название вернулось к исходному": "Nama kembali kepada asal"
+          "Название вернулось к исходному": "Nama kembali kepada asal",
+          "И подсказывать в меню, какую клавишу нажать": "Dan tunjukkan dalam menu kekunci mana perlu ditekan"
     },
   } /* SKQ_I18N_END */;
 
@@ -9507,6 +9533,22 @@ function core(storedSettings) {
     refreshReputation(true);
   }
 
+  let heldMod = ''; // какой модификатор сейчас держат: 'ctrl' или 'alt'
+
+  // Что ещё нажать, чтобы попасть в этот пункт, пока держат модификатор
+  function heldHint(key) {
+    if (!heldMod || !settings.menuHoldMod || !settings.menuHoldHints) return '';
+    const combo = menuHotkey(key);
+    if (!combo || combo.indexOf(heldMod + '+') !== 0) return '';
+    return comboLabel(combo.slice(heldMod.length + 1));
+  }
+
+  function setHeldMod(mod) {
+    if (mod === heldMod) return;
+    heldMod = mod;
+    applySiteMenu();
+  }
+
   const menuTextEl = (el) =>
     el.querySelector('[class*="MuiListItemText-primary"]')
     || el.querySelector('[class*="MuiListItemText"] p, [class*="MuiListItemText"] span')
@@ -9520,6 +9562,20 @@ function core(storedSettings) {
       el.appendChild(badge);
     }
     return badge;
+  }
+
+  function menuKeyHintEl(el, text) {
+    let badge = el.querySelector(':scope > .skq-mkey');
+    if (!text) {
+      if (badge) badge.remove();
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement('span');
+      badge.className = 'skq-mkey';
+      el.insertBefore(badge, el.querySelector(':scope > .skq-mcount'));
+    }
+    if (badge.textContent !== text) badge.textContent = text;
   }
 
   function applySiteMenu() {
@@ -9546,6 +9602,7 @@ function core(storedSettings) {
         const text = typeof value === 'number' ? shortCount(value) : '';
         if (badge.textContent !== text) badge.textContent = text;
       }
+      menuKeyHintEl(el, heldHint(key));
     }
     const open = seen > 0 && shownItems > 0;
     if (open && !menuVisible) onMenuOpened();
@@ -9727,6 +9784,8 @@ function core(storedSettings) {
     const node = e.composedPath ? e.composedPath()[0] : e.target;
     if (node instanceof Element && (node.closest('input, textarea, select') || node.isContentEditable)) return;
 
+    setHeldMod(e.ctrlKey ? 'ctrl' : e.altKey ? 'alt' : '');
+
     // меню показывается, пока держат Ctrl или Alt — чтобы видеть, что под какой цифрой
     if (settings.menuHoldMod && HOLD_KEYS[e.key] && !e.repeat && !menuVisible && !menuHeldOpen) {
       menuHeldOpen = toggleSiteMenu();
@@ -9750,12 +9809,14 @@ function core(storedSettings) {
   }, true);
 
   function releaseHeldMenu() {
+    setHeldMod('');
     if (!menuHeldOpen) return;
     menuHeldOpen = false;
     setSiteMenu(false);
   }
 
   document.addEventListener('keyup', (e) => {
+    setHeldMod(e.ctrlKey ? 'ctrl' : e.altKey ? 'alt' : '');
     if (HOLD_KEYS[e.key]) releaseHeldMenu();
   }, true);
   // Alt+Tab и переход по клавише уводят фокус, а клавишу отпускают уже не здесь
@@ -9925,6 +9986,8 @@ function core(storedSettings) {
               <button type="button" class="key menukey"></button></div>
             <label class="row"><input type="checkbox" name="menuHoldMod">
               ${T('Показывать меню, пока зажат Ctrl или Alt')}</label>
+            <label class="row sub holdhints"><input type="checkbox" name="menuHoldHints">
+              ${T('И подсказывать в меню, какую клавишу нажать')}</label>
           </fieldset>
           <p class="hint">${T('Пункты бокового меню сайта: своё название, видимость, счётчик и клавиша перехода. Счётчики обновляются при открытии меню.')}</p>
           <div class="mlist"></div>
@@ -10079,7 +10142,8 @@ function core(storedSettings) {
       capturingMenu = null;
       renderMenuRows();
       for (const k of ['hideAds', 'hidePromo', 'showPoints', 'showReputation', 'showMyVote', 'showFavCount',
-        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod']) f(k).checked = !!s[k];
+        'rehideOnBlur', 'menuKeyOn', 'menuHoldMod', 'menuHoldHints']) f(k).checked = !!s[k];
+      syncHoldHints();
       capturingToggle = false;
       menuKeyDraft = s.menuKey || DEFAULTS.menuKey;
       renderMenuKey();
@@ -10096,6 +10160,9 @@ function core(storedSettings) {
         btn.textContent = waiting ? t('Нажмите клавишу…') : keyLabel(keys[id]);
         btn.classList.toggle('wait', waiting);
       }
+    }
+    function syncHoldHints() {
+      root.querySelector('.holdhints').hidden = !f('menuHoldMod').checked;
     }
     function syncRehide() {
       const on = f('rehideOnBlur').checked;
@@ -10193,6 +10260,7 @@ function core(storedSettings) {
     });
     f('rehideOnBlur').addEventListener('change', syncRehide);
     f('menuKeyOn').addEventListener('change', renderMenuKey);
+    f('menuHoldMod').addEventListener('change', syncHoldHints);
     const backdrop = root.querySelector('.backdrop');
     if (backdrop) backdrop.addEventListener('click', close);
     root.querySelector('.cancel').addEventListener('click', close);
@@ -10215,6 +10283,7 @@ function core(storedSettings) {
         menuKey: menuKeyDraft,
         menuKeyOn: f('menuKeyOn').checked,
         menuHoldMod: f('menuHoldMod').checked,
+        menuHoldHints: f('menuHoldHints').checked,
         ...keys,
       });
       setCapturing(null);
@@ -10426,6 +10495,12 @@ function core(storedSettings) {
       font: 500 13px/1.2 Roboto, "Helvetica Neue", Arial, sans-serif; white-space: nowrap;
     }
     .skq-mcount:empty { display: none; }
+    .skq-mkey {
+      margin-left: auto; padding: 1px 7px; flex: none; border-radius: 6px;
+      background: #ff8c00; color: #fff; white-space: nowrap;
+      font: 700 12px/1.5 Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .skq-mkey + .skq-mcount { margin-left: 8px; }
     .skq-settings-panel { padding: 8px 0 24px; }
     .skq-rep {
       display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; vertical-align: middle;
