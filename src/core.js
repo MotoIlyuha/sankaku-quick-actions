@@ -1090,6 +1090,30 @@ function core(storedSettings) {
     toast(t('Пост снова виден: {id}', { id: String(id) }));
   }
 
+  // Карточка на сайте лежит внутри ячейки сетки: спрячь одну карточку — и на её
+  // месте останется пустая клетка. Ячейка — это предок, чей родитель держит и
+  // другие карточки; её и убираем, тогда сетка сама смыкается
+  function gridCell(card) {
+    const known = card.__skqCell;
+    if (known && known.isConnected && known.contains(card)) return known;
+    let cell = card;
+    for (let n = card.parentElement; n && n !== document.body; n = n.parentElement) {
+      const others = [...n.children].some((c) => c !== cell && (c.matches(CARD_SEL) || c.querySelector(CARD_SEL)));
+      if (others) {
+        card.__skqCell = cell;
+        return cell;
+      }
+      cell = n;
+    }
+    return card; // других карточек рядом нет — прячем только саму карточку
+  }
+
+  function setCardHidden(card, hide) {
+    card.classList.toggle('skq-rule-hide', hide);
+    const cell = gridCell(card);
+    if (cell !== card) cell.classList.toggle('skq-cell-hide', hide);
+  }
+
   const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
   function addRule(rule) {
@@ -1191,7 +1215,7 @@ function core(storedSettings) {
       card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
       const rule = id ? ruleFor(id) : null;
       const hide = (!!rule && rule.mode !== 'blur') || (!!id && postHidden(id));
-      card.classList.toggle('skq-rule-hide', hide);
+      setCardHidden(card, hide);
       // «Показать размытые посты» снимает и наше размытие
       card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
       if (hide) hidden++;
@@ -6678,7 +6702,7 @@ function core(storedSettings) {
     .skq-title-edit.changed .skq-title-btn { display: inline-flex; }
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
-    ${CARD_SEL}.skq-rule-hide { display: none !important; }
+    ${CARD_SEL}.skq-rule-hide, .skq-cell-hide { display: none !important; }
     ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video { filter: blur(20px); }
     ${CARD_SEL}.skq-favcard > *:not(.skq-corner) { box-shadow: 0 0 0 2px #ff4f70; border-radius: 6px; }
     .skq-eyebtn { position: relative; }
