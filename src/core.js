@@ -30,11 +30,35 @@ function core(storedSettings) {
   const MASS_HASH = '#skq-mass';
   const isMutating = (m) => !/^(GET|HEAD|OPTIONS)$/.test(m);
 
-  // Сетевая активность формы — родитель по ней понимает, что форма «успокоилась»
-  const frameNet = { inflight: 0, last: Date.now() };
+  // Сетевая активность формы — родитель по ней понимает, что форма «успокоилась».
+  // Запросы помним поимённо: какой-нибудь один (долгий опрос сайта) может висеть
+  // минутами, и считать из-за него форму занятой всё это время нельзя
+  const frameNet = { inflight: 0, last: Date.now(), pending: new Map() };
   if (FRAME_MODE) window.__skqNet = frameNet;
-  const netStart = () => { frameNet.inflight++; frameNet.last = Date.now(); };
-  const netEnd = () => { frameNet.inflight = Math.max(0, frameNet.inflight - 1); frameNet.last = Date.now(); };
+  let netSeq = 0;
+  const netStart = (url) => {
+    const id = ++netSeq;
+    frameNet.pending.set(id, { url: String(url || '').slice(0, 200), at: Date.now() });
+    frameNet.inflight = frameNet.pending.size;
+    frameNet.last = Date.now();
+    return id;
+  };
+  const netEnd = (id) => {
+    frameNet.pending.delete(id);
+    frameNet.inflight = frameNet.pending.size;
+    frameNet.last = Date.now();
+  };
+
+  // Запрос, который идёт дольше этого, считаем фоновым: форму он не занимает
+  const NET_STALE = 15000;
+  function netBusy(net) {
+    if (!net) return false;
+    if (!net.pending || typeof net.pending.forEach !== 'function') return net.inflight > 0;
+    const now = Date.now();
+    let busy = false;
+    net.pending.forEach((req) => { if (now - req.at < NET_STALE) busy = true; });
+    return busy;
+  }
 
   // ---------------------------------------------------------------------------
   // Настройки (меню Tampermonkey → «Настройки»)
@@ -330,8 +354,9 @@ function core(storedSettings) {
     } catch { /* ignore */ }
     const res = origFetch(input, init);
     if (FRAME_MODE) {
-      netStart();
-      res.then(netEnd, netEnd);
+      const reqId = netStart(url);
+      const done = () => netEnd(reqId);
+      res.then(done, done);
     }
     if (url && shouldHarvest(url)) {
       res.then((r) => r.clone().json().then(harvest)).catch(() => {});
@@ -363,8 +388,8 @@ function core(storedSettings) {
     if (meta) {
       onSiteRequest(meta.url, meta.h, this.withCredentials ? 'include' : undefined);
       if (FRAME_MODE) {
-        netStart();
-        this.addEventListener('loadend', netEnd);
+        const reqId = netStart(meta.url);
+        this.addEventListener('loadend', () => netEnd(reqId));
       }
       if (shouldHarvest(meta.url)) {
         this.addEventListener('load', () => {
@@ -3853,7 +3878,7 @@ function core(storedSettings) {
       let net = null;
       try { net = item.iframe && item.iframe.contentWindow.__skqNet; } catch { /* ignore */ }
       if (!net) return;
-      if (net.inflight === 0 && Date.now() - net.last >= quiet) return;
+      if (!netBusy(net) && Date.now() - net.last >= quiet) return;
       await sleep(200);
     }
   }
@@ -4561,8 +4586,19 @@ function core(storedSettings) {
       await syncFields(item);
       await waitIdle(item);
       if (!alive(item)) return false;
-      const doc = formDoc(item);
-      const btn = doc && findCreateButton(doc);
+      let doc = formDoc(item);
+      let btn = doc && findCreateButton(doc);
+      if (!btn) throw new Error(t('не нашёл кнопку «Создать пост»'));
+      // пока файл догружается, сайт держит кнопку выключенной — ждём, а не сдаёмся
+      if (isDisabled(btn)) {
+        await waitFor(() => {
+          if (!alive(item)) return true;
+          doc = formDoc(item);
+          btn = doc && findCreateButton(doc);
+          return !!btn && !isDisabled(btn);
+        }, 180000, 500);
+        if (!alive(item)) return false;
+      }
       if (!btn) throw new Error(t('не нашёл кнопку «Создать пост»'));
       if (isDisabled(btn)) throw new Error(t('кнопка «Создать пост» недоступна — проверьте обязательные поля'));
 
@@ -4586,7 +4622,7 @@ function core(storedSettings) {
         await sleep(warn ? 0 : 6000);
         let net = null;
         try { net = item.iframe && item.iframe.contentWindow.__skqNet; } catch { /* ignore */ }
-        if (item.waiter === waiter && net && net.inflight === 0 && net.last < clickedAt) {
+        if (item.waiter === waiter && net && !netBusy(net) && net.last < clickedAt) {
           waiter.reject(new Error(t('форма не отправилась — проверьте обязательные поля')));
         }
         await sleep(84000);

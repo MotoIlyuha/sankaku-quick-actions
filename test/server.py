@@ -73,6 +73,11 @@ class H(http.server.BaseHTTPRequestHandler):
                 want = raw.split('id_range:')[1].split('&')[0]
                 posts = [x for x in posts if x['id'] == want]
             return self._send(200, json.dumps(posts), 'application/json')
+        if path.startswith('/api/longpoll'):
+            # как у сайта: фоновый запрос, который висит минутами
+            import time
+            time.sleep(300)
+            return self._send(200, '{}', 'application/json')
         if path.startswith('/tags/autosuggest'):
             import urllib.parse
             q = urllib.parse.parse_qs(self.path.split('?', 1)[1] if '?' in self.path else '').get('tag', [''])[0].lower()

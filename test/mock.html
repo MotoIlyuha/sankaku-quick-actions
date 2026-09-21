@@ -273,6 +273,8 @@
         }
         if (e.key === 'Escape') closeLb();
       });
+      // фоновый запрос сайта, который не завершается минутами
+      fetch('/api/longpoll').catch(() => {});
       const onAutotag = async () => {
         await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
         window.__autotagRuns = (window.__autotagRuns || 0) + 1;
