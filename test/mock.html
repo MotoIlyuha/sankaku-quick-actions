@@ -108,7 +108,8 @@
     },
   };
   const SITE_WORDS = {
-    ru: { 'common-title__create_post': 'Создать пост', 'common-title__add-tags': 'Добавить теги', ...MENU_WORDS.ru },
+    ru: { 'common-title__create_post': 'Создать пост', 'common-title__add-tags': 'Добавить теги',
+      'common-title__try-again': 'Попробовать снова', ...MENU_WORDS.ru },
     nl: { 'common-title__create_post': 'Bericht maken', 'common-title__add-tags': 'Tags toevoegen', ...MENU_WORDS.nl },
   };
   const siteLang = (new URLSearchParams(location.search).get('sitelang')
@@ -274,6 +275,17 @@
       });
       const onAutotag = async () => {
         await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
+        window.__autotagRuns = (window.__autotagRuns || 0) + 1;
+        if (f.files[0] && f.files[0].name.includes('retry') && !window.__autotagFailed) {
+          window.__autotagFailed = true;
+          const box = document.createElement('div');
+          box.className = 'retrybox';
+          box.innerHTML = '<button class="MuiButtonBase-root MuiButton-root MuiButton-outlined" type="button">'
+            + '<span class="MuiButton-label">' + word('common-title__try-again') + '</span></button>';
+          box.querySelector('button').onclick = () => { box.remove(); onAutotag(); };
+          document.getElementById('details').appendChild(box);
+          return;
+        }
         chips.innerHTML = '';
         addChip('female'); addChip('smile');
       };
@@ -398,6 +410,25 @@
         : books ? word('common-title__browse_books') : 'Просмотр';
       app.innerHTML = `<div class="grid"><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/100"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/101"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/102"><img src="http://127.0.0.1:8766/PreviewUnavailable.svg" alt=""></a></div></div></div><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner blurred"><a href="/ru/posts/103"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a><svg class="eyeoff" width="24" height="24" viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7"/></svg></div></div></div><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/104"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div><div class="cell"><div data-test="post-card" class="pcard"><div class="pinner"><a href="/ru/posts/105"><img src="http://127.0.0.1:8766/pic.svg" alt=""></a></div></div></div></div>`;
       fetch('http://127.0.0.1:8766/posts?lang=ru&page=1&limit=6', { headers: { Authorization: 'Bearer test-token' } });
+      // хранилище, как у сайта: сетка рисуется по списку ID (числами), а
+      // REMOVE_POST_FROM_GALLERIES_BY_ID убирает пост из списка и из сетки
+      const gallery = { posts: [100, 101, 102, 103, 104, 105] };
+      const store = {
+        getState: () => ({ gallery: { galleries: new Map([['main', gallery]]) } }),
+        dispatch: (action) => {
+          (window.__dispatched = window.__dispatched || []).push(action);
+          if (action.type !== 'gallery/REMOVE_POST_FROM_GALLERIES_BY_ID') return;
+          gallery.posts = gallery.posts.filter((x) => x !== action.id);
+          document.querySelectorAll('.grid > .cell').forEach((cell) => {
+            const href = cell.querySelector('a').getAttribute('href');
+            if (!gallery.posts.includes(Number(href.split('/').pop()))) cell.remove();
+          });
+        },
+      };
+      const provider = { memoizedProps: { store }, return: null };
+      document.querySelectorAll('[data-test="post-card"]').forEach((card) => {
+        card.__reactFiber$mock = { memoizedProps: {}, return: provider };
+      });
     }
   }
   fetch('http://127.0.0.1:8766/api/me', { headers: { Authorization: 'Bearer test-token' } });

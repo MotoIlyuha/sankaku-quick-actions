@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.33.1
+// @version      1.33.2
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -225,7 +225,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.33.1';
+  const SKQ_VERSION = '1.33.2';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -6511,6 +6511,69 @@ function core(storedSettings) {
     return card; // других карточек рядом нет — прячем только саму карточку
   }
 
+  // Сетка сайта виртуальная (react-virtuoso): что и где рисовать, она решает по
+  // номеру поста в своём списке, так что CSS дыру не закроет. Поэтому пост
+  // убираем из самого списка — тем же действием, каким сайт убирает удалённый
+  // пост (gallery/REMOVE_POST_FROM_GALLERIES_BY_ID), и сетка перестраивается
+  let siteStoreCache = null;
+
+  function siteStore() {
+    if (siteStoreCache) return siteStoreCache;
+    let f = fiberOf(document.querySelector(CARD_SEL));
+    for (let i = 0; f && i < 3000; i++, f = f.return) {
+      const pr = f.memoizedProps;
+      if (!isObj(pr)) continue;
+      const st = isObj(pr.store) ? pr.store : isObj(pr.value) && isObj(pr.value.store) ? pr.value.store : null;
+      if (st && typeof st.dispatch === 'function' && typeof st.getState === 'function') {
+        siteStoreCache = st;
+        return st;
+      }
+    }
+    return null;
+  }
+
+  const imGet = (o, key) => (o && typeof o.get === 'function' ? o.get(key) : o ? o[key] : undefined);
+
+  // В списке пост может лежать числом или строкой — ищем его точное значение,
+  // иначе сравнение «!==» у сайта его не узнает
+  function removeFromGallery(id) {
+    const store = siteStore();
+    if (!store) return false;
+    let exact;
+    try {
+      const galleries = imGet(store.getState().gallery, 'galleries');
+      if (galleries && typeof galleries.forEach === 'function') {
+        galleries.forEach((gal) => {
+          const list = imGet(gal, 'posts');
+          if (list && typeof list.forEach === 'function') {
+            list.forEach((x) => { if (String(isObj(x) ? x.id : x) === String(id)) exact = x; });
+          }
+        });
+      }
+    } catch (e) { log('gallery state', e.message); }
+    if (exact === undefined) return false;
+    try {
+      store.dispatch({ type: 'gallery/REMOVE_POST_FROM_GALLERIES_BY_ID', id: exact });
+      return true;
+    } catch (e) {
+      log('gallery remove', e.message);
+      return false;
+    }
+  }
+
+  // что спрятано на этой странице: для счётчика и чтобы не убирать пост дважды
+  const pageHide = { key: '', ids: new Set(), removed: new Set() };
+
+  function pageHidden() {
+    const key = location.pathname + location.search;
+    if (pageHide.key !== key) {
+      pageHide.key = key;
+      pageHide.ids.clear();
+      pageHide.removed.clear();
+    }
+    return pageHide;
+  }
+
   function setCardHidden(card, hide) {
     card.classList.toggle('skq-rule-hide', hide);
     const cell = gridCell(card);
@@ -6591,7 +6654,6 @@ function core(storedSettings) {
   function markCards() {
     if (FRAME_MODE || !document.body) return;
     const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
-    let hidden = 0;
     for (const card of document.querySelectorAll(CARD_SEL)) {
       // теги и автор нужны правилам, поэтому ID берём всегда
       const id = cardId(card);
@@ -6618,12 +6680,21 @@ function core(storedSettings) {
       card.classList.toggle('skq-favcard', !!post && post.is_favorited === true);
       const rule = id ? ruleFor(id) : null;
       const hide = (!!rule && rule.mode !== 'blur') || (!!id && postHidden(id));
+      // сразу прячем карточку, а из списка сайта убираем — тогда исчезнет и её место
       setCardHidden(card, hide);
+      if (hide) {
+        const page = pageHidden();
+        page.ids.add(id);
+        if (!page.removed.has(id)) {
+          page.removed.add(id);
+          removeFromGallery(id);
+        }
+      }
       // «Показать размытые посты» снимает и наше размытие
       card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
-      if (hide) hidden++;
     }
-    ruleHidden = hidden;
+    // убранные из списка карточек на странице уже нет, но в счётчике они есть
+    ruleHidden = pageHidden().ids.size;
     updateEyeCount();
   }
 
@@ -9227,6 +9298,18 @@ function core(storedSettings) {
       AUTOTAG_RE.test(`${b.textContent} ${b.getAttribute('aria-label') || ''} ${b.title || ''}`)) || null;
   }
 
+  // Если Autotag не удался, сайт показывает «Попробовать снова»
+  function findRetryButton(doc) {
+    if (!doc) return null;
+    const word = siteWord('common-title__try-again', doc.defaultView).trim().toLowerCase();
+    return [...doc.querySelectorAll('button, [role="button"]')].find((b) => {
+      const text = btnText(b).toLowerCase();
+      return word ? text === word : /^(попробовать снова|try again|retry)$/i.test(text);
+    }) || null;
+  }
+
+  const AUTOTAG_RETRIES = 3;
+
   // очередь: между запусками автотега выдерживаем ту же паузу
   let autotagQueue = Promise.resolve();
   let lastAutotagAt = 0;
@@ -9257,6 +9340,16 @@ function core(storedSettings) {
       btn.click();
       await sleep(300);
       await waitIdle(item, 1500, 60000);
+      // не вышло — выждав секунду, жмём «Попробовать снова», но не до бесконечности
+      for (let attempt = 0; attempt < AUTOTAG_RETRIES && alive(item); attempt++) {
+        if (!findRetryButton(formDoc(item))) break;
+        await sleep(1000);
+        const again = findRetryButton(formDoc(item));
+        if (!again || isDisabled(again) || !alive(item)) break;
+        again.click();
+        await sleep(300);
+        await waitIdle(item, 1500, 60000);
+      }
     } finally {
       item.autotagging = false;
     }
