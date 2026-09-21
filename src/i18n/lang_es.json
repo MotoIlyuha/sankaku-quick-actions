@@ -207,5 +207,6 @@
  "205": "Publicación oculta: {id}",
  "206": "La publicación vuelve a verse: {id}",
  "207": "Publicaciones ocultas con la tecla ({n})",
- "208": "Volver a mostrar la publicación"
+ "208": "Volver a mostrar la publicación",
+ "209": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación"
 }

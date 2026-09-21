@@ -207,5 +207,6 @@
  "205": "Opslag skjult: {id}",
  "206": "Opslaget vises igen: {id}",
  "207": "Opslag skjult med tasten ({n})",
- "208": "Vis opslaget igen"
+ "208": "Vis opslaget igen",
+ "209": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular"
 }

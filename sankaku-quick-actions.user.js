@@ -437,7 +437,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Post hidden: {id}",
           "Пост снова виден: {id}": "Post shown again: {id}",
           "Посты, скрытые клавишей ({n})": "Posts hidden with the key ({n})",
-          "Вернуть пост": "Show the post again"
+          "Вернуть пост": "Show the post again",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "The site doubts the rating and is waiting for your decision — open the post form"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -648,7 +649,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "投稿を非表示にしました：{id}",
           "Пост снова виден: {id}": "投稿を再び表示しました：{id}",
           "Посты, скрытые клавишей ({n})": "キーで非表示にした投稿（{n}）",
-          "Вернуть пост": "投稿を再び表示"
+          "Вернуть пост": "投稿を再び表示",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "サイトがレーティングを疑問視し、判断を待っています。投稿フォームを開いてください"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -859,7 +861,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "已隐藏帖子：{id}",
           "Пост снова виден: {id}": "已重新显示帖子：{id}",
           "Посты, скрытые клавишей ({n})": "用按键隐藏的帖子（{n}）",
-          "Вернуть пост": "重新显示帖子"
+          "Вернуть пост": "重新显示帖子",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "网站对分级有疑问，正在等待你的决定——请打开帖子表单"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1070,7 +1073,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "已隱藏貼文：{id}",
           "Пост снова виден: {id}": "已重新顯示貼文：{id}",
           "Посты, скрытые клавишей ({n})": "用按鍵隱藏的貼文（{n}）",
-          "Вернуть пост": "重新顯示貼文"
+          "Вернуть пост": "重新顯示貼文",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "網站對分級有疑問，正在等待你的決定——請開啟貼文表單"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1281,7 +1285,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "게시물을 숨겼습니다: {id}",
           "Пост снова виден: {id}": "게시물을 다시 표시했습니다: {id}",
           "Посты, скрытые клавишей ({n})": "키로 숨긴 게시물 ({n})",
-          "Вернуть пост": "게시물 다시 표시"
+          "Вернуть пост": "게시물 다시 표시",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "사이트가 등급을 의심하며 결정을 기다리고 있습니다. 게시물 양식을 여세요"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1492,7 +1497,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Beitrag ausgeblendet: {id}",
           "Пост снова виден: {id}": "Beitrag wieder sichtbar: {id}",
           "Посты, скрытые клавишей ({n})": "Mit der Taste ausgeblendete Beiträge ({n})",
-          "Вернуть пост": "Beitrag wieder anzeigen"
+          "Вернуть пост": "Beitrag wieder anzeigen",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1703,7 +1709,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Post masqué : {id}",
           "Пост снова виден: {id}": "Post de nouveau visible : {id}",
           "Посты, скрытые клавишей ({n})": "Posts masqués avec la touche ({n})",
-          "Вернуть пост": "Réafficher le post"
+          "Вернуть пост": "Réafficher le post",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1914,7 +1921,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Publicación oculta: {id}",
           "Пост снова виден: {id}": "La publicación vuelve a verse: {id}",
           "Посты, скрытые клавишей ({n})": "Publicaciones ocultas con la tecla ({n})",
-          "Вернуть пост": "Volver a mostrar la publicación"
+          "Вернуть пост": "Volver a mostrar la publicación",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2125,7 +2133,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Publicação ocultada: {id}",
           "Пост снова виден: {id}": "Publicação visível novamente: {id}",
           "Посты, скрытые клавишей ({n})": "Publicações ocultadas com a tecla ({n})",
-          "Вернуть пост": "Mostrar a publicação de novo"
+          "Вернуть пост": "Mostrar a publicação de novo",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "O site duvida da classificação e aguarda a sua decisão — abra o formulário da publicação"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2336,7 +2345,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Post nascosto: {id}",
           "Пост снова виден: {id}": "Post di nuovo visibile: {id}",
           "Посты, скрытые клавишей ({n})": "Post nascosti con il tasto ({n})",
-          "Вернуть пост": "Mostra di nuovo il post"
+          "Вернуть пост": "Mostra di nuovo il post",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Il sito dubita della classificazione e attende la tua decisione: apri il modulo del post"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2547,7 +2557,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Post verborgen: {id}",
           "Пост снова виден: {id}": "Post weer zichtbaar: {id}",
           "Посты, скрытые клавишей ({n})": "Met de toets verborgen posts ({n})",
-          "Вернуть пост": "Post weer tonen"
+          "Вернуть пост": "Post weer tonen",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "De site twijfelt aan de classificatie en wacht op uw beslissing — open het formulier van de post"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2758,7 +2769,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Post ukryty: {id}",
           "Пост снова виден: {id}": "Post znów widoczny: {id}",
           "Посты, скрытые клавишей ({n})": "Posty ukryte klawiszem ({n})",
-          "Вернуть пост": "Pokaż post ponownie"
+          "Вернуть пост": "Pokaż post ponownie",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -2969,7 +2981,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Inlägget är dolt: {id}",
           "Пост снова виден: {id}": "Inlägget syns igen: {id}",
           "Посты, скрытые клавишей ({n})": "Inlägg som dolts med tangenten ({n})",
-          "Вернуть пост": "Visa inlägget igen"
+          "Вернуть пост": "Visa inlägget igen",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3180,7 +3193,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Opslag skjult: {id}",
           "Пост снова виден: {id}": "Opslaget vises igen: {id}",
           "Посты, скрытые клавишей ({n})": "Opslag skjult med tasten ({n})",
-          "Вернуть пост": "Vis opslaget igen"
+          "Вернуть пост": "Vis opslaget igen",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3391,7 +3405,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Innlegget er skjult: {id}",
           "Пост снова виден: {id}": "Innlegget vises igjen: {id}",
           "Посты, скрытые клавишей ({n})": "Innlegg skjult med tasten ({n})",
-          "Вернуть пост": "Vis innlegget igjen"
+          "Вернуть пост": "Vis innlegget igjen",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3602,7 +3617,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Julkaisu piilotettu: {id}",
           "Пост снова виден: {id}": "Julkaisu näkyy taas: {id}",
           "Посты, скрытые клавишей ({n})": "Näppäimellä piilotetut julkaisut ({n})",
-          "Вернуть пост": "Näytä julkaisu taas"
+          "Вернуть пост": "Näytä julkaisu taas",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3813,7 +3829,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Bejegyzés elrejtve: {id}",
           "Пост снова виден: {id}": "A bejegyzés ismét látszik: {id}",
           "Посты, скрытые клавишей ({n})": "A billentyűvel elrejtett bejegyzések ({n})",
-          "Вернуть пост": "Bejegyzés újbóli megjelenítése"
+          "Вернуть пост": "Bejegyzés újbóli megjelenítése",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -4024,7 +4041,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Postare ascunsă: {id}",
           "Пост снова виден: {id}": "Postarea este iar vizibilă: {id}",
           "Посты, скрытые клавишей ({n})": "Postări ascunse cu tasta ({n})",
-          "Вернуть пост": "Arată din nou postarea"
+          "Вернуть пост": "Arată din nou postarea",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4235,7 +4253,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Скрита публикация: {id}",
           "Пост снова виден: {id}": "Публикацията е видима отново: {id}",
           "Посты, скрытые клавишей ({n})": "Публикации, скрити с клавиша ({n})",
-          "Вернуть пост": "Показване на публикацията отново"
+          "Вернуть пост": "Показване на публикацията отново",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Сайтът се съмнява в рейтинга и чака решение — отворете формуляра на публикацията"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4446,7 +4465,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Η ανάρτηση κρύφτηκε: {id}",
           "Пост снова виден: {id}": "Η ανάρτηση εμφανίζεται ξανά: {id}",
           "Посты, скрытые клавишей ({n})": "Αναρτήσεις κρυμμένες με το πλήκτρο ({n})",
-          "Вернуть пост": "Εμφάνιση της ανάρτησης ξανά"
+          "Вернуть пост": "Εμφάνιση της ανάρτησης ξανά",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Ο ιστότοπος αμφιβάλλει για τη βαθμολογία και περιμένει απόφαση — ανοίξτε τη φόρμα της ανάρτησης"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4657,7 +4677,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Gönderi gizlendi: {id}",
           "Пост снова виден: {id}": "Gönderi yeniden görünüyor: {id}",
           "Посты, скрытые клавишей ({n})": "Tuşla gizlenen gönderiler ({n})",
-          "Вернуть пост": "Gönderiyi yeniden göster"
+          "Вернуть пост": "Gönderiyi yeniden göster",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4868,7 +4889,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "ซ่อนโพสต์แล้ว: {id}",
           "Пост снова виден: {id}": "แสดงโพสต์อีกครั้งแล้ว: {id}",
           "Посты, скрытые клавишей ({n})": "โพสต์ที่ซ่อนด้วยปุ่ม ({n})",
-          "Вернуть пост": "แสดงโพสต์อีกครั้ง"
+          "Вернуть пост": "แสดงโพสต์อีกครั้ง",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "เว็บไซต์ไม่แน่ใจเรื่องเรตติ้งและรอการตัดสินใจ — เปิดแบบฟอร์มของโพสต์"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -5079,7 +5101,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "पोस्ट छिपाई गई: {id}",
           "Пост снова виден: {id}": "पोस्ट फिर से दिख रही है: {id}",
           "Посты, скрытые клавишей ({n})": "कुंजी से छिपाई गई पोस्ट ({n})",
-          "Вернуть пост": "पोस्ट फिर दिखाएँ"
+          "Вернуть пост": "पोस्ट फिर दिखाएँ",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "साइट को रेटिंग पर संदेह है और वह आपके निर्णय की प्रतीक्षा कर रही है — पोस्ट का फ़ॉर्म खोलें"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5290,7 +5313,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Postingan disembunyikan: {id}",
           "Пост снова виден: {id}": "Postingan terlihat lagi: {id}",
           "Посты, скрытые клавишей ({n})": "Postingan yang disembunyikan dengan tombol ({n})",
-          "Вернуть пост": "Tampilkan postingan lagi"
+          "Вернуть пост": "Tampilkan postingan lagi",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Situs meragukan rating dan menunggu keputusan Anda — buka formulir postingan"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5501,7 +5525,8 @@ function core(storedSettings) {
           "Пост скрыт: {id}": "Siaran disembunyikan: {id}",
           "Пост снова виден: {id}": "Siaran kelihatan semula: {id}",
           "Посты, скрытые клавишей ({n})": "Siaran yang disembunyikan dengan kekunci ({n})",
-          "Вернуть пост": "Tunjukkan siaran semula"
+          "Вернуть пост": "Tunjukkan siaran semula",
+          "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Laman meragui penarafan dan menunggu keputusan anda — buka borang siaran"
     },
   } /* SKQ_I18N_END */;
 
@@ -9165,9 +9190,26 @@ function core(storedSettings) {
     }
   }
 
+  // Пока файл обрабатывается, сайт показывает в боковой панели скелет: ни
+  // рейтинга, ни тегов с Autotag, ни «Создать пост» там ещё нет (isLoading в
+  // UploadPostSideBar). Ждём, пока панель наполнится, — большие видео
+  // обрабатываются долго, поэтому с запасом
+  function detailsReady(item) {
+    const doc = formDoc(item);
+    return !!doc && !!findCreateButton(doc, true);
+  }
+
+  async function waitDetails(item, timeout = 180000) {
+    if (detailsReady(item)) return true;
+    await waitFor(() => !alive(item) || detailsReady(item), timeout, 400);
+    return detailsReady(item);
+  }
+
   async function afterFormReady(item, frame) {
     await waitIdle(item); // загрузка файла, авто-теги сайта
     if (!alive(item) || item.iframe !== frame || !item.formReady) return;
+    await waitDetails(item);
+    if (!alive(item) || item.iframe !== frame) return;
     if (item.wantAutotag) {
       item.wantAutotag = false;
       await runAutotag(item);
@@ -9200,6 +9242,8 @@ function core(storedSettings) {
   }
 
   async function runAutotag(item) {
+    if (!formDoc(item)) return false;
+    await waitDetails(item);
     if (!formDoc(item) || !findAutotagButton(formDoc(item))) return false;
     await autotagTurn();
     const doc = formDoc(item);
@@ -9790,7 +9834,9 @@ function core(storedSettings) {
     return cond();
   }
 
-  function findCreateButton(doc) {
+  // strict — только по названию: для проверки «панель уже готова» запасные
+  // догадки (любая кнопка отправки) дали бы ложный ответ
+  function findCreateButton(doc, strict) {
     const all = [...doc.querySelectorAll('button, [role="button"], input[type="submit"]')];
     // сначала по названию из словаря самого сайта — оно точное на любом языке;
     // ключи перебираем по порядку: «создать пост» важнее, чем «создать новый пост»
@@ -9802,6 +9848,7 @@ function core(storedSettings) {
     const named = all.filter((b) => CREATE_RE.test(btnText(b)));
     const exact = named.find((b) => /^(создать пост|create post)$/i.test(btnText(b)));
     if (exact || named.length) return exact || named[0];
+    if (strict) return null;
     // словаря нет и слова не те — ищем кнопку отправки формы
     const submit = all.find((b) => b.type === 'submit' && !isDisabled(b));
     if (submit) return submit;
@@ -9818,6 +9865,7 @@ function core(storedSettings) {
       if (!alive(item)) return false;
       if (!item.formReady) throw new Error(item.state === 'error' ? item.badge.title : t('форма не загрузилась'));
       await item.settled;
+      await waitDetails(item);
       await waitFor(() => !item.autotagging, 65000);
       await syncTags(item);
       await syncFields(item);
@@ -9833,7 +9881,19 @@ function core(storedSettings) {
       const clickedAt = Date.now();
       btn.click();
       (async () => {
-        await sleep(6000);
+        // сайт может засомневаться в рейтинге и спросить, что делать; решать
+        // за человека не будем — останавливаемся и говорим об этом
+        const warn = siteWord('upload__rating-warning-title', doc.defaultView).trim().toLowerCase();
+        for (let i = 0; warn && i < 12 && item.waiter === waiter; i++) {
+          await sleep(500);
+          const asks = [...doc.querySelectorAll('[role="dialog"], [class*="MuiDrawer"], [class*="MuiDialog"]')]
+            .some((el) => (el.textContent || '').toLowerCase().includes(warn));
+          if (asks) {
+            waiter.reject(new Error(t('Сайт сомневается в рейтинге и ждёт решения — откройте форму поста')));
+            return;
+          }
+        }
+        await sleep(warn ? 0 : 6000);
         let net = null;
         try { net = item.iframe && item.iframe.contentWindow.__skqNet; } catch { /* ignore */ }
         if (item.waiter === waiter && net && net.inflight === 0 && net.last < clickedAt) {

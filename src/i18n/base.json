@@ -208,6 +208,7 @@
   "Пост скрыт: {id}": "Post hidden: {id}",
   "Пост снова виден: {id}": "Post shown again: {id}",
   "Посты, скрытые клавишей ({n})": "Posts hidden with the key ({n})",
-  "Вернуть пост": "Show the post again"
+  "Вернуть пост": "Show the post again",
+  "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "The site doubts the rating and is waiting for your decision — open the post form"
  }
 }

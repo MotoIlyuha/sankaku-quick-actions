@@ -207,5 +207,6 @@
  "205": "Gönderi gizlendi: {id}",
  "206": "Gönderi yeniden görünüyor: {id}",
  "207": "Tuşla gizlenen gönderiler ({n})",
- "208": "Gönderiyi yeniden göster"
+ "208": "Gönderiyi yeniden göster",
+ "209": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın"
 }

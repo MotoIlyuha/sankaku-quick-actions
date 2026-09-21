@@ -3787,9 +3787,26 @@ function core(storedSettings) {
     }
   }
 
+  // Пока файл обрабатывается, сайт показывает в боковой панели скелет: ни
+  // рейтинга, ни тегов с Autotag, ни «Создать пост» там ещё нет (isLoading в
+  // UploadPostSideBar). Ждём, пока панель наполнится, — большие видео
+  // обрабатываются долго, поэтому с запасом
+  function detailsReady(item) {
+    const doc = formDoc(item);
+    return !!doc && !!findCreateButton(doc, true);
+  }
+
+  async function waitDetails(item, timeout = 180000) {
+    if (detailsReady(item)) return true;
+    await waitFor(() => !alive(item) || detailsReady(item), timeout, 400);
+    return detailsReady(item);
+  }
+
   async function afterFormReady(item, frame) {
     await waitIdle(item); // загрузка файла, авто-теги сайта
     if (!alive(item) || item.iframe !== frame || !item.formReady) return;
+    await waitDetails(item);
+    if (!alive(item) || item.iframe !== frame) return;
     if (item.wantAutotag) {
       item.wantAutotag = false;
       await runAutotag(item);
@@ -3822,6 +3839,8 @@ function core(storedSettings) {
   }
 
   async function runAutotag(item) {
+    if (!formDoc(item)) return false;
+    await waitDetails(item);
     if (!formDoc(item) || !findAutotagButton(formDoc(item))) return false;
     await autotagTurn();
     const doc = formDoc(item);
@@ -4412,7 +4431,9 @@ function core(storedSettings) {
     return cond();
   }
 
-  function findCreateButton(doc) {
+  // strict — только по названию: для проверки «панель уже готова» запасные
+  // догадки (любая кнопка отправки) дали бы ложный ответ
+  function findCreateButton(doc, strict) {
     const all = [...doc.querySelectorAll('button, [role="button"], input[type="submit"]')];
     // сначала по названию из словаря самого сайта — оно точное на любом языке;
     // ключи перебираем по порядку: «создать пост» важнее, чем «создать новый пост»
@@ -4424,6 +4445,7 @@ function core(storedSettings) {
     const named = all.filter((b) => CREATE_RE.test(btnText(b)));
     const exact = named.find((b) => /^(создать пост|create post)$/i.test(btnText(b)));
     if (exact || named.length) return exact || named[0];
+    if (strict) return null;
     // словаря нет и слова не те — ищем кнопку отправки формы
     const submit = all.find((b) => b.type === 'submit' && !isDisabled(b));
     if (submit) return submit;
@@ -4440,6 +4462,7 @@ function core(storedSettings) {
       if (!alive(item)) return false;
       if (!item.formReady) throw new Error(item.state === 'error' ? item.badge.title : t('форма не загрузилась'));
       await item.settled;
+      await waitDetails(item);
       await waitFor(() => !item.autotagging, 65000);
       await syncTags(item);
       await syncFields(item);
@@ -4455,7 +4478,19 @@ function core(storedSettings) {
       const clickedAt = Date.now();
       btn.click();
       (async () => {
-        await sleep(6000);
+        // сайт может засомневаться в рейтинге и спросить, что делать; решать
+        // за человека не будем — останавливаемся и говорим об этом
+        const warn = siteWord('upload__rating-warning-title', doc.defaultView).trim().toLowerCase();
+        for (let i = 0; warn && i < 12 && item.waiter === waiter; i++) {
+          await sleep(500);
+          const asks = [...doc.querySelectorAll('[role="dialog"], [class*="MuiDrawer"], [class*="MuiDialog"]')]
+            .some((el) => (el.textContent || '').toLowerCase().includes(warn));
+          if (asks) {
+            waiter.reject(new Error(t('Сайт сомневается в рейтинге и ждёт решения — откройте форму поста')));
+            return;
+          }
+        }
+        await sleep(warn ? 0 : 6000);
         let net = null;
         try { net = item.iframe && item.iframe.contentWindow.__skqNet; } catch { /* ignore */ }
         if (item.waiter === waiter && net && net.inflight === 0 && net.last < clickedAt) {

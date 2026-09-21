@@ -207,5 +207,6 @@
  "205": "Inlägget är dolt: {id}",
  "206": "Inlägget syns igen: {id}",
  "207": "Inlägg som dolts med tangenten ({n})",
- "208": "Visa inlägget igen"
+ "208": "Visa inlägget igen",
+ "209": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär"
 }

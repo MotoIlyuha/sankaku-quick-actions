@@ -188,10 +188,9 @@
         <div class="MuiAccordion-root adv"><div role="button" class="MuiAccordionSummary-root"><p>Продвинутый</p></div><div class="advbody"></div></div>
         <div class="MuiAutocomplete-root"><div id="chips"></div>
           <input id="autocomplete" class="MuiInputBase-input MuiAutocomplete-input" placeholder="${word('common-title__add-tags')}"></div>
-        <button type="button" id="autotag">Autotag</button>
         <input type="file" accept="image/*,video/*" id="f" hidden><button type="button" id="pick">Загрузить файл</button>
         <div id="preview">нет файла</div>
-        <button type="button" id="create" class="MuiButtonBase-root"><span class="MuiButton-label">${word('common-title__create_post')}</span></button>`;
+        <div id="details" class="skeleton">…</div>`;
       document.querySelectorAll('.ratings button').forEach((b) => b.addEventListener('click', () => {
         document.querySelectorAll('.ratings button').forEach((x) => { x.style.backgroundColor = ''; });
         b.style.backgroundColor = b.textContent === 'G' ? 'rgb(38, 217, 56)' : 'rgb(251, 98, 208)';
@@ -273,17 +272,28 @@
         }
         if (e.key === 'Escape') closeLb();
       });
-      document.getElementById('autotag').onclick = async () => {
+      const onAutotag = async () => {
         await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
         chips.innerHTML = '';
         addChip('female'); addChip('smile');
       };
       f.addEventListener('change', async () => {
         document.getElementById('preview').textContent = 'FILE: ' + f.files[0].name;
+        // как у сайта: пока файл обрабатывается, в панели скелет, кнопок ещё нет
+        setTimeout(() => {
+          const details = document.getElementById('details');
+          if (!details) return;
+          details.className = '';
+          details.innerHTML = '<button type="button" id="autotag">Autotag</button>'
+            + '<button type="button" id="create" class="MuiButtonBase-root"><span class="MuiButton-label">'
+            + word('common-title__create_post') + '</span></button>';
+          document.getElementById('autotag').onclick = onAutotag;
+          document.getElementById('create').onclick = onCreate;
+        }, 2500);
         await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
         if (!f.files[0].name.includes('notags')) addChip('blonde hair');
       });
-      document.getElementById('create').onclick = async () => {
+      const onCreate = async () => {
         if (!f.files.length || !chips.children.length) return;
         if (f.files[0].name.includes('bad')) {
           await fetch('/api/posts/fail', { method: 'POST', body: 'x' });
