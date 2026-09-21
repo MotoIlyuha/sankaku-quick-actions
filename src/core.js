@@ -3915,9 +3915,13 @@ function core(storedSettings) {
   // ---- Autotag ----
   const AUTOTAG_RE = /auto\s*-?\s*tag|авто\s*-?\s*тег/i;
 
+  // Отдельной кнопки Autotag у сайта больше нет: автотеги ставятся сами, когда
+  // файл загружен, а если не вышло — в форме появляется «Попробовать снова».
+  // Её и жмём; старую кнопку Autotag, если она где-то осталась, — тоже
   function findAutotagButton(doc) {
-    return [...doc.querySelectorAll('button, [role="button"]')].find((b) =>
-      AUTOTAG_RE.test(`${b.textContent} ${b.getAttribute('aria-label') || ''} ${b.title || ''}`)) || null;
+    const old = [...doc.querySelectorAll('button, [role="button"]')].find((b) =>
+      AUTOTAG_RE.test(`${b.textContent} ${b.getAttribute('aria-label') || ''} ${b.title || ''}`));
+    return old || findRetryButton(doc);
   }
 
   // Если Autotag не удался, сайт показывает «Попробовать снова»
@@ -3991,7 +3995,7 @@ function core(storedSettings) {
     const parts = [];
     if (now) parts.push(t('запущен для {n}', { n: now }));
     if (later) parts.push(t('{n} — когда откроются формы', { n: later }));
-    if (missing) parts.push(t('кнопка не найдена: {n}', { n: missing }));
+    if (missing) parts.push(t('автотеги уже на месте: {n}', { n: missing }));
     toast('Autotag: ' + (parts.join(', ') || t('нечего запускать')), !now && !later);
   }
 

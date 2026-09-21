@@ -208,5 +208,6 @@
  "206": "Beitrag wieder sichtbar: {id}",
  "207": "Mit der Taste ausgeblendete Beiträge ({n})",
  "208": "Beitrag wieder anzeigen",
- "209": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular"
+ "209": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular",
+ "210": "Auto-Tags schon vorhanden: {n}"
 }

@@ -208,5 +208,6 @@
  "206": "Postarea este iar vizibilă: {id}",
  "207": "Postări ascunse cu tasta ({n})",
  "208": "Arată din nou postarea",
- "209": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării"
+ "209": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării",
+ "210": "etichetele automate sunt deja puse: {n}"
 }

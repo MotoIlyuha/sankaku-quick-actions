@@ -208,5 +208,6 @@
  "206": "Innlegget vises igjen: {id}",
  "207": "Innlegg skjult med tasten ({n})",
  "208": "Vis innlegget igjen",
- "209": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget"
+ "209": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget",
+ "210": "automatiske tagger er allerede på plass: {n}"
 }

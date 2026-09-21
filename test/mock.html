@@ -285,7 +285,7 @@
           box.innerHTML = '<button class="MuiButtonBase-root MuiButton-root MuiButton-outlined" type="button">'
             + '<span class="MuiButton-label">' + word('common-title__try-again') + '</span></button>';
           box.querySelector('button').onclick = () => { box.remove(); onAutotag(); };
-          document.getElementById('details').appendChild(box);
+          document.getElementById('details').prepend(box);
           return;
         }
         chips.innerHTML = '';
@@ -298,11 +298,10 @@
           const details = document.getElementById('details');
           if (!details) return;
           details.className = '';
-          details.innerHTML = '<button type="button" id="autotag">Autotag</button>'
-            + '<button type="button" id="create" class="MuiButtonBase-root"><span class="MuiButton-label">'
+          details.innerHTML = '<button type="button" id="create" class="MuiButtonBase-root"><span class="MuiButton-label">'
             + word('common-title__create_post') + '</span></button>';
-          document.getElementById('autotag').onclick = onAutotag;
           document.getElementById('create').onclick = onCreate;
+          onAutotag(); // сайт сам запускает автотеги, как только файл загружен
         }, 2500);
         await fetch('/api/ai/autotag', { method: 'POST', body: 'x' });
         if (!f.files[0].name.includes('notags')) addChip('blonde hair');

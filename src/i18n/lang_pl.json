@@ -208,5 +208,6 @@
  "206": "Post znów widoczny: {id}",
  "207": "Posty ukryte klawiszem ({n})",
  "208": "Pokaż post ponownie",
- "209": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta"
+ "209": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
+ "210": "automatyczne tagi już są: {n}"
 }

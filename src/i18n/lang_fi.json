@@ -208,5 +208,6 @@
  "206": "Julkaisu näkyy taas: {id}",
  "207": "Näppäimellä piilotetut julkaisut ({n})",
  "208": "Näytä julkaisu taas",
- "209": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake"
+ "209": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake",
+ "210": "automaattiset tunnisteet jo paikallaan: {n}"
 }

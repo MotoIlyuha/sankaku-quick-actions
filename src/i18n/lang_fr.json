@@ -208,5 +208,6 @@
  "206": "Post de nouveau visible : {id}",
  "207": "Posts masqués avec la touche ({n})",
  "208": "Réafficher le post",
- "209": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post"
+ "209": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post",
+ "210": "tags automatiques déjà en place : {n}"
 }
