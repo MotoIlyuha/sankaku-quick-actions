@@ -284,6 +284,12 @@ function core(storedSettings) {
     };
     for (const k in vals) {
       if (vals[k] === undefined || vals[k] === null) continue;
+      // в сетке у поста только первые теги, на странице поста — все: копим,
+      // чтобы короткий список из сетки не затёр уже известный полный
+      if (k === 'tags' && Array.isArray(p.tags)) {
+        p.tags = [...new Set([...p.tags, ...vals.tags])];
+        continue;
+      }
       if (soft && p[k] !== undefined) continue;
       p[k] = vals[k];
     }
@@ -573,14 +579,27 @@ function core(storedSettings) {
   }
 
   // Ищем объект поста в пропсах React-компонентов выше по дереву
+  const POST_PROPS = ['post', 'currentPost', 'activePost', 'item'];
+  const postInProps = (pr) => {
+    if (!isObj(pr)) return null;
+    for (const key of POST_PROPS) if (looksLikePost(pr[key])) return pr[key];
+    return null;
+  };
+
   function postFromFiber(el) {
-    let f = fiberOf(el);
-    for (let i = 0; f && i < 80; i++, f = f.return) {
-      const pr = f.memoizedProps;
-      if (!isObj(pr)) continue;
-      for (const key of ['post', 'currentPost', 'activePost', 'item']) {
-        if (looksLikePost(pr[key])) return pr[key];
-      }
+    const start = fiberOf(el);
+    for (let f = start, i = 0; f && i < 80; i++, f = f.return) {
+      const found = postInProps(f.memoizedProps);
+      if (found) return found;
+    }
+    // в сетке данные поста лежат ниже обёртки [data-test="post-card"]
+    const queue = start && start.child ? [start.child] : [];
+    for (let seen = 0; queue.length && seen < 300; seen++) {
+      const f = queue.shift();
+      const found = postInProps(f.memoizedProps);
+      if (found) return found;
+      if (f.child) queue.push(f.child);
+      if (f.sibling) queue.push(f.sibling);
     }
     return null;
   }
@@ -1204,6 +1223,55 @@ function core(storedSettings) {
     if (cell !== card) cell.classList.toggle('skq-cell-hide', hide);
   }
 
+  // В сетку сайт отдаёт только первые пять тегов поста, а полный список
+  // догружает на странице поста. Правилу по тегам этого мало — для постов на
+  // экране догружаем все теги сами, по три запроса разом, каждый пост один раз
+  const fullTags = { queue: [], running: 0, pending: new Set(), done: new Set() };
+  const tagRulesOn = () => ruleList().some((r) => isObj(r) && Array.isArray(r.tags) && r.tags.length > 0);
+  const waitsFullTags = (id) => tagRulesOn() && !fullTags.done.has(String(id));
+
+  function wantFullTags(id) {
+    const key = String(id);
+    if (fullTags.done.has(key) || fullTags.pending.has(key)) return;
+    fullTags.pending.add(key);
+    fullTags.queue.push(key);
+    pumpFullTags();
+  }
+
+  const tagList = (data) => {
+    if (Array.isArray(data)) return data;
+    if (!isObj(data)) return null;
+    for (const key of ['data', 'tags', 'results']) if (Array.isArray(data[key])) return data[key];
+    return isObj(data.post) && Array.isArray(data.post.tags) ? data.post.tags : null;
+  };
+
+  async function loadFullTags(id) {
+    let list = null;
+    try {
+      list = tagList(await api('GET', `/posts/${id}/tags?lang=en&page=1&limit=100`));
+    } catch (e) { log('post tags', id, e.message); }
+    if (!list) {
+      // запасной путь — сам пост: на его странице сайт получает все теги
+      try { list = tagList(await api('GET', `/posts/${id}`)); } catch (e) { log('post', id, e.message); }
+    }
+    if (list && list.length) remember({ id, tags: list }, false);
+  }
+
+  function pumpFullTags() {
+    while (fullTags.running < 3 && fullTags.queue.length) {
+      const id = fullTags.queue.shift();
+      fullTags.running++;
+      loadFullTags(id).finally(() => {
+        // даже неудачу считаем ответом: пост проверим хотя бы по тем тегам, что есть
+        fullTags.done.add(id);
+        fullTags.pending.delete(id);
+        fullTags.running--;
+        pumpFullTags();
+        scheduleScan();
+      });
+    }
+  }
+
   const ruleId = () => 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
   function addRule(rule) {
@@ -1316,6 +1384,11 @@ function core(storedSettings) {
       }
       // «Показать размытые посты» снимает и наше размытие
       card.classList.toggle('skq-rule-blur', !!rule && !hide && !revealAll);
+      // пока не пришли все теги поста, решать рано — держим его размытым,
+      // чтобы то, что правило спрячет, не мелькнуло на экране
+      const waiting = !!id && !hide && waitsFullTags(id);
+      if (waiting) wantFullTags(id);
+      card.classList.toggle('skq-rule-wait', waiting && !revealAll);
     }
     // убранные из списка карточек на странице уже нет, но в счётчике они есть
     ruleHidden = pageHidden().ids.size;
@@ -7004,7 +7077,8 @@ function core(storedSettings) {
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
     ${CARD_SEL}.skq-rule-hide, .skq-cell-hide { display: none !important; }
-    ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video { filter: blur(20px); }
+    ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video,
+    ${CARD_SEL}.skq-rule-wait img, ${CARD_SEL}.skq-rule-wait video { filter: blur(20px); }
     ${CARD_SEL}.skq-favcard > *:not(.skq-corner) { box-shadow: 0 0 0 2px #ff4f70; border-radius: 6px; }
     .skq-eyebtn { position: relative; }
     .skq-eyecount {

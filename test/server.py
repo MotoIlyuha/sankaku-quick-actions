@@ -54,8 +54,9 @@ class H(http.server.BaseHTTPRequestHandler):
                 'user_reputation': {'rank': 3, 'reputation_week': 9, 'reputation': mine},
             }), 'application/json')
         if path.startswith('/posts'):
+            # как у сайта: в сетку уходят только первые теги, остальные — через /posts/{id}/tags
             tags = [
-                ['female', 'blonde hair'], ['trap', 'female'], ['loli'],
+                ['female', 'blonde hair', 'hidden deep tag'], ['trap', 'female'], ['loli'],
                 ['female', 'smile'], ['huge breasts'], ['male'],
             ]
             authors = ['someone', 'ilyuxa3211', 'someone', 'another', 'someone', 'another']
@@ -69,6 +70,12 @@ class H(http.server.BaseHTTPRequestHandler):
             ]
             import urllib.parse
             raw = urllib.parse.unquote(self.path)
+            m = __import__('re').match(r'^/posts/(\d+)/tags', path)
+            if m:
+                full = [x for x in posts if x['id'] == m.group(1)]
+                return self._send(200, json.dumps(full[0]['tags'] if full else []), 'application/json')
+            for x in posts:
+                x['tags'] = x['tags'][:2]
             if 'id_range:' in raw:
                 want = raw.split('id_range:')[1].split('&')[0]
                 posts = [x for x in posts if x['id'] == want]
