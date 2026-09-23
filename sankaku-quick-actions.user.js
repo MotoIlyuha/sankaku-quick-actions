@@ -11958,8 +11958,9 @@ function core(storedSettings) {
   }
 
   // Поле ввода с подсказками в оформлении массовой загрузки. Теги: через
-  // запятую, пробелы сразу превращаются в «_», на пустом поле — недавние теги,
-  // пока идёт запрос — «Загрузка…». Пользователь: одна строка, без истории
+  // запятую, пробелы сразу превращаются в «_», пока идёт запрос — «Загрузка…».
+  // Недавних тегов здесь нет: что прячешь, не должно всплывать при загрузке
+  // своих постов, и наоборот. Пользователь: одна строка
   function attachSuggest(input, kind) {
     const multi = kind === 'tag';
     const box = document.createElement('div');
@@ -11982,19 +11983,10 @@ function core(storedSettings) {
       return new Set(parts.map(normTag).filter(Boolean));
     };
 
+    // уже введённые теги второй раз не предлагаем
     function compose(query, server) {
-      if (!multi) return server || [];
       const skip = used();
-      const list = loadHistory().filter((h) => !skip.has(h.key));
-      const k = normTag(query);
-      const hist = !k ? list.slice(0, 15) : list.filter((h) => {
-        const n = normTag(h.label);
-        return n.startsWith(k) || h.key.startsWith(k) || (k.length > 1 && n.includes(k));
-      }).slice(0, 6);
-      const byKey = new Map((server || []).map((d) => [normTag(d.label), d]));
-      const top = hist.map((h) => ({ ...(byKey.get(h.key) || h.desc || { label: h.label }), history: true, key: h.key }));
-      const seen = new Set(top.map((x) => x.key));
-      return [...top, ...(server || []).filter((d) => !seen.has(normTag(d.label)) && !skip.has(normTag(d.label)))];
+      return (server || []).filter((d) => !skip.has(normTag(d.label)));
     }
 
     function hide() {
@@ -12015,24 +12007,10 @@ function core(storedSettings) {
       }
       const rows = list.map((o, i) => {
         const row = document.createElement('div');
-        row.className = 'sopt' + (o.history ? ' hist' : '');
+        row.className = 'sopt';
         row.setAttribute('role', 'option');
-        if (o.styles) buildRichRow(row, o);
-        else if (multi && (o.color || o.history)) buildApiRow(row, o);
+        if (multi && o.color) buildApiRow(row, o);
         else buildTextRow(row, o);
-        if (o.history) {
-          const forget = make('button', 'sforget', null, '✕');
-          forget.type = 'button';
-          forget.tabIndex = -1;
-          forget.title = t('Убрать из недавних');
-          forget.addEventListener('mousedown', (e) => e.preventDefault());
-          forget.addEventListener('click', (e) => {
-            e.stopPropagation();
-            forgetTag(o.key);
-            render(compose(st.query, st.server), '');
-          });
-          row.appendChild(forget);
-        }
         row.addEventListener('mousedown', (e) => e.preventDefault()); // фокус остаётся в поле
         row.addEventListener('click', () => pick(i));
         return row;
@@ -12052,16 +12030,6 @@ function core(storedSettings) {
       if (rows[st.active]) rows[st.active].scrollIntoView({ block: 'nearest' });
     }
 
-    function remember(opt) {
-      const list = loadHistory();
-      const key = normTag(opt.label);
-      const idx = list.findIndex((h) => h.key === key);
-      const prev = idx >= 0 ? list.splice(idx, 1)[0] : null;
-      const desc = opt.styles || opt.color ? bareDesc(opt) : prev ? prev.desc : null;
-      list.unshift({ key, label: opt.label, desc, ts: Date.now() });
-      saveHistory(list);
-    }
-
     function pick(index) {
       const opt = st.options[index];
       if (!opt) return;
@@ -12069,21 +12037,14 @@ function core(storedSettings) {
         const v = input.value;
         const cut = Math.max(v.lastIndexOf(','), v.lastIndexOf(';'));
         input.value = underscoreTags((cut >= 0 ? v.slice(0, cut + 1) : '') + opt.label) + ', ';
-        remember(opt);
       } else {
         input.value = opt.value || opt.label;
       }
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
-      if (multi) showRecent();
-      else hide();
-    }
-
-    function showRecent() {
       st.query = '';
       st.server = [];
-      if (multi) render(compose('', null), '');
-      else hide();
+      hide();
     }
 
     async function load(query) {
@@ -12100,8 +12061,8 @@ function core(storedSettings) {
       clearTimeout(st.timer);
       const q = term();
       st.query = q;
-      if (!q) { st.token++; showRecent(); return; }
-      // недавние — мгновенно, запрос к сайту — после паузы в наборе
+      if (!q) { st.token++; hide(); return; }
+      // подходящие прошлые подсказки — сразу, запрос к сайту — после паузы в наборе
       const k = normTag(q);
       render(compose(q, st.server.filter((d) => normTag(d.label).includes(k))), t('Загрузка…'));
       st.timer = setTimeout(() => load(q), 200);
@@ -12114,7 +12075,6 @@ function core(storedSettings) {
         e.stopPropagation();
         if (!open) {
           if (term()) load(term());
-          else showRecent();
           return;
         }
         const step = e.key === 'ArrowDown' ? 1 : -1;
@@ -12132,9 +12092,7 @@ function core(storedSettings) {
     });
 
     const reopen = () => {
-      if (!box.hidden) return;
-      if (term()) load(term());
-      else showRecent();
+      if (box.hidden && term()) load(term());
     };
     input.addEventListener('focus', reopen);
     input.addEventListener('mousedown', () => setTimeout(reopen, 0));
@@ -12195,7 +12153,7 @@ function core(storedSettings) {
     const tagField = attachSuggest(root.querySelector('.rtags'), 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
-    tagField.reopen(); // недавние теги — сразу, не дожидаясь события фокуса
+    tagField.reopen();
   }
 
   // ---- Вкладка «Плагин» на странице настроек сайта ----
