@@ -213,5 +213,8 @@
  "211": "Ocultas ({n})",
  "212": "Difuminadas ({n})",
  "213": "No se pudo eliminar la regla del sitio",
- "214": "Con la tecla {key}"
+ "214": "Con la tecla {key}",
+ "215": "Tamaño de la publicación",
+ "216": "como en el sitio",
+ "217": "Volver al tamaño del sitio"
 }

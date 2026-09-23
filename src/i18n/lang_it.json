@@ -213,5 +213,8 @@
  "211": "Nascosti ({n})",
  "212": "Sfocati ({n})",
  "213": "Impossibile eliminare la regola del sito",
- "214": "Con il tasto {key}"
+ "214": "Con il tasto {key}",
+ "215": "Dimensione dei post",
+ "216": "come sul sito",
+ "217": "Torna alla dimensione del sito"
 }

@@ -213,5 +213,8 @@
  "211": "Ukryte ({n})",
  "212": "Rozmyte ({n})",
  "213": "Nie udało się usunąć reguły serwisu",
- "214": "Klawiszem {key}"
+ "214": "Klawiszem {key}",
+ "215": "Rozmiar posta",
+ "216": "jak na stronie",
+ "217": "Przywróć rozmiar strony"
 }

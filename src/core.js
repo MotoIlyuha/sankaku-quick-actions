@@ -82,6 +82,7 @@ function core(storedSettings) {
     showMyVote: true, // своя оценка прямо на карточке в сетке
     showFavCount: true, // количество лайков в углу карточки
     voteStars: false, // свою оценку показывать звёздами, а не числом
+    cardSize: 0, // ширина поста в ленте, px; 0 — как решил сайт
     badges: { score: 'tl', vote: 'tl', favs: 'tr' }, // по какому углу разложены метки
     rules: [], // свои правила видимости: [{ id, tags: [...], user, mode: 'hide' | 'blur' }]
     hiddenPosts: [], // ID постов, спрятанных по одному
@@ -1370,8 +1371,46 @@ function core(storedSettings) {
 
   const voteText = (n) => (settings.voteStars ? '★'.repeat(n) + '☆'.repeat(5 - n) : `★ ${n}`);
 
+  // Сетка сайта — CSS grid с числом колонок по ширине окна: repeat(N, 1fr).
+  // Свой размер поста задаём минимальной шириной карточки — колонок станет
+  // столько, сколько таких карточек помещается в строку. Виртуальная сетка
+  // сайта сама перемеряет карточки, как и при смене ширины окна
+  const CARD_SIZE_MIN = 100, CARD_SIZE_MAX = 600;
+  const cardSizePx = (v) => {
+    const n = Math.round(Number(v) || 0);
+    return n > 0 ? Math.min(CARD_SIZE_MAX, Math.max(CARD_SIZE_MIN, n)) : 0;
+  };
+
+  function gridOf(card) {
+    const cell = gridCell(card);
+    const grid = cell && cell.parentElement;
+    return grid && getComputedStyle(grid).display.includes('grid') ? grid : null;
+  }
+
+  function applyCardSize(value) {
+    const px = cardSizePx(value === undefined ? settings.cardSize : value);
+    const grids = new Set();
+    for (const card of document.querySelectorAll(CARD_SEL)) {
+      const grid = gridOf(card);
+      if (grid) grids.add(grid);
+    }
+    for (const grid of document.querySelectorAll('.skq-grid-size')) grids.add(grid);
+    for (const grid of grids) {
+      grid.classList.toggle('skq-grid-size', px > 0);
+      if (px > 0) grid.style.setProperty('--skq-card-w', px + 'px');
+      else grid.style.removeProperty('--skq-card-w');
+    }
+  }
+
+  // Ширина поста сейчас — чтобы ползунок начинал с привычного размера
+  function currentCardWidth() {
+    const card = [...document.querySelectorAll(CARD_SEL)].find((c) => c.getBoundingClientRect().width > 0);
+    return card ? Math.round(gridCell(card).getBoundingClientRect().width) : 0;
+  }
+
   function markCards() {
     if (FRAME_MODE || !document.body) return;
+    applyCardSize();
     const wantVote = settings.showMyVote, wantFavs = settings.showFavCount, wantScore = settings.showScore;
     for (const card of document.querySelectorAll(CARD_SEL)) {
       // теги и автор нужны правилам, поэтому ID берём всегда
@@ -6062,6 +6101,10 @@ function core(storedSettings) {
     .pbadge.skq-myvote { color: #ffb347; }
     .pbadge.skq-favs { color: #ff8fa3; }
     .votemode { gap: 16px; cursor: default; }
+    .cardsize { flex-wrap: nowrap; }
+    .cardsize input[type=range] { flex: 1 1 120px; min-width: 80px; accent-color: #ff8c00; }
+    .cardsizeval { flex: none; min-width: 90px; color: #bbb; font-size: 13px; text-align: right; }
+    .cardsizereset { flex: none; padding: 2px 8px; }
     .pick { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
     input[type=radio] { width: 16px; height: 16px; accent-color: #ff8c00; margin: 0; }
     @media (max-width: 600px), (hover: none) {
@@ -6172,6 +6215,12 @@ function core(storedSettings) {
                 <label class="pick"><input type="radio" name="voteStars" value="stars"> ${T('Звёздами')}</label>
               </div>
               <label class="row"><input type="checkbox" name="showFavCount"> ${T('Показывать количество лайков на карточке')}</label>
+              <div class="num cardsize">
+                <span class="grow">${T('Размер поста')}</span>
+                <input type="range" name="cardSize" min="100" max="600" step="10">
+                <span class="cardsizeval"></span>
+                <button type="button" class="cardsizereset" title="${T('Вернуть размер сайта')}">↺</button>
+              </div>
             </div>
             <div class="cardprev" aria-hidden="true">
               ${CORNERS.map((c) => `<div class="zone z-${c}" data-corner="${c}"></div>`).join('')}
@@ -6474,6 +6523,8 @@ function core(storedSettings) {
       badgeDraft = { ...DEFAULTS.badges };
       if (isObj(s.badges)) for (const id in badgeDraft) if (CORNERS.includes(s.badges[id])) badgeDraft[id] = s.badges[id];
       f('voteStars').value = s.voteStars ? 'stars' : 'num';
+      cardSizeDraft = cardSizePx(s.cardSize);
+      renderCardSize();
       renderPreview();
       capturingMenu = null;
       renderMenuRows();
@@ -6489,6 +6540,24 @@ function core(storedSettings) {
       renderKey();
       syncRehide();
     }
+    // ---- Размер поста: 0 — сетку не трогаем, ползунок стоит на нынешней ширине ----
+    let cardSizeDraft = 0;
+    const sizeInput = f('cardSize');
+    function renderCardSize() {
+      const shown = cardSizeDraft || currentCardWidth() || 250;
+      sizeInput.value = String(Math.min(CARD_SIZE_MAX, Math.max(CARD_SIZE_MIN, shown)));
+      root.querySelector('.cardsizeval').textContent = cardSizeDraft ? cardSizeDraft + ' px' : t('как на сайте');
+      root.querySelector('.cardsizereset').hidden = !cardSizeDraft;
+    }
+    sizeInput.addEventListener('input', () => {
+      cardSizeDraft = cardSizePx(sizeInput.value);
+      renderCardSize();
+    });
+    root.querySelector('.cardsizereset').addEventListener('click', () => {
+      cardSizeDraft = 0;
+      renderCardSize();
+    });
+
     // ---- Превью карточки: метки раскладываются по углам ----
     const BADGE_SAMPLE = {
       score: () => '★ 4.3',
@@ -6683,6 +6752,7 @@ function core(storedSettings) {
         showMyVote: f('showMyVote').checked,
         showFavCount: f('showFavCount').checked,
         voteStars: f('voteStars').value === 'stars',
+        cardSize: cardSizeDraft,
         badges: { ...badgeDraft },
         revealHoverMs: ms('revealHoverMs', DEFAULTS.revealHoverMs),
         revealKeyboardMs: ms('revealKeyboardMs', DEFAULTS.revealKeyboardMs),
@@ -7309,6 +7379,7 @@ function core(storedSettings) {
     .skq-title-edit .skq-title-ok { background: #ff8c00; }
     .skq-title-edit .skq-title-ok:hover { background: #ff9d26; }
     ${CARD_SEL}.skq-rule-hide, .skq-cell-hide { display: none !important; }
+    .skq-grid-size { grid-template-columns: repeat(auto-fill, minmax(min(var(--skq-card-w), 100%), 1fr)) !important; }
     ${CARD_SEL}.skq-rule-blur img, ${CARD_SEL}.skq-rule-blur video,
     ${CARD_SEL}.skq-rule-wait img, ${CARD_SEL}.skq-rule-wait video { filter: blur(20px); }
     ${CARD_SEL}.skq-favcard > *:not(.skq-corner) { box-shadow: 0 0 0 2px #ff4f70; border-radius: 6px; }

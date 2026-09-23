@@ -213,5 +213,8 @@
  "211": "Piilotettu ({n})",
  "212": "Sumennettu ({n})",
  "213": "Sivuston sääntöä ei voitu poistaa",
- "214": "Näppäimellä {key}"
+ "214": "Näppäimellä {key}",
+ "215": "Julkaisun koko",
+ "216": "kuten sivustolla",
+ "217": "Palauta sivuston koko"
 }

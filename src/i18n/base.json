@@ -214,6 +214,9 @@
   "Скрыто ({n})": "Hidden ({n})",
   "Размыто ({n})": "Blurred ({n})",
   "Не удалось удалить правило сайта": "Could not delete the site rule",
-  "Клавишей {key}": "With the {key} key"
+  "Клавишей {key}": "With the {key} key",
+  "Размер поста": "Post size",
+  "как на сайте": "as on the site",
+  "Вернуть размер сайта": "Back to the site’s size"
  }
 }

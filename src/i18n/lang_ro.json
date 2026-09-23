@@ -213,5 +213,8 @@
  "211": "Ascunse ({n})",
  "212": "Estompate ({n})",
  "213": "Regula site-ului nu a putut fi ștearsă",
- "214": "Cu tasta {key}"
+ "214": "Cu tasta {key}",
+ "215": "Dimensiunea postării",
+ "216": "ca pe site",
+ "217": "Revino la dimensiunea site-ului"
 }

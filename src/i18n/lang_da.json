@@ -213,5 +213,8 @@
  "211": "Skjult ({n})",
  "212": "Slørede ({n})",
  "213": "Sidens regel kunne ikke slettes",
- "214": "Med tasten {key}"
+ "214": "Med tasten {key}",
+ "215": "Opslagets størrelse",
+ "216": "som på siden",
+ "217": "Tilbage til sidens størrelse"
 }

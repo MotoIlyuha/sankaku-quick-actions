@@ -213,5 +213,8 @@
  "211": "Masqués ({n})",
  "212": "Floutés ({n})",
  "213": "Impossible de supprimer la règle du site",
- "214": "Avec la touche {key}"
+ "214": "Avec la touche {key}",
+ "215": "Taille des posts",
+ "216": "comme sur le site",
+ "217": "Revenir à la taille du site"
 }
