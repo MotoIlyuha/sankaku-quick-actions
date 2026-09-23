@@ -5877,7 +5877,10 @@ function core(storedSettings) {
     .rtaglist { margin: -6px 0 14px; }
     .rtaglist summary { cursor: pointer; color: #bbb; user-select: none; }
     .rtaglist summary:hover { color: #fff; }
-    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 180px; overflow-y: auto; padding: 4px; }
+    .rtagchips { margin-top: 6px; max-height: 220px; overflow-y: auto; padding: 4px; }
+    .rtaghead { margin: 6px 0 6px; color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: .3px; }
+    .rtaghead:first-child { margin-top: 0; }
+    .rtaggroup { display: flex; flex-wrap: wrap; gap: 6px; }
     .tchip {
       display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
       border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
@@ -6799,7 +6802,10 @@ function core(storedSettings) {
         : Array.isArray(data.data) ? data.data : []) : Array.isArray(data) ? data : [];
       for (const item of list) {
         if (!isObj(item)) continue;
-        for (const tag of Array.isArray(item.tags) ? item.tags : []) if (isObj(tag) || typeof tag === 'string') tags.push(tag);
+        const mode = /blur|размы/i.test(String(item.visibility ?? item.mode ?? '')) ? 'blur' : 'hide';
+        for (const tag of Array.isArray(item.tags) ? item.tags : []) {
+          if (isObj(tag) || typeof tag === 'string') tags.push({ tag, mode });
+        }
       }
     } catch (e) {
       log('site blacklist', e.message);
@@ -6811,32 +6817,35 @@ function core(storedSettings) {
 
   // Один тег — одна запись, как бы он ни был записан: переведённое имя,
   // исходное, английское; сначала свои правила, свежие сверху
+  // Скрытое и размытое — отдельными списками: один тег может быть в обоих
   function blacklistedTags(siteTags) {
-    const out = [];
-    const byKey = new Map();
-    const add = (keys, label, color) => {
-      const known = keys.map((k) => byKey.get(k)).find(Boolean);
+    const out = { hide: [], blur: [] };
+    const byKey = { hide: new Map(), blur: new Map() };
+    const add = (mode, keys, label, color) => {
+      const map = byKey[mode];
+      const known = keys.map((k) => map.get(k)).find(Boolean);
       if (known) {
-        keys.forEach((k) => { known.keys.add(k); byKey.set(k, known); });
+        keys.forEach((k) => { known.keys.add(k); map.set(k, known); });
         if (!known.color && color) known.color = color;
         return;
       }
       const entry = { key: keys[0], keys: new Set(keys), label, color };
-      keys.forEach((k) => byKey.set(k, entry));
-      out.push(entry);
+      keys.forEach((k) => map.set(k, entry));
+      out[mode].push(entry);
     };
     for (const rule of [...ruleList()].reverse()) {
+      const mode = rule.mode === 'blur' ? 'blur' : 'hide';
       for (const tag of Array.isArray(rule.tags) ? rule.tags : []) {
         const key = tagKey(tag);
-        if (key) add([key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
+        if (key) add(mode, [key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
       }
     }
-    for (const tag of siteTags || []) {
+    for (const { tag, mode } of siteTags || []) {
       const keys = tagNames([tag]) || [];
       if (!keys.length) continue;
       const label = isObj(tag) ? String(tag.name || tag.tagName || tag.name_en || keys[0]) : String(tag);
       const color = isObj(tag) ? TAG_TYPE_COLORS[Number(tag.type ?? tag.tagType)] || '' : '';
-      add(keys, label.replace(/_/g, ' '), color);
+      add(mode, keys, label.replace(/_/g, ' '), color);
     }
     return out;
   }
@@ -6903,16 +6912,28 @@ function core(storedSettings) {
 
     function renderTagList() {
       const typed = enteredKeys();
-      tagList.hidden = listed.length === 0;
-      tagList.querySelector('summary').textContent = t('Уже в чёрном списке ({n})', { n: listed.length });
-      const chips = listed.map((entry) => {
-        const chip = document.createElement('span');
-        chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
-        chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
-        chip.textContent = entry.label;
-        return chip;
-      });
-      tagList.querySelector('.rtagchips').replaceChildren(...chips);
+      const total = listed.hide.length + listed.blur.length;
+      tagList.hidden = total === 0;
+      tagList.querySelector('summary').textContent = t('Уже в чёрном списке ({n})', { n: total });
+      const groups = [['hide', t('Скрыто ({n})', { n: listed.hide.length })], ['blur', t('Размыто ({n})', { n: listed.blur.length })]];
+      const parts = [];
+      for (const [mode, title] of groups) {
+        if (!listed[mode].length) continue;
+        const head = document.createElement('div');
+        head.className = 'rtaghead';
+        head.textContent = title;
+        const box = document.createElement('div');
+        box.className = 'rtaggroup';
+        box.append(...listed[mode].map((entry) => {
+          const chip = document.createElement('span');
+          chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
+          chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
+          chip.textContent = entry.label;
+          return chip;
+        }));
+        parts.push(head, box);
+      }
+      tagList.querySelector('.rtagchips').replaceChildren(...parts);
     }
     tagsInput.addEventListener('input', renderTagList);
     tagsInput.addEventListener('skq-change', renderTagList);

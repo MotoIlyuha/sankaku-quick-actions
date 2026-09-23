@@ -210,6 +210,8 @@
   "Вернуть пост": "Show the post again",
   "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "The site doubts the rating and is waiting for your decision — open the post form",
   "автотеги уже на месте: {n}": "auto tags already in place: {n}",
-  "Уже в чёрном списке ({n})": "Already blacklisted ({n})"
+  "Уже в чёрном списке ({n})": "Already blacklisted ({n})",
+  "Скрыто ({n})": "Hidden ({n})",
+  "Размыто ({n})": "Blurred ({n})"
  }
 }
