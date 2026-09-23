@@ -212,5 +212,6 @@
  "210": "Jo mustalla listalla ({n})",
  "211": "Piilotettu ({n})",
  "212": "Sumennettu ({n})",
- "213": "Sivuston sääntöä ei voitu poistaa"
+ "213": "Sivuston sääntöä ei voitu poistaa",
+ "214": "Näppäimellä {key}"
 }

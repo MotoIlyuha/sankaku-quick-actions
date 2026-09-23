@@ -212,5 +212,6 @@
  "210": "Bereits auf der Blacklist ({n})",
  "211": "Ausgeblendet ({n})",
  "212": "Unscharf ({n})",
- "213": "Regel der Seite konnte nicht gelöscht werden"
+ "213": "Regel der Seite konnte nicht gelöscht werden",
+ "214": "Mit der Taste {key}"
 }

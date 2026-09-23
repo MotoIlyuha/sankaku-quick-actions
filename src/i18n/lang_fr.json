@@ -212,5 +212,6 @@
  "210": "Déjà dans la liste noire ({n})",
  "211": "Masqués ({n})",
  "212": "Floutés ({n})",
- "213": "Impossible de supprimer la règle du site"
+ "213": "Impossible de supprimer la règle du site",
+ "214": "Avec la touche {key}"
 }

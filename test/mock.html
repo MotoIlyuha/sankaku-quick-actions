@@ -413,11 +413,14 @@
       fetch('http://127.0.0.1:8766/posts?lang=ru&page=1&limit=6', { headers: { Authorization: 'Bearer test-token' } });
       // хранилище, как у сайта: сетка рисуется по списку ID (числами), а
       // REMOVE_POST_FROM_GALLERIES_BY_ID убирает пост из списка и из сетки
-      const gallery = { posts: [100, 101, 102, 103, 104, 105] };
-      const store = {
-        getState: () => ({ gallery: { galleries: new Map([['main', gallery]]) } }),
+      // хранилище у сайта одно на всю жизнь страницы — как и здесь
+      const gallery = window.__mockGallery || (window.__mockGallery = { posts: [] });
+      gallery.posts = [100, 101, 102, 103, 104, 105];
+      const store = window.__mockStore || (window.__mockStore = {
+        getState: () => ({ gallery: { currentGallery: 'main', galleries: new Map([['main', gallery]]) } }),
         dispatch: (action) => {
           (window.__dispatched = window.__dispatched || []).push(action);
+          if (action.type === 'gallery/INVALIDATE_GALLERY_KEY') { render(); return; } // сайт заново грузит ленту
           if (action.type !== 'gallery/REMOVE_POST_FROM_GALLERIES_BY_ID') return;
           gallery.posts = gallery.posts.filter((x) => x !== action.id);
           document.querySelectorAll('.grid > .cell').forEach((cell) => {
@@ -425,7 +428,7 @@
             if (!gallery.posts.includes(Number(href.split('/').pop()))) cell.remove();
           });
         },
-      };
+      });
       const provider = { memoizedProps: { store }, return: null };
       document.querySelectorAll('[data-test="post-card"]').forEach((card) => {
         card.__reactFiber$mock = { memoizedProps: {}, return: provider };

@@ -212,5 +212,6 @@
  "210": "Già nella lista nera ({n})",
  "211": "Nascosti ({n})",
  "212": "Sfocati ({n})",
- "213": "Impossibile eliminare la regola del sito"
+ "213": "Impossibile eliminare la regola del sito",
+ "214": "Con il tasto {key}"
 }

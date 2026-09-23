@@ -212,5 +212,6 @@
  "210": "Deja în lista neagră ({n})",
  "211": "Ascunse ({n})",
  "212": "Estompate ({n})",
- "213": "Regula site-ului nu a putut fi ștearsă"
+ "213": "Regula site-ului nu a putut fi ștearsă",
+ "214": "Cu tasta {key}"
 }

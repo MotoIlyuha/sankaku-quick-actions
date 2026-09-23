@@ -213,6 +213,7 @@
   "Уже в чёрном списке ({n})": "Already blacklisted ({n})",
   "Скрыто ({n})": "Hidden ({n})",
   "Размыто ({n})": "Blurred ({n})",
-  "Не удалось удалить правило сайта": "Could not delete the site rule"
+  "Не удалось удалить правило сайта": "Could not delete the site rule",
+  "Клавишей {key}": "With the {key} key"
  }
 }

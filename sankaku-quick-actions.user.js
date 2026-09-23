@@ -466,7 +466,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Already blacklisted ({n})",
           "Скрыто ({n})": "Hidden ({n})",
           "Размыто ({n})": "Blurred ({n})",
-          "Не удалось удалить правило сайта": "Could not delete the site rule"
+          "Не удалось удалить правило сайта": "Could not delete the site rule",
+          "Клавишей {key}": "With the {key} key"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -682,7 +683,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "ブラックリスト登録済み（{n}）",
           "Скрыто ({n})": "非表示（{n}）",
           "Размыто ({n})": "ぼかし（{n}）",
-          "Не удалось удалить правило сайта": "サイトのルールを削除できませんでした"
+          "Не удалось удалить правило сайта": "サイトのルールを削除できませんでした",
+          "Клавишей {key}": "{key} キーで"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -898,7 +900,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "已在黑名单中（{n}）",
           "Скрыто ({n})": "隐藏（{n}）",
           "Размыто ({n})": "模糊（{n}）",
-          "Не удалось удалить правило сайта": "无法删除网站规则"
+          "Не удалось удалить правило сайта": "无法删除网站规则",
+          "Клавишей {key}": "用 {key} 键"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1114,7 +1117,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "已在黑名單中（{n}）",
           "Скрыто ({n})": "隱藏（{n}）",
           "Размыто ({n})": "模糊（{n}）",
-          "Не удалось удалить правило сайта": "無法刪除網站規則"
+          "Не удалось удалить правило сайта": "無法刪除網站規則",
+          "Клавишей {key}": "用 {key} 鍵"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1330,7 +1334,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "이미 블랙리스트에 있음 ({n})",
           "Скрыто ({n})": "숨김 ({n})",
           "Размыто ({n})": "흐리게 ({n})",
-          "Не удалось удалить правило сайта": "사이트 규칙을 삭제하지 못했습니다"
+          "Не удалось удалить правило сайта": "사이트 규칙을 삭제하지 못했습니다",
+          "Клавишей {key}": "{key} 키로"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1546,7 +1551,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Bereits auf der Blacklist ({n})",
           "Скрыто ({n})": "Ausgeblendet ({n})",
           "Размыто ({n})": "Unscharf ({n})",
-          "Не удалось удалить правило сайта": "Regel der Seite konnte nicht gelöscht werden"
+          "Не удалось удалить правило сайта": "Regel der Seite konnte nicht gelöscht werden",
+          "Клавишей {key}": "Mit der Taste {key}"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1762,7 +1768,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Déjà dans la liste noire ({n})",
           "Скрыто ({n})": "Masqués ({n})",
           "Размыто ({n})": "Floutés ({n})",
-          "Не удалось удалить правило сайта": "Impossible de supprimer la règle du site"
+          "Не удалось удалить правило сайта": "Impossible de supprimer la règle du site",
+          "Клавишей {key}": "Avec la touche {key}"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1978,7 +1985,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Ya en la lista negra ({n})",
           "Скрыто ({n})": "Ocultas ({n})",
           "Размыто ({n})": "Difuminadas ({n})",
-          "Не удалось удалить правило сайта": "No se pudo eliminar la regla del sitio"
+          "Не удалось удалить правило сайта": "No se pudo eliminar la regla del sitio",
+          "Клавишей {key}": "Con la tecla {key}"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2194,7 +2202,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Já na lista negra ({n})",
           "Скрыто ({n})": "Ocultas ({n})",
           "Размыто ({n})": "Desfocadas ({n})",
-          "Не удалось удалить правило сайта": "Não foi possível eliminar a regra do site"
+          "Не удалось удалить правило сайта": "Não foi possível eliminar a regra do site",
+          "Клавишей {key}": "Com a tecla {key}"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2410,7 +2419,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Già nella lista nera ({n})",
           "Скрыто ({n})": "Nascosti ({n})",
           "Размыто ({n})": "Sfocati ({n})",
-          "Не удалось удалить правило сайта": "Impossibile eliminare la regola del sito"
+          "Не удалось удалить правило сайта": "Impossibile eliminare la regola del sito",
+          "Клавишей {key}": "Con il tasto {key}"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2626,7 +2636,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Al op de zwarte lijst ({n})",
           "Скрыто ({n})": "Verborgen ({n})",
           "Размыто ({n})": "Vervaagd ({n})",
-          "Не удалось удалить правило сайта": "Regel van de site kon niet worden verwijderd"
+          "Не удалось удалить правило сайта": "Regel van de site kon niet worden verwijderd",
+          "Клавишей {key}": "Met de toets {key}"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2842,7 +2853,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Już na czarnej liście ({n})",
           "Скрыто ({n})": "Ukryte ({n})",
           "Размыто ({n})": "Rozmyte ({n})",
-          "Не удалось удалить правило сайта": "Nie udało się usunąć reguły serwisu"
+          "Не удалось удалить правило сайта": "Nie udało się usunąć reguły serwisu",
+          "Клавишей {key}": "Klawiszem {key}"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -3058,7 +3070,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Redan svartlistade ({n})",
           "Скрыто ({n})": "Dolda ({n})",
           "Размыто ({n})": "Suddiga ({n})",
-          "Не удалось удалить правило сайта": "Det gick inte att ta bort webbplatsens regel"
+          "Не удалось удалить правило сайта": "Det gick inte att ta bort webbplatsens regel",
+          "Клавишей {key}": "Med tangenten {key}"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3274,7 +3287,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Allerede på sortlisten ({n})",
           "Скрыто ({n})": "Skjult ({n})",
           "Размыто ({n})": "Slørede ({n})",
-          "Не удалось удалить правило сайта": "Sidens regel kunne ikke slettes"
+          "Не удалось удалить правило сайта": "Sidens regel kunne ikke slettes",
+          "Клавишей {key}": "Med tasten {key}"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3490,7 +3504,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Allerede på svartelisten ({n})",
           "Скрыто ({n})": "Skjult ({n})",
           "Размыто ({n})": "Uskarpe ({n})",
-          "Не удалось удалить правило сайта": "Kunne ikke slette sidens regel"
+          "Не удалось удалить правило сайта": "Kunne ikke slette sidens regel",
+          "Клавишей {key}": "Med tasten {key}"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3706,7 +3721,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Jo mustalla listalla ({n})",
           "Скрыто ({n})": "Piilotettu ({n})",
           "Размыто ({n})": "Sumennettu ({n})",
-          "Не удалось удалить правило сайта": "Sivuston sääntöä ei voitu poistaa"
+          "Не удалось удалить правило сайта": "Sivuston sääntöä ei voitu poistaa",
+          "Клавишей {key}": "Näppäimellä {key}"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3922,7 +3938,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Már a feketelistán ({n})",
           "Скрыто ({n})": "Elrejtve ({n})",
           "Размыто ({n})": "Elmosva ({n})",
-          "Не удалось удалить правило сайта": "Az oldal szabályát nem sikerült törölni"
+          "Не удалось удалить правило сайта": "Az oldal szabályát nem sikerült törölni",
+          "Клавишей {key}": "A(z) {key} billentyűvel"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -4138,7 +4155,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Deja în lista neagră ({n})",
           "Скрыто ({n})": "Ascunse ({n})",
           "Размыто ({n})": "Estompate ({n})",
-          "Не удалось удалить правило сайта": "Regula site-ului nu a putut fi ștearsă"
+          "Не удалось удалить правило сайта": "Regula site-ului nu a putut fi ștearsă",
+          "Клавишей {key}": "Cu tasta {key}"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4354,7 +4372,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Вече в черния списък ({n})",
           "Скрыто ({n})": "Скрити ({n})",
           "Размыто ({n})": "Размити ({n})",
-          "Не удалось удалить правило сайта": "Правилото на сайта не можа да бъде изтрито"
+          "Не удалось удалить правило сайта": "Правилото на сайта не можа да бъде изтрито",
+          "Клавишей {key}": "С клавиша {key}"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4570,7 +4589,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Ήδη στη μαύρη λίστα ({n})",
           "Скрыто ({n})": "Κρυμμένα ({n})",
           "Размыто ({n})": "Θολωμένα ({n})",
-          "Не удалось удалить правило сайта": "Δεν ήταν δυνατή η διαγραφή του κανόνα του ιστότοπου"
+          "Не удалось удалить правило сайта": "Δεν ήταν δυνατή η διαγραφή του κανόνα του ιστότοπου",
+          "Клавишей {key}": "Με το πλήκτρο {key}"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4786,7 +4806,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Zaten kara listede ({n})",
           "Скрыто ({n})": "Gizlenen ({n})",
           "Размыто ({n})": "Bulanık ({n})",
-          "Не удалось удалить правило сайта": "Site kuralı silinemedi"
+          "Не удалось удалить правило сайта": "Site kuralı silinemedi",
+          "Клавишей {key}": "{key} tuşuyla"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -5002,7 +5023,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "อยู่ในบัญชีดำแล้ว ({n})",
           "Скрыто ({n})": "ซ่อน ({n})",
           "Размыто ({n})": "เบลอ ({n})",
-          "Не удалось удалить правило сайта": "ลบกฎของเว็บไซต์ไม่สำเร็จ"
+          "Не удалось удалить правило сайта": "ลบกฎของเว็บไซต์ไม่สำเร็จ",
+          "Клавишей {key}": "ด้วยปุ่ม {key}"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -5218,7 +5240,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "पहले से ब्लैकलिस्ट में ({n})",
           "Скрыто ({n})": "छिपाए गए ({n})",
           "Размыто ({n})": "धुंधले ({n})",
-          "Не удалось удалить правило сайта": "साइट का नियम हटाया नहीं जा सका"
+          "Не удалось удалить правило сайта": "साइट का नियम हटाया नहीं जा सका",
+          "Клавишей {key}": "{key} कुंजी से"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5434,7 +5457,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Sudah di daftar hitam ({n})",
           "Скрыто ({n})": "Disembunyikan ({n})",
           "Размыто ({n})": "Diburamkan ({n})",
-          "Не удалось удалить правило сайта": "Aturan situs tidak dapat dihapus"
+          "Не удалось удалить правило сайта": "Aturan situs tidak dapat dihapus",
+          "Клавишей {key}": "Dengan tombol {key}"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5650,7 +5674,8 @@ function core(storedSettings) {
           "Уже в чёрном списке ({n})": "Sudah dalam senarai hitam ({n})",
           "Скрыто ({n})": "Disembunyikan ({n})",
           "Размыто ({n})": "Dikaburkan ({n})",
-          "Не удалось удалить правило сайта": "Peraturan laman tidak dapat dipadam"
+          "Не удалось удалить правило сайта": "Peraturan laman tidak dapat dipadam",
+          "Клавишей {key}": "Dengan kekunci {key}"
     },
   } /* SKQ_I18N_END */;
 
@@ -6637,6 +6662,7 @@ function core(storedSettings) {
   function unhidePost(id) {
     saveSettings({ hiddenPosts: hiddenList().filter((x) => x !== String(id)) });
     toast(t('Пост снова виден: {id}', { id: String(id) }));
+    restoreHiddenPosts();
   }
 
   // Карточка на сайте лежит внутри ячейки сетки: спрячь одну карточку — и на её
@@ -6707,8 +6733,9 @@ function core(storedSettings) {
     }
   }
 
-  // что спрятано на этой странице: для счётчика и чтобы не убирать пост дважды
-  const pageHide = { key: '', ids: new Set(), removed: new Set() };
+  // что спрятано на этой странице: для счётчика, для списка в меню глаза
+  // (правило → посты) и чтобы не убирать пост дважды
+  const pageHide = { key: '', ids: new Set(), removed: new Set(), byRule: new Map() };
 
   function pageHidden() {
     const key = location.pathname + location.search;
@@ -6716,8 +6743,32 @@ function core(storedSettings) {
       pageHide.key = key;
       pageHide.ids.clear();
       pageHide.removed.clear();
+      pageHide.byRule.clear();
     }
     return pageHide;
+  }
+
+  // Убранные из сетки посты сами не вернутся: просим сайт перезагрузить
+  // список — тем же действием, каким он обновляет ленту после правки своего
+  // чёрного списка. Хранилища нет — перезагружаем страницу
+  function restoreHiddenPosts() {
+    const page = pageHidden();
+    const hadRemoved = page.removed.size > 0;
+    page.ids.clear();
+    page.removed.clear();
+    page.byRule.clear();
+    if (!hadRemoved) { scheduleScan(); return; }
+    const store = siteStore();
+    if (!store) { location.reload(); return; }
+    let key = 'tags';
+    try { key = imGet(store.getState().gallery, 'currentGallery') || key; } catch { /* ignore */ }
+    try {
+      store.dispatch({ type: 'gallery/INVALIDATE_GALLERY_KEY', key });
+    } catch (e) {
+      log('gallery invalidate', e.message);
+      location.reload();
+    }
+    scheduleScan();
   }
 
   function setCardHidden(card, hide) {
@@ -6785,6 +6836,7 @@ function core(storedSettings) {
   function dropRule(id) {
     saveSettings({ rules: ruleList().filter((r) => r.id !== id) });
     toast(t('Правило удалено'));
+    restoreHiddenPosts();
   }
 
   // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
@@ -6880,6 +6932,10 @@ function core(storedSettings) {
       if (hide) {
         const page = pageHidden();
         page.ids.add(id);
+        // спрятанный клавишей пост — в своей группе, остальные — по правилу
+        const group = postHidden(id) ? 'manual' : rule.id;
+        if (!page.byRule.has(group)) page.byRule.set(group, new Set());
+        page.byRule.get(group).add(id);
         if (!page.removed.has(id)) {
           page.removed.add(id);
           removeFromGallery(id);
@@ -11077,6 +11133,7 @@ function core(storedSettings) {
   const eyeButton = () => document.querySelector('.skq-eyebtn');
 
   function updateEyeCount() {
+    renderEyeStats();
     const btn = eyeButton();
     if (!btn) return;
     const badge = btn.querySelector('.skq-eyecount');
@@ -11126,7 +11183,8 @@ function core(storedSettings) {
     menu.innerHTML = `
       <label class="skq-eyerow"><span>${T('Показать размытые посты')}</span>
         <input type="checkbox" class="skq-eyesw"></label>
-      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>`;
+      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>
+      <div class="skq-eyestats"></div>`;
     const row = menu.querySelector('.skq-eyerow');
     row.title = t('То же самое делает клавиша {key}', { key: keyLabel(settings.revealAllKey) });
     const sw = menu.querySelector('.skq-eyesw');
@@ -11145,7 +11203,98 @@ function core(storedSettings) {
     const width = menu.getBoundingClientRect().width;
     menu.style.top = Math.round(r.bottom + 6) + 'px';
     menu.style.left = Math.round(Math.max(8, Math.min(r.right - width, innerWidth - width - 8))) + 'px';
+    menu.style.maxHeight = Math.max(200, innerHeight - r.bottom - 20) + 'px';
     eyeMenu = menu;
+    eyeStatsSig = '';
+    renderEyeStats();
+  }
+
+  // ---- «Скрыто постов» в меню глаза ----
+  const eyeOpen = new Set(); // какие правила в меню раскрыты
+  let eyeStatsSig = '';
+
+  function hideGroupLabel(key) {
+    if (key === 'manual') return t('Клавишей {key}', { key: keyLabel(settings.hidePostKey) });
+    const rule = ruleList().find((r) => r.id === key);
+    if (!rule) return '?';
+    const parts = (rule.tags || []).map((tag) => String(tag).replace(/_/g, ' '));
+    if (rule.user) parts.push('@' + rule.user);
+    return parts.join(' + ');
+  }
+
+  function dropHideGroup(key, ids) {
+    if (key === 'manual') {
+      const back = new Set([...ids].map(String));
+      saveSettings({ hiddenPosts: hiddenList().filter((x) => !back.has(x)) });
+      toast(t('Пост снова виден: {id}', { id: [...back].join(', ') }));
+      restoreHiddenPosts();
+      return;
+    }
+    dropRule(key);
+  }
+
+  function renderEyeStats() {
+    if (!eyeMenu) return;
+    const box = eyeMenu.querySelector('.skq-eyestats');
+    const page = pageHidden();
+    const groups = [...page.byRule.entries()].filter(([, ids]) => ids.size > 0)
+      .sort((a, b) => b[1].size - a[1].size);
+    // перерисовываем, только если что-то поменялось, — иначе сбились бы прокрутка и раскрытые спойлеры
+    const sig = page.ids.size + '|' + groups.map(([k, ids]) => k + ':' + [...ids].join(',')).join(';');
+    if (sig === eyeStatsSig) return;
+    eyeStatsSig = sig;
+
+    const total = document.createElement('div');
+    total.className = 'skq-eyetotal';
+    total.textContent = t('Скрыто постов: {n}', { n: page.ids.size });
+    const rows = groups.map(([key, ids]) => {
+      const det = document.createElement('details');
+      det.className = 'skq-eyerule';
+      det.open = eyeOpen.has(key);
+      det.addEventListener('toggle', () => { if (det.open) eyeOpen.add(key); else eyeOpen.delete(key); });
+      const sum = document.createElement('summary');
+      const name = document.createElement('span');
+      name.className = 'skq-eyename';
+      name.textContent = hideGroupLabel(key);
+      name.title = name.textContent;
+      const cnt = document.createElement('span');
+      cnt.className = 'skq-eyecnt';
+      cnt.textContent = shortCount(ids.size);
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'skq-eyedel';
+      del.textContent = '✕';
+      del.title = key === 'manual' ? t('Вернуть пост') : t('Удалить правило');
+      del.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropHideGroup(key, ids);
+      });
+      sum.append(name, cnt, del);
+      // посты, которые это правило спрятало, — лентой с прокруткой вбок
+      const strip = document.createElement('div');
+      strip.className = 'skq-eyethumbs';
+      for (const id of ids) {
+        const post = posts.get(String(id)) || {};
+        const a = document.createElement('a');
+        a.href = langPrefix() + '/posts/' + encodeURIComponent(id);
+        a.title = '#' + id;
+        const src = post.preview_url || post.sample_url;
+        if (src) {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.loading = 'lazy';
+          a.appendChild(img);
+        } else {
+          a.textContent = '#' + id;
+        }
+        strip.appendChild(a);
+      }
+      det.append(sum, strip);
+      return det;
+    });
+    box.replaceChildren(total, ...rows);
   }
 
   document.addEventListener('click', (e) => {
@@ -12338,6 +12487,7 @@ function core(storedSettings) {
     }
     siteBlacklistCache = null;
     toast(failed ? t('Не удалось удалить правило сайта') : t('Правило удалено'), failed);
+    restoreHiddenPosts();
   }
 
   // Один тег — одна запись, как бы он ни был записан: переведённое имя,
@@ -12703,13 +12853,39 @@ function core(storedSettings) {
       font: 14px/1.4 Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     .skq-eyerow {
-      display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; margin: 0;
+      display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 9px 10px; margin: 0;
       border: 0; border-radius: 8px; background: none; color: inherit; font: inherit;
       text-align: left; cursor: pointer;
     }
     .skq-eyerow:hover { background: rgba(255, 255, 255, .1); }
     .skq-eyerow span { flex: 1 1 auto; }
     .skq-eyerow input[type=checkbox] { width: 18px; height: 18px; margin: 0; accent-color: #ff8c00; }
+    /* ширина постоянная: иначе лента миниатюр растягивала бы меню вбок */
+    .skq-eyemenu { width: 300px; max-width: calc(100vw - 16px); box-sizing: border-box; overflow-x: hidden; overflow-y: auto; }
+    .skq-eyestats { margin-top: 6px; padding-top: 8px; border-top: 1px solid #444; }
+    .skq-eyetotal { padding: 2px 10px 6px; color: #bbb; font-size: 13px; }
+    .skq-eyerule summary {
+      position: relative; display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+      border-radius: 8px; cursor: pointer; list-style: none;
+    }
+    .skq-eyerule summary::-webkit-details-marker { display: none; }
+    .skq-eyerule summary::before { content: '▸'; flex: none; color: #999; font-size: 11px; }
+    .skq-eyerule[open] summary::before { content: '▾'; }
+    .skq-eyerule summary:hover { background: rgba(255, 255, 255, .1); }
+    .skq-eyename { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .skq-eyecnt { flex: none; color: #ff8c00; font-weight: 700; }
+    .skq-eyedel {
+      display: none; flex: none; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+      background: #b3261e; color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
+    }
+    .skq-eyerule summary:hover .skq-eyedel, .skq-eyedel:focus-visible { display: inline-block; }
+    .skq-eyedel:hover { background: #d93025; }
+    .skq-eyethumbs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 10px 10px; }
+    .skq-eyethumbs a {
+      flex: none; display: flex; align-items: center; justify-content: center; width: 72px; height: 72px;
+      border-radius: 6px; overflow: hidden; background: #444; color: #ccc; font-size: 11px; text-decoration: none;
+    }
+    .skq-eyethumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .skq-hdr-btn {
       display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; padding: 6px 16px;
       border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer;

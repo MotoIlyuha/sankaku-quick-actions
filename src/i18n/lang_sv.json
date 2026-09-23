@@ -212,5 +212,6 @@
  "210": "Redan svartlistade ({n})",
  "211": "Dolda ({n})",
  "212": "Suddiga ({n})",
- "213": "Det gick inte att ta bort webbplatsens regel"
+ "213": "Det gick inte att ta bort webbplatsens regel",
+ "214": "Med tangenten {key}"
 }

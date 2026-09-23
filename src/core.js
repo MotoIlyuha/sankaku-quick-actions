@@ -1134,6 +1134,7 @@ function core(storedSettings) {
   function unhidePost(id) {
     saveSettings({ hiddenPosts: hiddenList().filter((x) => x !== String(id)) });
     toast(t('Пост снова виден: {id}', { id: String(id) }));
+    restoreHiddenPosts();
   }
 
   // Карточка на сайте лежит внутри ячейки сетки: спрячь одну карточку — и на её
@@ -1204,8 +1205,9 @@ function core(storedSettings) {
     }
   }
 
-  // что спрятано на этой странице: для счётчика и чтобы не убирать пост дважды
-  const pageHide = { key: '', ids: new Set(), removed: new Set() };
+  // что спрятано на этой странице: для счётчика, для списка в меню глаза
+  // (правило → посты) и чтобы не убирать пост дважды
+  const pageHide = { key: '', ids: new Set(), removed: new Set(), byRule: new Map() };
 
   function pageHidden() {
     const key = location.pathname + location.search;
@@ -1213,8 +1215,32 @@ function core(storedSettings) {
       pageHide.key = key;
       pageHide.ids.clear();
       pageHide.removed.clear();
+      pageHide.byRule.clear();
     }
     return pageHide;
+  }
+
+  // Убранные из сетки посты сами не вернутся: просим сайт перезагрузить
+  // список — тем же действием, каким он обновляет ленту после правки своего
+  // чёрного списка. Хранилища нет — перезагружаем страницу
+  function restoreHiddenPosts() {
+    const page = pageHidden();
+    const hadRemoved = page.removed.size > 0;
+    page.ids.clear();
+    page.removed.clear();
+    page.byRule.clear();
+    if (!hadRemoved) { scheduleScan(); return; }
+    const store = siteStore();
+    if (!store) { location.reload(); return; }
+    let key = 'tags';
+    try { key = imGet(store.getState().gallery, 'currentGallery') || key; } catch { /* ignore */ }
+    try {
+      store.dispatch({ type: 'gallery/INVALIDATE_GALLERY_KEY', key });
+    } catch (e) {
+      log('gallery invalidate', e.message);
+      location.reload();
+    }
+    scheduleScan();
   }
 
   function setCardHidden(card, hide) {
@@ -1282,6 +1308,7 @@ function core(storedSettings) {
   function dropRule(id) {
     saveSettings({ rules: ruleList().filter((r) => r.id !== id) });
     toast(t('Правило удалено'));
+    restoreHiddenPosts();
   }
 
   // Метки каждого угла живут в общей строке, чтобы не наезжать друг на друга
@@ -1377,6 +1404,10 @@ function core(storedSettings) {
       if (hide) {
         const page = pageHidden();
         page.ids.add(id);
+        // спрятанный клавишей пост — в своей группе, остальные — по правилу
+        const group = postHidden(id) ? 'manual' : rule.id;
+        if (!page.byRule.has(group)) page.byRule.set(group, new Set());
+        page.byRule.get(group).add(id);
         if (!page.removed.has(id)) {
           page.removed.add(id);
           removeFromGallery(id);
@@ -5574,6 +5605,7 @@ function core(storedSettings) {
   const eyeButton = () => document.querySelector('.skq-eyebtn');
 
   function updateEyeCount() {
+    renderEyeStats();
     const btn = eyeButton();
     if (!btn) return;
     const badge = btn.querySelector('.skq-eyecount');
@@ -5623,7 +5655,8 @@ function core(storedSettings) {
     menu.innerHTML = `
       <label class="skq-eyerow"><span>${T('Показать размытые посты')}</span>
         <input type="checkbox" class="skq-eyesw"></label>
-      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>`;
+      <button type="button" class="skq-eyerow skq-eyeadd">+ ${T('Создать новое правило')}</button>
+      <div class="skq-eyestats"></div>`;
     const row = menu.querySelector('.skq-eyerow');
     row.title = t('То же самое делает клавиша {key}', { key: keyLabel(settings.revealAllKey) });
     const sw = menu.querySelector('.skq-eyesw');
@@ -5642,7 +5675,98 @@ function core(storedSettings) {
     const width = menu.getBoundingClientRect().width;
     menu.style.top = Math.round(r.bottom + 6) + 'px';
     menu.style.left = Math.round(Math.max(8, Math.min(r.right - width, innerWidth - width - 8))) + 'px';
+    menu.style.maxHeight = Math.max(200, innerHeight - r.bottom - 20) + 'px';
     eyeMenu = menu;
+    eyeStatsSig = '';
+    renderEyeStats();
+  }
+
+  // ---- «Скрыто постов» в меню глаза ----
+  const eyeOpen = new Set(); // какие правила в меню раскрыты
+  let eyeStatsSig = '';
+
+  function hideGroupLabel(key) {
+    if (key === 'manual') return t('Клавишей {key}', { key: keyLabel(settings.hidePostKey) });
+    const rule = ruleList().find((r) => r.id === key);
+    if (!rule) return '?';
+    const parts = (rule.tags || []).map((tag) => String(tag).replace(/_/g, ' '));
+    if (rule.user) parts.push('@' + rule.user);
+    return parts.join(' + ');
+  }
+
+  function dropHideGroup(key, ids) {
+    if (key === 'manual') {
+      const back = new Set([...ids].map(String));
+      saveSettings({ hiddenPosts: hiddenList().filter((x) => !back.has(x)) });
+      toast(t('Пост снова виден: {id}', { id: [...back].join(', ') }));
+      restoreHiddenPosts();
+      return;
+    }
+    dropRule(key);
+  }
+
+  function renderEyeStats() {
+    if (!eyeMenu) return;
+    const box = eyeMenu.querySelector('.skq-eyestats');
+    const page = pageHidden();
+    const groups = [...page.byRule.entries()].filter(([, ids]) => ids.size > 0)
+      .sort((a, b) => b[1].size - a[1].size);
+    // перерисовываем, только если что-то поменялось, — иначе сбились бы прокрутка и раскрытые спойлеры
+    const sig = page.ids.size + '|' + groups.map(([k, ids]) => k + ':' + [...ids].join(',')).join(';');
+    if (sig === eyeStatsSig) return;
+    eyeStatsSig = sig;
+
+    const total = document.createElement('div');
+    total.className = 'skq-eyetotal';
+    total.textContent = t('Скрыто постов: {n}', { n: page.ids.size });
+    const rows = groups.map(([key, ids]) => {
+      const det = document.createElement('details');
+      det.className = 'skq-eyerule';
+      det.open = eyeOpen.has(key);
+      det.addEventListener('toggle', () => { if (det.open) eyeOpen.add(key); else eyeOpen.delete(key); });
+      const sum = document.createElement('summary');
+      const name = document.createElement('span');
+      name.className = 'skq-eyename';
+      name.textContent = hideGroupLabel(key);
+      name.title = name.textContent;
+      const cnt = document.createElement('span');
+      cnt.className = 'skq-eyecnt';
+      cnt.textContent = shortCount(ids.size);
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'skq-eyedel';
+      del.textContent = '✕';
+      del.title = key === 'manual' ? t('Вернуть пост') : t('Удалить правило');
+      del.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropHideGroup(key, ids);
+      });
+      sum.append(name, cnt, del);
+      // посты, которые это правило спрятало, — лентой с прокруткой вбок
+      const strip = document.createElement('div');
+      strip.className = 'skq-eyethumbs';
+      for (const id of ids) {
+        const post = posts.get(String(id)) || {};
+        const a = document.createElement('a');
+        a.href = langPrefix() + '/posts/' + encodeURIComponent(id);
+        a.title = '#' + id;
+        const src = post.preview_url || post.sample_url;
+        if (src) {
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = '';
+          img.loading = 'lazy';
+          a.appendChild(img);
+        } else {
+          a.textContent = '#' + id;
+        }
+        strip.appendChild(a);
+      }
+      det.append(sum, strip);
+      return det;
+    });
+    box.replaceChildren(total, ...rows);
   }
 
   document.addEventListener('click', (e) => {
@@ -6835,6 +6959,7 @@ function core(storedSettings) {
     }
     siteBlacklistCache = null;
     toast(failed ? t('Не удалось удалить правило сайта') : t('Правило удалено'), failed);
+    restoreHiddenPosts();
   }
 
   // Один тег — одна запись, как бы он ни был записан: переведённое имя,
@@ -7200,13 +7325,39 @@ function core(storedSettings) {
       font: 14px/1.4 Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     .skq-eyerow {
-      display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; margin: 0;
+      display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 9px 10px; margin: 0;
       border: 0; border-radius: 8px; background: none; color: inherit; font: inherit;
       text-align: left; cursor: pointer;
     }
     .skq-eyerow:hover { background: rgba(255, 255, 255, .1); }
     .skq-eyerow span { flex: 1 1 auto; }
     .skq-eyerow input[type=checkbox] { width: 18px; height: 18px; margin: 0; accent-color: #ff8c00; }
+    /* ширина постоянная: иначе лента миниатюр растягивала бы меню вбок */
+    .skq-eyemenu { width: 300px; max-width: calc(100vw - 16px); box-sizing: border-box; overflow-x: hidden; overflow-y: auto; }
+    .skq-eyestats { margin-top: 6px; padding-top: 8px; border-top: 1px solid #444; }
+    .skq-eyetotal { padding: 2px 10px 6px; color: #bbb; font-size: 13px; }
+    .skq-eyerule summary {
+      position: relative; display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+      border-radius: 8px; cursor: pointer; list-style: none;
+    }
+    .skq-eyerule summary::-webkit-details-marker { display: none; }
+    .skq-eyerule summary::before { content: '▸'; flex: none; color: #999; font-size: 11px; }
+    .skq-eyerule[open] summary::before { content: '▾'; }
+    .skq-eyerule summary:hover { background: rgba(255, 255, 255, .1); }
+    .skq-eyename { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .skq-eyecnt { flex: none; color: #ff8c00; font-weight: 700; }
+    .skq-eyedel {
+      display: none; flex: none; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+      background: #b3261e; color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
+    }
+    .skq-eyerule summary:hover .skq-eyedel, .skq-eyedel:focus-visible { display: inline-block; }
+    .skq-eyedel:hover { background: #d93025; }
+    .skq-eyethumbs { display: flex; gap: 6px; overflow-x: auto; padding: 4px 10px 10px; }
+    .skq-eyethumbs a {
+      flex: none; display: flex; align-items: center; justify-content: center; width: 72px; height: 72px;
+      border-radius: 6px; overflow: hidden; background: #444; color: #ccc; font-size: 11px; text-decoration: none;
+    }
+    .skq-eyethumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .skq-hdr-btn {
       display: inline-flex; align-items: center; gap: 8px; margin-left: 4px; padding: 6px 16px;
       border: 0; border-radius: 4px; background: none; color: inherit; cursor: pointer;

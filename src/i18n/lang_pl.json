@@ -212,5 +212,6 @@
  "210": "Już na czarnej liście ({n})",
  "211": "Ukryte ({n})",
  "212": "Rozmyte ({n})",
- "213": "Nie udało się usunąć reguły serwisu"
+ "213": "Nie udało się usunąć reguły serwisu",
+ "214": "Klawiszem {key}"
 }
