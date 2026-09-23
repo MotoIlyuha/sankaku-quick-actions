@@ -211,5 +211,6 @@
  "209": "tags automatiques déjà en place : {n}",
  "210": "Déjà dans la liste noire ({n})",
  "211": "Masqués ({n})",
- "212": "Floutés ({n})"
+ "212": "Floutés ({n})",
+ "213": "Impossible de supprimer la règle du site"
 }

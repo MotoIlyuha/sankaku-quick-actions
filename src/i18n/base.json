@@ -212,6 +212,7 @@
   "автотеги уже на месте: {n}": "auto tags already in place: {n}",
   "Уже в чёрном списке ({n})": "Already blacklisted ({n})",
   "Скрыто ({n})": "Hidden ({n})",
-  "Размыто ({n})": "Blurred ({n})"
+  "Размыто ({n})": "Blurred ({n})",
+  "Не удалось удалить правило сайта": "Could not delete the site rule"
  }
 }

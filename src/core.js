@@ -5885,7 +5885,15 @@ function core(storedSettings) {
       display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
       border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
     }
-    .tchip { padding: 0 12px; }
+    .tchip { position: relative; padding: 0 12px; }
+    /* крестик удаления правила — только при наведении, поверх края чипа */
+    .tchipdel {
+      position: absolute; top: -6px; right: -6px; display: none; width: 18px; height: 18px; padding: 0;
+      border: 0; border-radius: 50%; background: #b3261e; color: #fff; font-size: 10px; line-height: 18px; cursor: pointer;
+    }
+    .tchip:hover .tchipdel, .tchipdel:focus-visible { display: block; }
+    .tchipdel:hover { background: #d93025; }
+    .tchipdel:disabled { opacity: .5; cursor: default; }
     /* этот тег уже введён в поле — значит, он в чёрном списке второй раз */
     .tchip.dup { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff8c00; }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
@@ -6804,7 +6812,7 @@ function core(storedSettings) {
         if (!isObj(item)) continue;
         const mode = /blur|размы/i.test(String(item.visibility ?? item.mode ?? '')) ? 'blur' : 'hide';
         for (const tag of Array.isArray(item.tags) ? item.tags : []) {
-          if (isObj(tag) || typeof tag === 'string') tags.push({ tag, mode });
+          if (isObj(tag) || typeof tag === 'string') tags.push({ tag, mode, rule: item.id });
         }
       }
     } catch (e) {
@@ -6815,37 +6823,52 @@ function core(storedSettings) {
     return tags;
   }
 
+  // Крестик на чипе: удаляет правила, из которых взялся этот тег, — свои
+  // сразу, правила сайта — его же запросом DELETE users/blacklist/{id}
+  async function dropBlacklistEntry(entry) {
+    const ids = new Set(entry.plugin);
+    if (ids.size) saveSettings({ rules: ruleList().filter((r) => !ids.has(r.id)) });
+    let failed = false;
+    for (const id of entry.site) {
+      if (id == null) continue;
+      try { await api('DELETE', `/users/blacklist/${encodeURIComponent(id)}`); } catch (e) { failed = true; log('site blacklist delete', e.message); }
+    }
+    siteBlacklistCache = null;
+    toast(failed ? t('Не удалось удалить правило сайта') : t('Правило удалено'), failed);
+  }
+
   // Один тег — одна запись, как бы он ни был записан: переведённое имя,
   // исходное, английское; сначала свои правила, свежие сверху
   // Скрытое и размытое — отдельными списками: один тег может быть в обоих
   function blacklistedTags(siteTags) {
     const out = { hide: [], blur: [] };
     const byKey = { hide: new Map(), blur: new Map() };
-    const add = (mode, keys, label, color) => {
+    // запись помнит, из каких правил взялась, — чтобы крестик мог их удалить
+    const add = (mode, keys, label, color, src) => {
       const map = byKey[mode];
-      const known = keys.map((k) => map.get(k)).find(Boolean);
-      if (known) {
-        keys.forEach((k) => { known.keys.add(k); map.set(k, known); });
-        if (!known.color && color) known.color = color;
-        return;
+      let entry = keys.map((k) => map.get(k)).find(Boolean);
+      if (!entry) {
+        entry = { key: keys[0], keys: new Set(keys), label, color, plugin: new Set(), site: new Set() };
+        out[mode].push(entry);
       }
-      const entry = { key: keys[0], keys: new Set(keys), label, color };
-      keys.forEach((k) => map.set(k, entry));
-      out[mode].push(entry);
+      keys.forEach((k) => { entry.keys.add(k); map.set(k, entry); });
+      if (!entry.color && color) entry.color = color;
+      if (src.plugin != null) entry.plugin.add(src.plugin);
+      if (src.site != null) entry.site.add(src.site);
     };
     for (const rule of [...ruleList()].reverse()) {
       const mode = rule.mode === 'blur' ? 'blur' : 'hide';
       for (const tag of Array.isArray(rule.tags) ? rule.tags : []) {
         const key = tagKey(tag);
-        if (key) add(mode, [key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
+        if (key) add(mode, [key], key.replace(/_/g, ' '), tagColorCache.get(key) || '', { plugin: rule.id });
       }
     }
-    for (const { tag, mode } of siteTags || []) {
+    for (const { tag, mode, rule } of siteTags || []) {
       const keys = tagNames([tag]) || [];
       if (!keys.length) continue;
       const label = isObj(tag) ? String(tag.name || tag.tagName || tag.name_en || keys[0]) : String(tag);
       const color = isObj(tag) ? TAG_TYPE_COLORS[Number(tag.type ?? tag.tagType)] || '' : '';
-      add(mode, keys, label.replace(/_/g, ' '), color);
+      add(mode, keys, label.replace(/_/g, ' '), color, { site: rule });
     }
     return out;
   }
@@ -6929,6 +6952,21 @@ function core(storedSettings) {
           chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
           chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
           chip.textContent = entry.label;
+          if (entry.plugin.size || entry.site.size) {
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.className = 'tchipdel';
+            del.title = t('Удалить правило');
+            del.textContent = '✕';
+            del.addEventListener('click', async () => {
+              del.disabled = true;
+              await dropBlacklistEntry(entry);
+              if (!host.isConnected) return;
+              listed = blacklistedTags(await siteBlacklist());
+              renderTagList();
+            });
+            chip.appendChild(del);
+          }
           return chip;
         }));
         parts.push(head, box);

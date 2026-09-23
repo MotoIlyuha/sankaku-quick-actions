@@ -465,7 +465,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "auto tags already in place: {n}",
           "Уже в чёрном списке ({n})": "Already blacklisted ({n})",
           "Скрыто ({n})": "Hidden ({n})",
-          "Размыто ({n})": "Blurred ({n})"
+          "Размыто ({n})": "Blurred ({n})",
+          "Не удалось удалить правило сайта": "Could not delete the site rule"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -680,7 +681,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "自動タグは設定済み：{n}",
           "Уже в чёрном списке ({n})": "ブラックリスト登録済み（{n}）",
           "Скрыто ({n})": "非表示（{n}）",
-          "Размыто ({n})": "ぼかし（{n}）"
+          "Размыто ({n})": "ぼかし（{n}）",
+          "Не удалось удалить правило сайта": "サイトのルールを削除できませんでした"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -895,7 +897,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "自动标签已就位：{n}",
           "Уже в чёрном списке ({n})": "已在黑名单中（{n}）",
           "Скрыто ({n})": "隐藏（{n}）",
-          "Размыто ({n})": "模糊（{n}）"
+          "Размыто ({n})": "模糊（{n}）",
+          "Не удалось удалить правило сайта": "无法删除网站规则"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1110,7 +1113,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "自動標籤已就位：{n}",
           "Уже в чёрном списке ({n})": "已在黑名單中（{n}）",
           "Скрыто ({n})": "隱藏（{n}）",
-          "Размыто ({n})": "模糊（{n}）"
+          "Размыто ({n})": "模糊（{n}）",
+          "Не удалось удалить правило сайта": "無法刪除網站規則"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1325,7 +1329,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "자동 태그가 이미 있음: {n}",
           "Уже в чёрном списке ({n})": "이미 블랙리스트에 있음 ({n})",
           "Скрыто ({n})": "숨김 ({n})",
-          "Размыто ({n})": "흐리게 ({n})"
+          "Размыто ({n})": "흐리게 ({n})",
+          "Не удалось удалить правило сайта": "사이트 규칙을 삭제하지 못했습니다"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1540,7 +1545,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "Auto-Tags schon vorhanden: {n}",
           "Уже в чёрном списке ({n})": "Bereits auf der Blacklist ({n})",
           "Скрыто ({n})": "Ausgeblendet ({n})",
-          "Размыто ({n})": "Unscharf ({n})"
+          "Размыто ({n})": "Unscharf ({n})",
+          "Не удалось удалить правило сайта": "Regel der Seite konnte nicht gelöscht werden"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1755,7 +1761,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "tags automatiques déjà en place : {n}",
           "Уже в чёрном списке ({n})": "Déjà dans la liste noire ({n})",
           "Скрыто ({n})": "Masqués ({n})",
-          "Размыто ({n})": "Floutés ({n})"
+          "Размыто ({n})": "Floutés ({n})",
+          "Не удалось удалить правило сайта": "Impossible de supprimer la règle du site"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1970,7 +1977,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "etiquetas automáticas ya puestas: {n}",
           "Уже в чёрном списке ({n})": "Ya en la lista negra ({n})",
           "Скрыто ({n})": "Ocultas ({n})",
-          "Размыто ({n})": "Difuminadas ({n})"
+          "Размыто ({n})": "Difuminadas ({n})",
+          "Не удалось удалить правило сайта": "No se pudo eliminar la regla del sitio"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2185,7 +2193,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "etiquetas automáticas já colocadas: {n}",
           "Уже в чёрном списке ({n})": "Já na lista negra ({n})",
           "Скрыто ({n})": "Ocultas ({n})",
-          "Размыто ({n})": "Desfocadas ({n})"
+          "Размыто ({n})": "Desfocadas ({n})",
+          "Не удалось удалить правило сайта": "Não foi possível eliminar a regra do site"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2400,7 +2409,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "tag automatici già presenti: {n}",
           "Уже в чёрном списке ({n})": "Già nella lista nera ({n})",
           "Скрыто ({n})": "Nascosti ({n})",
-          "Размыто ({n})": "Sfocati ({n})"
+          "Размыто ({n})": "Sfocati ({n})",
+          "Не удалось удалить правило сайта": "Impossibile eliminare la regola del sito"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2615,7 +2625,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automatische tags al aanwezig: {n}",
           "Уже в чёрном списке ({n})": "Al op de zwarte lijst ({n})",
           "Скрыто ({n})": "Verborgen ({n})",
-          "Размыто ({n})": "Vervaagd ({n})"
+          "Размыто ({n})": "Vervaagd ({n})",
+          "Не удалось удалить правило сайта": "Regel van de site kon niet worden verwijderd"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2830,7 +2841,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automatyczne tagi już są: {n}",
           "Уже в чёрном списке ({n})": "Już na czarnej liście ({n})",
           "Скрыто ({n})": "Ukryte ({n})",
-          "Размыто ({n})": "Rozmyte ({n})"
+          "Размыто ({n})": "Rozmyte ({n})",
+          "Не удалось удалить правило сайта": "Nie udało się usunąć reguły serwisu"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -3045,7 +3057,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automatiska taggar finns redan: {n}",
           "Уже в чёрном списке ({n})": "Redan svartlistade ({n})",
           "Скрыто ({n})": "Dolda ({n})",
-          "Размыто ({n})": "Suddiga ({n})"
+          "Размыто ({n})": "Suddiga ({n})",
+          "Не удалось удалить правило сайта": "Det gick inte att ta bort webbplatsens regel"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3260,7 +3273,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automatiske tags er der allerede: {n}",
           "Уже в чёрном списке ({n})": "Allerede på sortlisten ({n})",
           "Скрыто ({n})": "Skjult ({n})",
-          "Размыто ({n})": "Slørede ({n})"
+          "Размыто ({n})": "Slørede ({n})",
+          "Не удалось удалить правило сайта": "Sidens regel kunne ikke slettes"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3475,7 +3489,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automatiske tagger er allerede på plass: {n}",
           "Уже в чёрном списке ({n})": "Allerede på svartelisten ({n})",
           "Скрыто ({n})": "Skjult ({n})",
-          "Размыто ({n})": "Uskarpe ({n})"
+          "Размыто ({n})": "Uskarpe ({n})",
+          "Не удалось удалить правило сайта": "Kunne ikke slette sidens regel"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3690,7 +3705,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "automaattiset tunnisteet jo paikallaan: {n}",
           "Уже в чёрном списке ({n})": "Jo mustalla listalla ({n})",
           "Скрыто ({n})": "Piilotettu ({n})",
-          "Размыто ({n})": "Sumennettu ({n})"
+          "Размыто ({n})": "Sumennettu ({n})",
+          "Не удалось удалить правило сайта": "Sivuston sääntöä ei voitu poistaa"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3905,7 +3921,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "az automatikus címkék már megvannak: {n}",
           "Уже в чёрном списке ({n})": "Már a feketelistán ({n})",
           "Скрыто ({n})": "Elrejtve ({n})",
-          "Размыто ({n})": "Elmosva ({n})"
+          "Размыто ({n})": "Elmosva ({n})",
+          "Не удалось удалить правило сайта": "Az oldal szabályát nem sikerült törölni"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -4120,7 +4137,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "etichetele automate sunt deja puse: {n}",
           "Уже в чёрном списке ({n})": "Deja în lista neagră ({n})",
           "Скрыто ({n})": "Ascunse ({n})",
-          "Размыто ({n})": "Estompate ({n})"
+          "Размыто ({n})": "Estompate ({n})",
+          "Не удалось удалить правило сайта": "Regula site-ului nu a putut fi ștearsă"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4335,7 +4353,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "автоматичните тагове вече са налице: {n}",
           "Уже в чёрном списке ({n})": "Вече в черния списък ({n})",
           "Скрыто ({n})": "Скрити ({n})",
-          "Размыто ({n})": "Размити ({n})"
+          "Размыто ({n})": "Размити ({n})",
+          "Не удалось удалить правило сайта": "Правилото на сайта не можа да бъде изтрито"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4550,7 +4569,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "οι αυτόματες ετικέτες υπάρχουν ήδη: {n}",
           "Уже в чёрном списке ({n})": "Ήδη στη μαύρη λίστα ({n})",
           "Скрыто ({n})": "Κρυμμένα ({n})",
-          "Размыто ({n})": "Θολωμένα ({n})"
+          "Размыто ({n})": "Θολωμένα ({n})",
+          "Не удалось удалить правило сайта": "Δεν ήταν δυνατή η διαγραφή του κανόνα του ιστότοπου"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4765,7 +4785,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "otomatik etiketler zaten var: {n}",
           "Уже в чёрном списке ({n})": "Zaten kara listede ({n})",
           "Скрыто ({n})": "Gizlenen ({n})",
-          "Размыто ({n})": "Bulanık ({n})"
+          "Размыто ({n})": "Bulanık ({n})",
+          "Не удалось удалить правило сайта": "Site kuralı silinemedi"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4980,7 +5001,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "มีแท็กอัตโนมัติแล้ว: {n}",
           "Уже в чёрном списке ({n})": "อยู่ในบัญชีดำแล้ว ({n})",
           "Скрыто ({n})": "ซ่อน ({n})",
-          "Размыто ({n})": "เบลอ ({n})"
+          "Размыто ({n})": "เบลอ ({n})",
+          "Не удалось удалить правило сайта": "ลบกฎของเว็บไซต์ไม่สำเร็จ"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -5195,7 +5217,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "ऑटो टैग पहले से लगे हैं: {n}",
           "Уже в чёрном списке ({n})": "पहले से ब्लैकलिस्ट में ({n})",
           "Скрыто ({n})": "छिपाए गए ({n})",
-          "Размыто ({n})": "धुंधले ({n})"
+          "Размыто ({n})": "धुंधले ({n})",
+          "Не удалось удалить правило сайта": "साइट का नियम हटाया नहीं जा सका"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5410,7 +5433,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "tag otomatis sudah ada: {n}",
           "Уже в чёрном списке ({n})": "Sudah di daftar hitam ({n})",
           "Скрыто ({n})": "Disembunyikan ({n})",
-          "Размыто ({n})": "Diburamkan ({n})"
+          "Размыто ({n})": "Diburamkan ({n})",
+          "Не удалось удалить правило сайта": "Aturan situs tidak dapat dihapus"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5625,7 +5649,8 @@ function core(storedSettings) {
           "автотеги уже на месте: {n}": "tag automatik sudah ada: {n}",
           "Уже в чёрном списке ({n})": "Sudah dalam senarai hitam ({n})",
           "Скрыто ({n})": "Disembunyikan ({n})",
-          "Размыто ({n})": "Dikaburkan ({n})"
+          "Размыто ({n})": "Dikaburkan ({n})",
+          "Не удалось удалить правило сайта": "Peraturan laman tidak dapat dipadam"
     },
   } /* SKQ_I18N_END */;
 
@@ -11363,7 +11388,15 @@ function core(storedSettings) {
       display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
       border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
     }
-    .tchip { padding: 0 12px; }
+    .tchip { position: relative; padding: 0 12px; }
+    /* крестик удаления правила — только при наведении, поверх края чипа */
+    .tchipdel {
+      position: absolute; top: -6px; right: -6px; display: none; width: 18px; height: 18px; padding: 0;
+      border: 0; border-radius: 50%; background: #b3261e; color: #fff; font-size: 10px; line-height: 18px; cursor: pointer;
+    }
+    .tchip:hover .tchipdel, .tchipdel:focus-visible { display: block; }
+    .tchipdel:hover { background: #d93025; }
+    .tchipdel:disabled { opacity: .5; cursor: default; }
     /* этот тег уже введён в поле — значит, он в чёрном списке второй раз */
     .tchip.dup { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff8c00; }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
@@ -12282,7 +12315,7 @@ function core(storedSettings) {
         if (!isObj(item)) continue;
         const mode = /blur|размы/i.test(String(item.visibility ?? item.mode ?? '')) ? 'blur' : 'hide';
         for (const tag of Array.isArray(item.tags) ? item.tags : []) {
-          if (isObj(tag) || typeof tag === 'string') tags.push({ tag, mode });
+          if (isObj(tag) || typeof tag === 'string') tags.push({ tag, mode, rule: item.id });
         }
       }
     } catch (e) {
@@ -12293,37 +12326,52 @@ function core(storedSettings) {
     return tags;
   }
 
+  // Крестик на чипе: удаляет правила, из которых взялся этот тег, — свои
+  // сразу, правила сайта — его же запросом DELETE users/blacklist/{id}
+  async function dropBlacklistEntry(entry) {
+    const ids = new Set(entry.plugin);
+    if (ids.size) saveSettings({ rules: ruleList().filter((r) => !ids.has(r.id)) });
+    let failed = false;
+    for (const id of entry.site) {
+      if (id == null) continue;
+      try { await api('DELETE', `/users/blacklist/${encodeURIComponent(id)}`); } catch (e) { failed = true; log('site blacklist delete', e.message); }
+    }
+    siteBlacklistCache = null;
+    toast(failed ? t('Не удалось удалить правило сайта') : t('Правило удалено'), failed);
+  }
+
   // Один тег — одна запись, как бы он ни был записан: переведённое имя,
   // исходное, английское; сначала свои правила, свежие сверху
   // Скрытое и размытое — отдельными списками: один тег может быть в обоих
   function blacklistedTags(siteTags) {
     const out = { hide: [], blur: [] };
     const byKey = { hide: new Map(), blur: new Map() };
-    const add = (mode, keys, label, color) => {
+    // запись помнит, из каких правил взялась, — чтобы крестик мог их удалить
+    const add = (mode, keys, label, color, src) => {
       const map = byKey[mode];
-      const known = keys.map((k) => map.get(k)).find(Boolean);
-      if (known) {
-        keys.forEach((k) => { known.keys.add(k); map.set(k, known); });
-        if (!known.color && color) known.color = color;
-        return;
+      let entry = keys.map((k) => map.get(k)).find(Boolean);
+      if (!entry) {
+        entry = { key: keys[0], keys: new Set(keys), label, color, plugin: new Set(), site: new Set() };
+        out[mode].push(entry);
       }
-      const entry = { key: keys[0], keys: new Set(keys), label, color };
-      keys.forEach((k) => map.set(k, entry));
-      out[mode].push(entry);
+      keys.forEach((k) => { entry.keys.add(k); map.set(k, entry); });
+      if (!entry.color && color) entry.color = color;
+      if (src.plugin != null) entry.plugin.add(src.plugin);
+      if (src.site != null) entry.site.add(src.site);
     };
     for (const rule of [...ruleList()].reverse()) {
       const mode = rule.mode === 'blur' ? 'blur' : 'hide';
       for (const tag of Array.isArray(rule.tags) ? rule.tags : []) {
         const key = tagKey(tag);
-        if (key) add(mode, [key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
+        if (key) add(mode, [key], key.replace(/_/g, ' '), tagColorCache.get(key) || '', { plugin: rule.id });
       }
     }
-    for (const { tag, mode } of siteTags || []) {
+    for (const { tag, mode, rule } of siteTags || []) {
       const keys = tagNames([tag]) || [];
       if (!keys.length) continue;
       const label = isObj(tag) ? String(tag.name || tag.tagName || tag.name_en || keys[0]) : String(tag);
       const color = isObj(tag) ? TAG_TYPE_COLORS[Number(tag.type ?? tag.tagType)] || '' : '';
-      add(mode, keys, label.replace(/_/g, ' '), color);
+      add(mode, keys, label.replace(/_/g, ' '), color, { site: rule });
     }
     return out;
   }
@@ -12407,6 +12455,21 @@ function core(storedSettings) {
           chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
           chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
           chip.textContent = entry.label;
+          if (entry.plugin.size || entry.site.size) {
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.className = 'tchipdel';
+            del.title = t('Удалить правило');
+            del.textContent = '✕';
+            del.addEventListener('click', async () => {
+              del.disabled = true;
+              await dropBlacklistEntry(entry);
+              if (!host.isConnected) return;
+              listed = blacklistedTags(await siteBlacklist());
+              renderTagList();
+            });
+            chip.appendChild(del);
+          }
           return chip;
         }));
         parts.push(head, box);

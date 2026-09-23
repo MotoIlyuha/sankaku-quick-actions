@@ -211,5 +211,6 @@
  "209": "automatyczne tagi już są: {n}",
  "210": "Już na czarnej liście ({n})",
  "211": "Ukryte ({n})",
- "212": "Rozmyte ({n})"
+ "212": "Rozmyte ({n})",
+ "213": "Nie udało się usunąć reguły serwisu"
 }

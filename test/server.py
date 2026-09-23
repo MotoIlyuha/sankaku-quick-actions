@@ -81,12 +81,15 @@ class H(http.server.BaseHTTPRequestHandler):
                 posts = [x for x in posts if x['id'] == want]
             return self._send(200, json.dumps(posts), 'application/json')
         if path.startswith('/users/blacklist'):
+            global DELETED
+            DELETED = globals().get('DELETED', set())
             # как у сайта: правила чёрного списка, у каждого свои теги
             rules = [
                 {'id': 'b1', 'visibility': 'hide', 'tags': [{'name': 'трап', 'tagName': 'trap', 'name_en': 'Trap', 'type': 0}]},
                 {'id': 'b2', 'visibility': 'hide', 'tags': [{'name': 'огромная грудь', 'tagName': 'huge_breasts', 'name_en': 'Huge breasts', 'type': 11}]},
                 {'id': 'b3', 'visibility': 'blur', 'tags': [{'name': 'лоли', 'tagName': 'loli', 'name_en': 'Loli', 'type': 0}]},
             ]
+            rules = [r for r in rules if r['id'] not in DELETED]
             return self._send(200, json.dumps({'list': rules, 'records': [], 'count': len(rules)}), 'application/json')
         if path.startswith('/api/longpoll'):
             # как у сайта: фоновый запрос, который висит минутами
@@ -147,6 +150,11 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         return self._send(204, b'', 'text/plain')
     def do_DELETE(self):
+        if self.path.startswith('/users/blacklist/'):
+            global DELETED
+            DELETED = globals().get('DELETED', set())
+            DELETED.add(self.path.rsplit('/', 1)[1])
+            return self._send(200, json.dumps({'success': True}), 'application/json')
         if '/posts/' in self.path:
             return self._send(200, json.dumps({'success': True}), 'application/json')
         return self._send(404, '{}', 'application/json')
