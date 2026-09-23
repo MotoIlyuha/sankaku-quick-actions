@@ -462,7 +462,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Posts hidden with the key ({n})",
           "Вернуть пост": "Show the post again",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "The site doubts the rating and is waiting for your decision — open the post form",
-          "автотеги уже на месте: {n}": "auto tags already in place: {n}"
+          "автотеги уже на месте: {n}": "auto tags already in place: {n}",
+          "Добавленные теги ({n})": "Added tags ({n})",
+          "Убрать тег": "Remove the tag"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -674,7 +676,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "キーで非表示にした投稿（{n}）",
           "Вернуть пост": "投稿を再び表示",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "サイトがレーティングを疑問視し、判断を待っています。投稿フォームを開いてください",
-          "автотеги уже на месте: {n}": "自動タグは設定済み：{n}"
+          "автотеги уже на месте: {n}": "自動タグは設定済み：{n}",
+          "Добавленные теги ({n})": "追加したタグ（{n}）",
+          "Убрать тег": "タグを外す"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -886,7 +890,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "用按键隐藏的帖子（{n}）",
           "Вернуть пост": "重新显示帖子",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "网站对分级有疑问，正在等待你的决定——请打开帖子表单",
-          "автотеги уже на месте: {n}": "自动标签已就位：{n}"
+          "автотеги уже на месте: {n}": "自动标签已就位：{n}",
+          "Добавленные теги ({n})": "已添加的标签（{n}）",
+          "Убрать тег": "移除标签"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1098,7 +1104,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "用按鍵隱藏的貼文（{n}）",
           "Вернуть пост": "重新顯示貼文",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "網站對分級有疑問，正在等待你的決定——請開啟貼文表單",
-          "автотеги уже на месте: {n}": "自動標籤已就位：{n}"
+          "автотеги уже на месте: {n}": "自動標籤已就位：{n}",
+          "Добавленные теги ({n})": "已新增的標籤（{n}）",
+          "Убрать тег": "移除標籤"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1310,7 +1318,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "키로 숨긴 게시물 ({n})",
           "Вернуть пост": "게시물 다시 표시",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "사이트가 등급을 의심하며 결정을 기다리고 있습니다. 게시물 양식을 여세요",
-          "автотеги уже на месте: {n}": "자동 태그가 이미 있음: {n}"
+          "автотеги уже на месте: {n}": "자동 태그가 이미 있음: {n}",
+          "Добавленные теги ({n})": "추가한 태그 ({n})",
+          "Убрать тег": "태그 제거"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1522,7 +1532,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Mit der Taste ausgeblendete Beiträge ({n})",
           "Вернуть пост": "Beitrag wieder anzeigen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular",
-          "автотеги уже на месте: {n}": "Auto-Tags schon vorhanden: {n}"
+          "автотеги уже на месте: {n}": "Auto-Tags schon vorhanden: {n}",
+          "Добавленные теги ({n})": "Hinzugefügte Tags ({n})",
+          "Убрать тег": "Tag entfernen"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1734,7 +1746,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Posts masqués avec la touche ({n})",
           "Вернуть пост": "Réafficher le post",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post",
-          "автотеги уже на месте: {n}": "tags automatiques déjà en place : {n}"
+          "автотеги уже на месте: {n}": "tags automatiques déjà en place : {n}",
+          "Добавленные теги ({n})": "Tags ajoutés ({n})",
+          "Убрать тег": "Retirer le tag"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1946,7 +1960,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Publicaciones ocultas con la tecla ({n})",
           "Вернуть пост": "Volver a mostrar la publicación",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación",
-          "автотеги уже на месте: {n}": "etiquetas automáticas ya puestas: {n}"
+          "автотеги уже на месте: {n}": "etiquetas automáticas ya puestas: {n}",
+          "Добавленные теги ({n})": "Etiquetas añadidas ({n})",
+          "Убрать тег": "Quitar la etiqueta"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2158,7 +2174,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Publicações ocultadas com a tecla ({n})",
           "Вернуть пост": "Mostrar a publicação de novo",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "O site duvida da classificação e aguarda a sua decisão — abra o formulário da publicação",
-          "автотеги уже на месте: {n}": "etiquetas automáticas já colocadas: {n}"
+          "автотеги уже на месте: {n}": "etiquetas automáticas já colocadas: {n}",
+          "Добавленные теги ({n})": "Etiquetas adicionadas ({n})",
+          "Убрать тег": "Remover a etiqueta"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2370,7 +2388,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Post nascosti con il tasto ({n})",
           "Вернуть пост": "Mostra di nuovo il post",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Il sito dubita della classificazione e attende la tua decisione: apri il modulo del post",
-          "автотеги уже на месте: {n}": "tag automatici già presenti: {n}"
+          "автотеги уже на месте: {n}": "tag automatici già presenti: {n}",
+          "Добавленные теги ({n})": "Tag aggiunti ({n})",
+          "Убрать тег": "Rimuovi il tag"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2582,7 +2602,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Met de toets verborgen posts ({n})",
           "Вернуть пост": "Post weer tonen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "De site twijfelt aan de classificatie en wacht op uw beslissing — open het formulier van de post",
-          "автотеги уже на месте: {n}": "automatische tags al aanwezig: {n}"
+          "автотеги уже на месте: {n}": "automatische tags al aanwezig: {n}",
+          "Добавленные теги ({n})": "Toegevoegde tags ({n})",
+          "Убрать тег": "Tag verwijderen"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2794,7 +2816,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Posty ukryte klawiszem ({n})",
           "Вернуть пост": "Pokaż post ponownie",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
-          "автотеги уже на месте: {n}": "automatyczne tagi już są: {n}"
+          "автотеги уже на месте: {n}": "automatyczne tagi już są: {n}",
+          "Добавленные теги ({n})": "Dodane tagi ({n})",
+          "Убрать тег": "Usuń tag"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -3006,7 +3030,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Inlägg som dolts med tangenten ({n})",
           "Вернуть пост": "Visa inlägget igen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär",
-          "автотеги уже на месте: {n}": "automatiska taggar finns redan: {n}"
+          "автотеги уже на месте: {n}": "automatiska taggar finns redan: {n}",
+          "Добавленные теги ({n})": "Tillagda taggar ({n})",
+          "Убрать тег": "Ta bort taggen"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3218,7 +3244,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Opslag skjult med tasten ({n})",
           "Вернуть пост": "Vis opslaget igen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular",
-          "автотеги уже на месте: {n}": "automatiske tags er der allerede: {n}"
+          "автотеги уже на месте: {n}": "automatiske tags er der allerede: {n}",
+          "Добавленные теги ({n})": "Tilføjede tags ({n})",
+          "Убрать тег": "Fjern tagget"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3430,7 +3458,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Innlegg skjult med tasten ({n})",
           "Вернуть пост": "Vis innlegget igjen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget",
-          "автотеги уже на месте: {n}": "automatiske tagger er allerede på plass: {n}"
+          "автотеги уже на месте: {n}": "automatiske tagger er allerede på plass: {n}",
+          "Добавленные теги ({n})": "Lagt til tagger ({n})",
+          "Убрать тег": "Fjern taggen"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3642,7 +3672,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Näppäimellä piilotetut julkaisut ({n})",
           "Вернуть пост": "Näytä julkaisu taas",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake",
-          "автотеги уже на месте: {n}": "automaattiset tunnisteet jo paikallaan: {n}"
+          "автотеги уже на месте: {n}": "automaattiset tunnisteet jo paikallaan: {n}",
+          "Добавленные теги ({n})": "Lisätyt tunnisteet ({n})",
+          "Убрать тег": "Poista tunniste"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3854,7 +3886,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "A billentyűvel elrejtett bejegyzések ({n})",
           "Вернуть пост": "Bejegyzés újbóli megjelenítése",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját",
-          "автотеги уже на месте: {n}": "az automatikus címkék már megvannak: {n}"
+          "автотеги уже на месте: {n}": "az automatikus címkék már megvannak: {n}",
+          "Добавленные теги ({n})": "Hozzáadott címkék ({n})",
+          "Убрать тег": "Címke eltávolítása"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -4066,7 +4100,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Postări ascunse cu tasta ({n})",
           "Вернуть пост": "Arată din nou postarea",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării",
-          "автотеги уже на месте: {n}": "etichetele automate sunt deja puse: {n}"
+          "автотеги уже на месте: {n}": "etichetele automate sunt deja puse: {n}",
+          "Добавленные теги ({n})": "Etichete adăugate ({n})",
+          "Убрать тег": "Elimină eticheta"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4278,7 +4314,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Публикации, скрити с клавиша ({n})",
           "Вернуть пост": "Показване на публикацията отново",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Сайтът се съмнява в рейтинга и чака решение — отворете формуляра на публикацията",
-          "автотеги уже на месте: {n}": "автоматичните тагове вече са налице: {n}"
+          "автотеги уже на месте: {n}": "автоматичните тагове вече са налице: {n}",
+          "Добавленные теги ({n})": "Добавени тагове ({n})",
+          "Убрать тег": "Премахване на тага"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4490,7 +4528,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Αναρτήσεις κρυμμένες με το πλήκτρο ({n})",
           "Вернуть пост": "Εμφάνιση της ανάρτησης ξανά",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Ο ιστότοπος αμφιβάλλει για τη βαθμολογία και περιμένει απόφαση — ανοίξτε τη φόρμα της ανάρτησης",
-          "автотеги уже на месте: {n}": "οι αυτόματες ετικέτες υπάρχουν ήδη: {n}"
+          "автотеги уже на месте: {n}": "οι αυτόματες ετικέτες υπάρχουν ήδη: {n}",
+          "Добавленные теги ({n})": "Ετικέτες που προστέθηκαν ({n})",
+          "Убрать тег": "Αφαίρεση ετικέτας"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4702,7 +4742,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Tuşla gizlenen gönderiler ({n})",
           "Вернуть пост": "Gönderiyi yeniden göster",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın",
-          "автотеги уже на месте: {n}": "otomatik etiketler zaten var: {n}"
+          "автотеги уже на месте: {n}": "otomatik etiketler zaten var: {n}",
+          "Добавленные теги ({n})": "Eklenen etiketler ({n})",
+          "Убрать тег": "Etiketi kaldır"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4914,7 +4956,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "โพสต์ที่ซ่อนด้วยปุ่ม ({n})",
           "Вернуть пост": "แสดงโพสต์อีกครั้ง",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "เว็บไซต์ไม่แน่ใจเรื่องเรตติ้งและรอการตัดสินใจ — เปิดแบบฟอร์มของโพสต์",
-          "автотеги уже на месте: {n}": "มีแท็กอัตโนมัติแล้ว: {n}"
+          "автотеги уже на месте: {n}": "มีแท็กอัตโนมัติแล้ว: {n}",
+          "Добавленные теги ({n})": "แท็กที่เพิ่มแล้ว ({n})",
+          "Убрать тег": "นำแท็กออก"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -5126,7 +5170,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "कुंजी से छिपाई गई पोस्ट ({n})",
           "Вернуть пост": "पोस्ट फिर दिखाएँ",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "साइट को रेटिंग पर संदेह है और वह आपके निर्णय की प्रतीक्षा कर रही है — पोस्ट का फ़ॉर्म खोलें",
-          "автотеги уже на месте: {n}": "ऑटो टैग पहले से लगे हैं: {n}"
+          "автотеги уже на месте: {n}": "ऑटो टैग पहले से लगे हैं: {n}",
+          "Добавленные теги ({n})": "जोड़े गए टैग ({n})",
+          "Убрать тег": "टैग हटाएँ"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5338,7 +5384,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Postingan yang disembunyikan dengan tombol ({n})",
           "Вернуть пост": "Tampilkan postingan lagi",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Situs meragukan rating dan menunggu keputusan Anda — buka formulir postingan",
-          "автотеги уже на месте: {n}": "tag otomatis sudah ada: {n}"
+          "автотеги уже на месте: {n}": "tag otomatis sudah ada: {n}",
+          "Добавленные теги ({n})": "Tag yang ditambahkan ({n})",
+          "Убрать тег": "Hapus tag"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5550,7 +5598,9 @@ function core(storedSettings) {
           "Посты, скрытые клавишей ({n})": "Siaran yang disembunyikan dengan kekunci ({n})",
           "Вернуть пост": "Tunjukkan siaran semula",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Laman meragui penarafan dan menunggu keputusan anda — buka borang siaran",
-          "автотеги уже на месте: {n}": "tag automatik sudah ada: {n}"
+          "автотеги уже на месте: {n}": "tag automatik sudah ada: {n}",
+          "Добавленные теги ({n})": "Tag yang ditambah ({n})",
+          "Убрать тег": "Buang tag"
     },
   } /* SKQ_I18N_END */;
 
@@ -11204,6 +11254,19 @@ function core(storedSettings) {
     }
     .fld input[type=text]:focus { outline: 2px solid #ff8c00; outline-offset: 1px; }
     .picks { display: flex; gap: 20px; }
+    .rtaglist { margin: -6px 0 14px; }
+    .rtaglist summary { cursor: pointer; color: #bbb; user-select: none; }
+    .rtaglist summary:hover { color: #fff; }
+    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tchip {
+      display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
+      border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
+    }
+    .tchipdel {
+      width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+      background: rgba(0, 0, 0, .3); color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
+    }
+    .tchipdel:hover { background: rgba(0, 0, 0, .55); }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .rrow {
       display: flex; align-items: center; gap: 10px; padding: 8px 10px;
@@ -11932,6 +11995,8 @@ function core(storedSettings) {
     row.appendChild(inner);
   }
 
+  const tagColorCache = new Map(); // тег → цвет его типа, по ответам подсказок
+
   // ---- Подсказки тегов и пользователей ----
   // Адреса те же, что у самого сайта: tags/autosuggest?tag=… и users/autosuggest?name=…
   async function suggestList(kind, q) {
@@ -11947,10 +12012,12 @@ function core(storedSettings) {
       if (kind !== 'tag') return { value: String(name), label: String(name) };
       const count = isObj(x) ? (x.post_count ?? x.count) : null;
       const rating = isObj(x) && RATINGS[String(x.rating || '').toLowerCase()];
+      const color = isObj(x) ? TAG_TYPE_COLORS[Number(x.type ?? x.tagType)] || TAG_TYPE_COLORS[0] : '';
+      if (color) tagColorCache.set(tagKey(name), color);
       return {
         value: tagKey(name),
         label: String(name).replace(/_/g, ' '),
-        color: isObj(x) ? TAG_TYPE_COLORS[Number(x.type ?? x.tagType)] || TAG_TYPE_COLORS[0] : '',
+        color,
         rating: rating ? rating[0] : '',
         count: typeof count === 'number' ? shortCount(count) : '',
       };
@@ -12040,6 +12107,7 @@ function core(storedSettings) {
       } else {
         input.value = opt.value || opt.label;
       }
+      input.dispatchEvent(new Event('skq-change'));
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
       st.query = '';
@@ -12116,6 +12184,7 @@ function core(storedSettings) {
         <h2>${T('Создать новое правило')}</h2>
         <div class="fld"><span>${T('Теги')}</span>
           <input type="text" class="rtags" placeholder="${T('Теги через запятую')}"></div>
+        <details class="rtaglist" hidden><summary></summary><div class="rtagchips"></div></details>
         <div class="fld"><span>${T('Пользователь')}</span><input type="text" class="ruser"></div>
         <div class="fld"><span>${T('Видимость')}</span>
           <div class="picks">
@@ -12150,7 +12219,43 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
-    const tagField = attachSuggest(root.querySelector('.rtags'), 'tag');
+    // Уже добавленные теги — свёрнутым списком с крестиками: длинную строку
+    // через запятую глазами не проверишь
+    const tagsInput = root.querySelector('.rtags');
+    const tagList = root.querySelector('.rtaglist');
+    const enteredTags = () => [...new Set(tagsInput.value.split(/[,;]/)
+      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean))];
+
+    function renderTagList() {
+      const tags = enteredTags();
+      tagList.hidden = tags.length === 0;
+      tagList.querySelector('summary').textContent = t('Добавленные теги ({n})', { n: tags.length });
+      const chips = tags.map((tag) => {
+        const chip = document.createElement('span');
+        chip.className = 'tchip';
+        chip.style.backgroundColor = tagColorCache.get(tag) || '#616161';
+        chip.appendChild(document.createTextNode(tag.replace(/_/g, ' ')));
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'tchipdel';
+        del.title = t('Убрать тег');
+        del.textContent = '✕';
+        del.addEventListener('click', () => {
+          const rest = enteredTags().filter((x) => x !== tag);
+          tagsInput.value = rest.length ? rest.join(', ') + ', ' : '';
+          tagsInput.focus();
+          // как будто стёрли руками: список обновится, подсказки закроются
+          tagsInput.dispatchEvent(new Event('input'));
+        });
+        chip.appendChild(del);
+        return chip;
+      });
+      tagList.querySelector('.rtagchips').replaceChildren(...chips);
+    }
+    tagsInput.addEventListener('input', renderTagList);
+    tagsInput.addEventListener('skq-change', renderTagList);
+
+    const tagField = attachSuggest(tagsInput, 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
     tagField.reopen();

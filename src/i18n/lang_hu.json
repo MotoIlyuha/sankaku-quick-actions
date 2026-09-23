@@ -208,5 +208,7 @@
  "206": "A billentyűvel elrejtett bejegyzések ({n})",
  "207": "Bejegyzés újbóli megjelenítése",
  "208": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját",
- "209": "az automatikus címkék már megvannak: {n}"
+ "209": "az automatikus címkék már megvannak: {n}",
+ "210": "Hozzáadott címkék ({n})",
+ "211": "Címke eltávolítása"
 }

@@ -208,5 +208,7 @@
  "206": "Post nascosti con il tasto ({n})",
  "207": "Mostra di nuovo il post",
  "208": "Il sito dubita della classificazione e attende la tua decisione: apri il modulo del post",
- "209": "tag automatici già presenti: {n}"
+ "209": "tag automatici già presenti: {n}",
+ "210": "Tag aggiunti ({n})",
+ "211": "Rimuovi il tag"
 }

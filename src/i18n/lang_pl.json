@@ -208,5 +208,7 @@
  "206": "Posty ukryte klawiszem ({n})",
  "207": "Pokaż post ponownie",
  "208": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
- "209": "automatyczne tagi już są: {n}"
+ "209": "automatyczne tagi już są: {n}",
+ "210": "Dodane tagi ({n})",
+ "211": "Usuń tag"
 }

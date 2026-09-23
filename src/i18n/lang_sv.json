@@ -208,5 +208,7 @@
  "206": "Inlägg som dolts med tangenten ({n})",
  "207": "Visa inlägget igen",
  "208": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär",
- "209": "automatiska taggar finns redan: {n}"
+ "209": "automatiska taggar finns redan: {n}",
+ "210": "Tillagda taggar ({n})",
+ "211": "Ta bort taggen"
 }

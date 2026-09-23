@@ -5801,6 +5801,19 @@ function core(storedSettings) {
     }
     .fld input[type=text]:focus { outline: 2px solid #ff8c00; outline-offset: 1px; }
     .picks { display: flex; gap: 20px; }
+    .rtaglist { margin: -6px 0 14px; }
+    .rtaglist summary { cursor: pointer; color: #bbb; user-select: none; }
+    .rtaglist summary:hover { color: #fff; }
+    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tchip {
+      display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
+      border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
+    }
+    .tchipdel {
+      width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+      background: rgba(0, 0, 0, .3); color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
+    }
+    .tchipdel:hover { background: rgba(0, 0, 0, .55); }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .rrow {
       display: flex; align-items: center; gap: 10px; padding: 8px 10px;
@@ -6529,6 +6542,8 @@ function core(storedSettings) {
     row.appendChild(inner);
   }
 
+  const tagColorCache = new Map(); // тег → цвет его типа, по ответам подсказок
+
   // ---- Подсказки тегов и пользователей ----
   // Адреса те же, что у самого сайта: tags/autosuggest?tag=… и users/autosuggest?name=…
   async function suggestList(kind, q) {
@@ -6544,10 +6559,12 @@ function core(storedSettings) {
       if (kind !== 'tag') return { value: String(name), label: String(name) };
       const count = isObj(x) ? (x.post_count ?? x.count) : null;
       const rating = isObj(x) && RATINGS[String(x.rating || '').toLowerCase()];
+      const color = isObj(x) ? TAG_TYPE_COLORS[Number(x.type ?? x.tagType)] || TAG_TYPE_COLORS[0] : '';
+      if (color) tagColorCache.set(tagKey(name), color);
       return {
         value: tagKey(name),
         label: String(name).replace(/_/g, ' '),
-        color: isObj(x) ? TAG_TYPE_COLORS[Number(x.type ?? x.tagType)] || TAG_TYPE_COLORS[0] : '',
+        color,
         rating: rating ? rating[0] : '',
         count: typeof count === 'number' ? shortCount(count) : '',
       };
@@ -6637,6 +6654,7 @@ function core(storedSettings) {
       } else {
         input.value = opt.value || opt.label;
       }
+      input.dispatchEvent(new Event('skq-change'));
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
       st.query = '';
@@ -6713,6 +6731,7 @@ function core(storedSettings) {
         <h2>${T('Создать новое правило')}</h2>
         <div class="fld"><span>${T('Теги')}</span>
           <input type="text" class="rtags" placeholder="${T('Теги через запятую')}"></div>
+        <details class="rtaglist" hidden><summary></summary><div class="rtagchips"></div></details>
         <div class="fld"><span>${T('Пользователь')}</span><input type="text" class="ruser"></div>
         <div class="fld"><span>${T('Видимость')}</span>
           <div class="picks">
@@ -6747,7 +6766,43 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
-    const tagField = attachSuggest(root.querySelector('.rtags'), 'tag');
+    // Уже добавленные теги — свёрнутым списком с крестиками: длинную строку
+    // через запятую глазами не проверишь
+    const tagsInput = root.querySelector('.rtags');
+    const tagList = root.querySelector('.rtaglist');
+    const enteredTags = () => [...new Set(tagsInput.value.split(/[,;]/)
+      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean))];
+
+    function renderTagList() {
+      const tags = enteredTags();
+      tagList.hidden = tags.length === 0;
+      tagList.querySelector('summary').textContent = t('Добавленные теги ({n})', { n: tags.length });
+      const chips = tags.map((tag) => {
+        const chip = document.createElement('span');
+        chip.className = 'tchip';
+        chip.style.backgroundColor = tagColorCache.get(tag) || '#616161';
+        chip.appendChild(document.createTextNode(tag.replace(/_/g, ' ')));
+        const del = document.createElement('button');
+        del.type = 'button';
+        del.className = 'tchipdel';
+        del.title = t('Убрать тег');
+        del.textContent = '✕';
+        del.addEventListener('click', () => {
+          const rest = enteredTags().filter((x) => x !== tag);
+          tagsInput.value = rest.length ? rest.join(', ') + ', ' : '';
+          tagsInput.focus();
+          // как будто стёрли руками: список обновится, подсказки закроются
+          tagsInput.dispatchEvent(new Event('input'));
+        });
+        chip.appendChild(del);
+        return chip;
+      });
+      tagList.querySelector('.rtagchips').replaceChildren(...chips);
+    }
+    tagsInput.addEventListener('input', renderTagList);
+    tagsInput.addEventListener('skq-change', renderTagList);
+
+    const tagField = attachSuggest(tagsInput, 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
     tagField.reopen();
