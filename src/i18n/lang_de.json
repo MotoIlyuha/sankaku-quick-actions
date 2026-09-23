@@ -188,7 +188,7 @@
  "186": "Neue Regel erstellen",
  "187": "Die Taste {key} macht dasselbe",
  "188": "Tags",
- "189": "Durch Leerzeichen oder Komma getrennt",
+ "189": "Tags, durch Komma getrennt",
  "190": "Benutzer",
  "191": "Sichtbarkeit",
  "192": "Ausblenden",
@@ -202,12 +202,11 @@
  "200": "Regel hinzugefügt",
  "201": "Regel gelöscht",
  "202": "Ausgeblendete Beiträge: {n}",
- "203": "Nichts gefunden",
- "204": "Beitrag ausblenden",
- "205": "Beitrag ausgeblendet: {id}",
- "206": "Beitrag wieder sichtbar: {id}",
- "207": "Mit der Taste ausgeblendete Beiträge ({n})",
- "208": "Beitrag wieder anzeigen",
- "209": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular",
- "210": "Auto-Tags schon vorhanden: {n}"
+ "203": "Beitrag ausblenden",
+ "204": "Beitrag ausgeblendet: {id}",
+ "205": "Beitrag wieder sichtbar: {id}",
+ "206": "Mit der Taste ausgeblendete Beiträge ({n})",
+ "207": "Beitrag wieder anzeigen",
+ "208": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular",
+ "209": "Auto-Tags schon vorhanden: {n}"
 }

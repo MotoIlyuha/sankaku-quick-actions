@@ -188,7 +188,7 @@
  "186": "Skapa en ny regel",
  "187": "Tangenten {key} gör samma sak",
  "188": "Taggar",
- "189": "Åtskilda med mellanslag eller kommatecken",
+ "189": "Taggar, kommaseparerade",
  "190": "Användare",
  "191": "Synlighet",
  "192": "Dölj",
@@ -202,12 +202,11 @@
  "200": "Regeln har lagts till",
  "201": "Regeln har tagits bort",
  "202": "Dolda inlägg: {n}",
- "203": "Inget hittades",
- "204": "Dölj inlägget",
- "205": "Inlägget är dolt: {id}",
- "206": "Inlägget syns igen: {id}",
- "207": "Inlägg som dolts med tangenten ({n})",
- "208": "Visa inlägget igen",
- "209": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär",
- "210": "automatiska taggar finns redan: {n}"
+ "203": "Dölj inlägget",
+ "204": "Inlägget är dolt: {id}",
+ "205": "Inlägget syns igen: {id}",
+ "206": "Inlägg som dolts med tangenten ({n})",
+ "207": "Visa inlägget igen",
+ "208": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär",
+ "209": "automatiska taggar finns redan: {n}"
 }

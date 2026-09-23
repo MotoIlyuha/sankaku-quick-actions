@@ -188,7 +188,7 @@
  "186": "Créer une nouvelle règle",
  "187": "La touche {key} fait la même chose",
  "188": "Tags",
- "189": "Séparés par des espaces ou des virgules",
+ "189": "Tags séparés par des virgules",
  "190": "Utilisateur",
  "191": "Visibilité",
  "192": "Masquer",
@@ -202,12 +202,11 @@
  "200": "Règle ajoutée",
  "201": "Règle supprimée",
  "202": "Posts masqués : {n}",
- "203": "Aucun résultat",
- "204": "Masquer le post",
- "205": "Post masqué : {id}",
- "206": "Post de nouveau visible : {id}",
- "207": "Posts masqués avec la touche ({n})",
- "208": "Réafficher le post",
- "209": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post",
- "210": "tags automatiques déjà en place : {n}"
+ "203": "Masquer le post",
+ "204": "Post masqué : {id}",
+ "205": "Post de nouveau visible : {id}",
+ "206": "Posts masqués avec la touche ({n})",
+ "207": "Réafficher le post",
+ "208": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post",
+ "209": "tags automatiques déjà en place : {n}"
 }

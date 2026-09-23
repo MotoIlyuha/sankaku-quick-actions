@@ -188,7 +188,7 @@
  "186": "Opprett en ny regel",
  "187": "Tasten {key} gjør det samme",
  "188": "Tagger",
- "189": "Atskilt med mellomrom eller komma",
+ "189": "Tagger, atskilt med komma",
  "190": "Bruker",
  "191": "Synlighet",
  "192": "Skjul",
@@ -202,12 +202,11 @@
  "200": "Regelen er lagt til",
  "201": "Regelen er slettet",
  "202": "Skjulte innlegg: {n}",
- "203": "Ingenting funnet",
- "204": "Skjul innlegget",
- "205": "Innlegget er skjult: {id}",
- "206": "Innlegget vises igjen: {id}",
- "207": "Innlegg skjult med tasten ({n})",
- "208": "Vis innlegget igjen",
- "209": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget",
- "210": "automatiske tagger er allerede på plass: {n}"
+ "203": "Skjul innlegget",
+ "204": "Innlegget er skjult: {id}",
+ "205": "Innlegget vises igjen: {id}",
+ "206": "Innlegg skjult med tasten ({n})",
+ "207": "Vis innlegget igjen",
+ "208": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget",
+ "209": "automatiske tagger er allerede på plass: {n}"
 }

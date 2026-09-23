@@ -81,8 +81,12 @@ class H(http.server.BaseHTTPRequestHandler):
         if path.startswith('/tags/autosuggest'):
             import urllib.parse
             q = urllib.parse.parse_qs(self.path.split('?', 1)[1] if '?' in self.path else '').get('tag', [''])[0].lower()
-            known = [('trap', 1200), ('female', 40800000), ('loli', 99000), ('huge breasts', 320000)]
-            out = [{'name': n, 'post_count': c} for n, c in known if q and q in n]
+            # как у сайта: тип тега задаёт цвет чипа, рейтинг — s / q / e
+            known = [('trap', 1200, 0, 'q'), ('female', 40800000, 0, 's'), ('loli', 99000, 0, 'e'),
+                     ('huge breasts', 320000, 11, 'q'), ('fern (sousou no frieren)', 51000, 4, 's'),
+                     ('feet', 900000, 11, 's'), ('frieren', 88000, 4, 's')]
+            q = q.replace('_', ' ')  # сайт хранит теги с подчёркиваниями и ищет по обоим написаниям
+            out = [{'name': n, 'post_count': c, 'type': ty, 'rating': r} for n, c, ty, r in known if q and q in n]
             return self._send(200, json.dumps(out), 'application/json')
         if path.startswith('/users/autosuggest'):
             import urllib.parse

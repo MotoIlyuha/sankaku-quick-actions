@@ -188,7 +188,7 @@
  "186": "Creați o regulă nouă",
  "187": "Tasta {key} face același lucru",
  "188": "Etichete",
- "189": "Separate prin spații sau virgule",
+ "189": "Etichete separate prin virgulă",
  "190": "Utilizator",
  "191": "Vizibilitate",
  "192": "Ascunde",
@@ -202,12 +202,11 @@
  "200": "Regulă adăugată",
  "201": "Regulă ștearsă",
  "202": "Postări ascunse: {n}",
- "203": "Nu s-a găsit nimic",
- "204": "Ascunde postarea",
- "205": "Postare ascunsă: {id}",
- "206": "Postarea este iar vizibilă: {id}",
- "207": "Postări ascunse cu tasta ({n})",
- "208": "Arată din nou postarea",
- "209": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării",
- "210": "etichetele automate sunt deja puse: {n}"
+ "203": "Ascunde postarea",
+ "204": "Postare ascunsă: {id}",
+ "205": "Postarea este iar vizibilă: {id}",
+ "206": "Postări ascunse cu tasta ({n})",
+ "207": "Arată din nou postarea",
+ "208": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării",
+ "209": "etichetele automate sunt deja puse: {n}"
 }

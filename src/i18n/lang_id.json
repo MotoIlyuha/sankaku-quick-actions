@@ -188,7 +188,7 @@
  "186": "Buat aturan baru",
  "187": "Tombol {key} melakukan hal yang sama",
  "188": "Tag",
- "189": "Dipisahkan dengan spasi atau koma",
+ "189": "Tag, dipisahkan koma",
  "190": "Pengguna",
  "191": "Visibilitas",
  "192": "Sembunyikan",
@@ -202,12 +202,11 @@
  "200": "Aturan ditambahkan",
  "201": "Aturan dihapus",
  "202": "Postingan tersembunyi: {n}",
- "203": "Tidak ada yang ditemukan",
- "204": "Sembunyikan postingan",
- "205": "Postingan disembunyikan: {id}",
- "206": "Postingan terlihat lagi: {id}",
- "207": "Postingan yang disembunyikan dengan tombol ({n})",
- "208": "Tampilkan postingan lagi",
- "209": "Situs meragukan rating dan menunggu keputusan Anda — buka formulir postingan",
- "210": "tag otomatis sudah ada: {n}"
+ "203": "Sembunyikan postingan",
+ "204": "Postingan disembunyikan: {id}",
+ "205": "Postingan terlihat lagi: {id}",
+ "206": "Postingan yang disembunyikan dengan tombol ({n})",
+ "207": "Tampilkan postingan lagi",
+ "208": "Situs meragukan rating dan menunggu keputusan Anda — buka formulir postingan",
+ "209": "tag otomatis sudah ada: {n}"
 }

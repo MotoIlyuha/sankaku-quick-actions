@@ -188,7 +188,7 @@
  "186": "Utwórz nową regułę",
  "187": "Klawisz {key} robi to samo",
  "188": "Tagi",
- "189": "Oddzielone spacją lub przecinkiem",
+ "189": "Tagi oddzielone przecinkami",
  "190": "Użytkownik",
  "191": "Widoczność",
  "192": "Ukryj",
@@ -202,12 +202,11 @@
  "200": "Reguła dodana",
  "201": "Reguła usunięta",
  "202": "Ukryte posty: {n}",
- "203": "Nic nie znaleziono",
- "204": "Ukryj post",
- "205": "Post ukryty: {id}",
- "206": "Post znów widoczny: {id}",
- "207": "Posty ukryte klawiszem ({n})",
- "208": "Pokaż post ponownie",
- "209": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
- "210": "automatyczne tagi już są: {n}"
+ "203": "Ukryj post",
+ "204": "Post ukryty: {id}",
+ "205": "Post znów widoczny: {id}",
+ "206": "Posty ukryte klawiszem ({n})",
+ "207": "Pokaż post ponownie",
+ "208": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
+ "209": "automatyczne tagi już są: {n}"
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
 // @namespace    skq-quick-actions
-// @version      1.33.3
+// @version      1.34.0
 // @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
 // @author       MotoIlyuha
 // @homepageURL  https://github.com/MotoIlyuha/sankaku-quick-actions
@@ -249,7 +249,7 @@ function core(storedSettings) {
   // Языки. Ключ строки — её русский текст, перевод берётся по языку,
   // выбранному в настройках Sankaku (он же стоит в адресе страницы).
   // ---------------------------------------------------------------------------
-  const SKQ_VERSION = '1.33.3';
+  const SKQ_VERSION = '1.34.0';
 
   const STRINGS = /* SKQ_I18N_START */ {
     'en': {
@@ -442,7 +442,7 @@ function core(storedSettings) {
           "Создать новое правило": "Create a new rule",
           "То же самое делает клавиша {key}": "The {key} key does the same",
           "Теги": "Tags",
-          "Через пробел или запятую": "Separated by spaces or commas",
+          "Теги через запятую": "Tags, comma-separated",
           "Пользователь": "User",
           "Видимость": "Visibility",
           "Скрыть": "Hide",
@@ -456,7 +456,6 @@ function core(storedSettings) {
           "Правило добавлено": "Rule added",
           "Правило удалено": "Rule deleted",
           "Скрыто постов: {n}": "Posts hidden: {n}",
-          "Ничего не найдено": "Nothing found",
           "Скрыть пост": "Hide the post",
           "Пост скрыт: {id}": "Post hidden: {id}",
           "Пост снова виден: {id}": "Post shown again: {id}",
@@ -655,7 +654,7 @@ function core(storedSettings) {
           "Создать новое правило": "新しいルールを作成",
           "То же самое делает клавиша {key}": "{key} キーでも同じことができます",
           "Теги": "タグ",
-          "Через пробел или запятую": "スペースまたはカンマ区切り",
+          "Теги через запятую": "タグ（カンマ区切り）",
           "Пользователь": "ユーザー",
           "Видимость": "表示",
           "Скрыть": "非表示",
@@ -669,7 +668,6 @@ function core(storedSettings) {
           "Правило добавлено": "ルールを追加しました",
           "Правило удалено": "ルールを削除しました",
           "Скрыто постов: {n}": "非表示の投稿：{n}",
-          "Ничего не найдено": "見つかりませんでした",
           "Скрыть пост": "投稿を非表示にする",
           "Пост скрыт: {id}": "投稿を非表示にしました：{id}",
           "Пост снова виден: {id}": "投稿を再び表示しました：{id}",
@@ -868,7 +866,7 @@ function core(storedSettings) {
           "Создать новое правило": "创建新规则",
           "То же самое делает клавиша {key}": "{key} 键的作用相同",
           "Теги": "标签",
-          "Через пробел или запятую": "用空格或逗号分隔",
+          "Теги через запятую": "标签，用逗号分隔",
           "Пользователь": "用户",
           "Видимость": "可见性",
           "Скрыть": "隐藏",
@@ -882,7 +880,6 @@ function core(storedSettings) {
           "Правило добавлено": "已添加规则",
           "Правило удалено": "已删除规则",
           "Скрыто постов: {n}": "已隐藏帖子：{n}",
-          "Ничего не найдено": "未找到结果",
           "Скрыть пост": "隐藏该帖子",
           "Пост скрыт: {id}": "已隐藏帖子：{id}",
           "Пост снова виден: {id}": "已重新显示帖子：{id}",
@@ -1081,7 +1078,7 @@ function core(storedSettings) {
           "Создать новое правило": "建立新規則",
           "То же самое делает клавиша {key}": "{key} 鍵的作用相同",
           "Теги": "標籤",
-          "Через пробел или запятую": "用空格或逗號分隔",
+          "Теги через запятую": "標籤，用逗號分隔",
           "Пользователь": "使用者",
           "Видимость": "可見性",
           "Скрыть": "隱藏",
@@ -1095,7 +1092,6 @@ function core(storedSettings) {
           "Правило добавлено": "已新增規則",
           "Правило удалено": "已刪除規則",
           "Скрыто постов: {n}": "已隱藏貼文：{n}",
-          "Ничего не найдено": "找不到結果",
           "Скрыть пост": "隱藏該貼文",
           "Пост скрыт: {id}": "已隱藏貼文：{id}",
           "Пост снова виден: {id}": "已重新顯示貼文：{id}",
@@ -1294,7 +1290,7 @@ function core(storedSettings) {
           "Создать новое правило": "새 규칙 만들기",
           "То же самое делает клавиша {key}": "{key} 키도 같은 일을 합니다",
           "Теги": "태그",
-          "Через пробел или запятую": "공백 또는 쉼표로 구분",
+          "Теги через запятую": "태그(쉼표로 구분)",
           "Пользователь": "사용자",
           "Видимость": "표시 방식",
           "Скрыть": "숨기기",
@@ -1308,7 +1304,6 @@ function core(storedSettings) {
           "Правило добавлено": "규칙을 추가했습니다",
           "Правило удалено": "규칙을 삭제했습니다",
           "Скрыто постов: {n}": "숨긴 게시물: {n}",
-          "Ничего не найдено": "결과가 없습니다",
           "Скрыть пост": "게시물 숨기기",
           "Пост скрыт: {id}": "게시물을 숨겼습니다: {id}",
           "Пост снова виден: {id}": "게시물을 다시 표시했습니다: {id}",
@@ -1507,7 +1502,7 @@ function core(storedSettings) {
           "Создать новое правило": "Neue Regel erstellen",
           "То же самое делает клавиша {key}": "Die Taste {key} macht dasselbe",
           "Теги": "Tags",
-          "Через пробел или запятую": "Durch Leerzeichen oder Komma getrennt",
+          "Теги через запятую": "Tags, durch Komma getrennt",
           "Пользователь": "Benutzer",
           "Видимость": "Sichtbarkeit",
           "Скрыть": "Ausblenden",
@@ -1521,7 +1516,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regel hinzugefügt",
           "Правило удалено": "Regel gelöscht",
           "Скрыто постов: {n}": "Ausgeblendete Beiträge: {n}",
-          "Ничего не найдено": "Nichts gefunden",
           "Скрыть пост": "Beitrag ausblenden",
           "Пост скрыт: {id}": "Beitrag ausgeblendet: {id}",
           "Пост снова виден: {id}": "Beitrag wieder sichtbar: {id}",
@@ -1720,7 +1714,7 @@ function core(storedSettings) {
           "Создать новое правило": "Créer une nouvelle règle",
           "То же самое делает клавиша {key}": "La touche {key} fait la même chose",
           "Теги": "Tags",
-          "Через пробел или запятую": "Séparés par des espaces ou des virgules",
+          "Теги через запятую": "Tags séparés par des virgules",
           "Пользователь": "Utilisateur",
           "Видимость": "Visibilité",
           "Скрыть": "Masquer",
@@ -1734,7 +1728,6 @@ function core(storedSettings) {
           "Правило добавлено": "Règle ajoutée",
           "Правило удалено": "Règle supprimée",
           "Скрыто постов: {n}": "Posts masqués : {n}",
-          "Ничего не найдено": "Aucun résultat",
           "Скрыть пост": "Masquer le post",
           "Пост скрыт: {id}": "Post masqué : {id}",
           "Пост снова виден: {id}": "Post de nouveau visible : {id}",
@@ -1933,7 +1926,7 @@ function core(storedSettings) {
           "Создать новое правило": "Crear una regla nueva",
           "То же самое делает клавиша {key}": "La tecla {key} hace lo mismo",
           "Теги": "Etiquetas",
-          "Через пробел или запятую": "Separadas por espacios o comas",
+          "Теги через запятую": "Etiquetas separadas por comas",
           "Пользователь": "Usuario",
           "Видимость": "Visibilidad",
           "Скрыть": "Ocultar",
@@ -1947,7 +1940,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regla añadida",
           "Правило удалено": "Regla eliminada",
           "Скрыто постов: {n}": "Publicaciones ocultas: {n}",
-          "Ничего не найдено": "No se ha encontrado nada",
           "Скрыть пост": "Ocultar la publicación",
           "Пост скрыт: {id}": "Publicación oculta: {id}",
           "Пост снова виден: {id}": "La publicación vuelve a verse: {id}",
@@ -2146,7 +2138,7 @@ function core(storedSettings) {
           "Создать новое правило": "Criar uma nova regra",
           "То же самое делает клавиша {key}": "A tecla {key} faz o mesmo",
           "Теги": "Etiquetas",
-          "Через пробел или запятую": "Separadas por espaços ou vírgulas",
+          "Теги через запятую": "Etiquetas separadas por vírgulas",
           "Пользователь": "Utilizador",
           "Видимость": "Visibilidade",
           "Скрыть": "Ocultar",
@@ -2160,7 +2152,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regra adicionada",
           "Правило удалено": "Regra eliminada",
           "Скрыто постов: {n}": "Publicações ocultas: {n}",
-          "Ничего не найдено": "Nada encontrado",
           "Скрыть пост": "Ocultar a publicação",
           "Пост скрыт: {id}": "Publicação ocultada: {id}",
           "Пост снова виден: {id}": "Publicação visível novamente: {id}",
@@ -2359,7 +2350,7 @@ function core(storedSettings) {
           "Создать новое правило": "Crea una nuova regola",
           "То же самое делает клавиша {key}": "Il tasto {key} fa la stessa cosa",
           "Теги": "Tag",
-          "Через пробел или запятую": "Separati da spazi o virgole",
+          "Теги через запятую": "Tag separati da virgole",
           "Пользователь": "Utente",
           "Видимость": "Visibilità",
           "Скрыть": "Nascondi",
@@ -2373,7 +2364,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regola aggiunta",
           "Правило удалено": "Regola eliminata",
           "Скрыто постов: {n}": "Post nascosti: {n}",
-          "Ничего не найдено": "Nessun risultato",
           "Скрыть пост": "Nascondi il post",
           "Пост скрыт: {id}": "Post nascosto: {id}",
           "Пост снова виден: {id}": "Post di nuovo visibile: {id}",
@@ -2572,7 +2562,7 @@ function core(storedSettings) {
           "Создать новое правило": "Nieuwe regel maken",
           "То же самое делает клавиша {key}": "De toets {key} doet hetzelfde",
           "Теги": "Tags",
-          "Через пробел или запятую": "Gescheiden door spaties of komma’s",
+          "Теги через запятую": "Tags, gescheiden door komma’s",
           "Пользователь": "Gebruiker",
           "Видимость": "Zichtbaarheid",
           "Скрыть": "Verbergen",
@@ -2586,7 +2576,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regel toegevoegd",
           "Правило удалено": "Regel verwijderd",
           "Скрыто постов: {n}": "Verborgen posts: {n}",
-          "Ничего не найдено": "Niets gevonden",
           "Скрыть пост": "Post verbergen",
           "Пост скрыт: {id}": "Post verborgen: {id}",
           "Пост снова виден: {id}": "Post weer zichtbaar: {id}",
@@ -2785,7 +2774,7 @@ function core(storedSettings) {
           "Создать новое правило": "Utwórz nową regułę",
           "То же самое делает клавиша {key}": "Klawisz {key} robi to samo",
           "Теги": "Tagi",
-          "Через пробел или запятую": "Oddzielone spacją lub przecinkiem",
+          "Теги через запятую": "Tagi oddzielone przecinkami",
           "Пользователь": "Użytkownik",
           "Видимость": "Widoczność",
           "Скрыть": "Ukryj",
@@ -2799,7 +2788,6 @@ function core(storedSettings) {
           "Правило добавлено": "Reguła dodana",
           "Правило удалено": "Reguła usunięta",
           "Скрыто постов: {n}": "Ukryte posty: {n}",
-          "Ничего не найдено": "Nic nie znaleziono",
           "Скрыть пост": "Ukryj post",
           "Пост скрыт: {id}": "Post ukryty: {id}",
           "Пост снова виден: {id}": "Post znów widoczny: {id}",
@@ -2998,7 +2986,7 @@ function core(storedSettings) {
           "Создать новое правило": "Skapa en ny regel",
           "То же самое делает клавиша {key}": "Tangenten {key} gör samma sak",
           "Теги": "Taggar",
-          "Через пробел или запятую": "Åtskilda med mellanslag eller kommatecken",
+          "Теги через запятую": "Taggar, kommaseparerade",
           "Пользователь": "Användare",
           "Видимость": "Synlighet",
           "Скрыть": "Dölj",
@@ -3012,7 +3000,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regeln har lagts till",
           "Правило удалено": "Regeln har tagits bort",
           "Скрыто постов: {n}": "Dolda inlägg: {n}",
-          "Ничего не найдено": "Inget hittades",
           "Скрыть пост": "Dölj inlägget",
           "Пост скрыт: {id}": "Inlägget är dolt: {id}",
           "Пост снова виден: {id}": "Inlägget syns igen: {id}",
@@ -3211,7 +3198,7 @@ function core(storedSettings) {
           "Создать новое правило": "Opret en ny regel",
           "То же самое делает клавиша {key}": "Tasten {key} gør det samme",
           "Теги": "Tags",
-          "Через пробел или запятую": "Adskilt med mellemrum eller komma",
+          "Теги через запятую": "Tags adskilt med komma",
           "Пользователь": "Bruger",
           "Видимость": "Synlighed",
           "Скрыть": "Skjul",
@@ -3225,7 +3212,6 @@ function core(storedSettings) {
           "Правило добавлено": "Reglen er tilføjet",
           "Правило удалено": "Reglen er slettet",
           "Скрыто постов: {n}": "Skjulte opslag: {n}",
-          "Ничего не найдено": "Intet fundet",
           "Скрыть пост": "Skjul opslaget",
           "Пост скрыт: {id}": "Opslag skjult: {id}",
           "Пост снова виден: {id}": "Opslaget vises igen: {id}",
@@ -3424,7 +3410,7 @@ function core(storedSettings) {
           "Создать новое правило": "Opprett en ny regel",
           "То же самое делает клавиша {key}": "Tasten {key} gjør det samme",
           "Теги": "Tagger",
-          "Через пробел или запятую": "Atskilt med mellomrom eller komma",
+          "Теги через запятую": "Tagger, atskilt med komma",
           "Пользователь": "Bruker",
           "Видимость": "Synlighet",
           "Скрыть": "Skjul",
@@ -3438,7 +3424,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regelen er lagt til",
           "Правило удалено": "Regelen er slettet",
           "Скрыто постов: {n}": "Skjulte innlegg: {n}",
-          "Ничего не найдено": "Ingenting funnet",
           "Скрыть пост": "Skjul innlegget",
           "Пост скрыт: {id}": "Innlegget er skjult: {id}",
           "Пост снова виден: {id}": "Innlegget vises igjen: {id}",
@@ -3637,7 +3622,7 @@ function core(storedSettings) {
           "Создать новое правило": "Luo uusi sääntö",
           "То же самое делает клавиша {key}": "Näppäin {key} tekee saman",
           "Теги": "Tunnisteet",
-          "Через пробел или запятую": "Välilyönnillä tai pilkulla eroteltuna",
+          "Теги через запятую": "Tunnisteet pilkulla eroteltuina",
           "Пользователь": "Käyttäjä",
           "Видимость": "Näkyvyys",
           "Скрыть": "Piilota",
@@ -3651,7 +3636,6 @@ function core(storedSettings) {
           "Правило добавлено": "Sääntö lisätty",
           "Правило удалено": "Sääntö poistettu",
           "Скрыто постов: {n}": "Piilotettuja julkaisuja: {n}",
-          "Ничего не найдено": "Ei löytynyt mitään",
           "Скрыть пост": "Piilota julkaisu",
           "Пост скрыт: {id}": "Julkaisu piilotettu: {id}",
           "Пост снова виден: {id}": "Julkaisu näkyy taas: {id}",
@@ -3850,7 +3834,7 @@ function core(storedSettings) {
           "Создать новое правило": "Új szabály létrehozása",
           "То же самое делает клавиша {key}": "A(z) {key} billentyű ugyanezt teszi",
           "Теги": "Címkék",
-          "Через пробел или запятую": "Szóközzel vagy vesszővel elválasztva",
+          "Теги через запятую": "Címkék vesszővel elválasztva",
           "Пользователь": "Felhasználó",
           "Видимость": "Láthatóság",
           "Скрыть": "Elrejtés",
@@ -3864,7 +3848,6 @@ function core(storedSettings) {
           "Правило добавлено": "Szabály hozzáadva",
           "Правило удалено": "Szabály törölve",
           "Скрыто постов: {n}": "Elrejtett bejegyzések: {n}",
-          "Ничего не найдено": "Nincs találat",
           "Скрыть пост": "Bejegyzés elrejtése",
           "Пост скрыт: {id}": "Bejegyzés elrejtve: {id}",
           "Пост снова виден: {id}": "A bejegyzés ismét látszik: {id}",
@@ -4063,7 +4046,7 @@ function core(storedSettings) {
           "Создать новое правило": "Creați o regulă nouă",
           "То же самое делает клавиша {key}": "Tasta {key} face același lucru",
           "Теги": "Etichete",
-          "Через пробел или запятую": "Separate prin spații sau virgule",
+          "Теги через запятую": "Etichete separate prin virgulă",
           "Пользователь": "Utilizator",
           "Видимость": "Vizibilitate",
           "Скрыть": "Ascunde",
@@ -4077,7 +4060,6 @@ function core(storedSettings) {
           "Правило добавлено": "Regulă adăugată",
           "Правило удалено": "Regulă ștearsă",
           "Скрыто постов: {n}": "Postări ascunse: {n}",
-          "Ничего не найдено": "Nu s-a găsit nimic",
           "Скрыть пост": "Ascunde postarea",
           "Пост скрыт: {id}": "Postare ascunsă: {id}",
           "Пост снова виден: {id}": "Postarea este iar vizibilă: {id}",
@@ -4276,7 +4258,7 @@ function core(storedSettings) {
           "Создать новое правило": "Създаване на ново правило",
           "То же самое делает клавиша {key}": "Клавишът {key} прави същото",
           "Теги": "Тагове",
-          "Через пробел или запятую": "Разделени с интервал или запетая",
+          "Теги через запятую": "Тагове, разделени със запетая",
           "Пользователь": "Потребител",
           "Видимость": "Видимост",
           "Скрыть": "Скриване",
@@ -4290,7 +4272,6 @@ function core(storedSettings) {
           "Правило добавлено": "Правилото е добавено",
           "Правило удалено": "Правилото е изтрито",
           "Скрыто постов: {n}": "Скрити публикации: {n}",
-          "Ничего не найдено": "Нищо не е намерено",
           "Скрыть пост": "Скриване на публикацията",
           "Пост скрыт: {id}": "Скрита публикация: {id}",
           "Пост снова виден: {id}": "Публикацията е видима отново: {id}",
@@ -4489,7 +4470,7 @@ function core(storedSettings) {
           "Создать новое правило": "Δημιουργία νέου κανόνα",
           "То же самое делает клавиша {key}": "Το πλήκτρο {key} κάνει το ίδιο",
           "Теги": "Ετικέτες",
-          "Через пробел или запятую": "Χωρισμένα με κενό ή κόμμα",
+          "Теги через запятую": "Ετικέτες, χωρισμένες με κόμμα",
           "Пользователь": "Χρήστης",
           "Видимость": "Ορατότητα",
           "Скрыть": "Απόκρυψη",
@@ -4503,7 +4484,6 @@ function core(storedSettings) {
           "Правило добавлено": "Ο κανόνας προστέθηκε",
           "Правило удалено": "Ο κανόνας διαγράφηκε",
           "Скрыто постов: {n}": "Κρυμμένες αναρτήσεις: {n}",
-          "Ничего не найдено": "Δεν βρέθηκε τίποτα",
           "Скрыть пост": "Απόκρυψη ανάρτησης",
           "Пост скрыт: {id}": "Η ανάρτηση κρύφτηκε: {id}",
           "Пост снова виден: {id}": "Η ανάρτηση εμφανίζεται ξανά: {id}",
@@ -4702,7 +4682,7 @@ function core(storedSettings) {
           "Создать новое правило": "Yeni kural oluştur",
           "То же самое делает клавиша {key}": "{key} tuşu da aynısını yapar",
           "Теги": "Etiketler",
-          "Через пробел или запятую": "Boşluk veya virgülle ayırın",
+          "Теги через запятую": "Virgülle ayrılmış etiketler",
           "Пользователь": "Kullanıcı",
           "Видимость": "Görünürlük",
           "Скрыть": "Gizle",
@@ -4716,7 +4696,6 @@ function core(storedSettings) {
           "Правило добавлено": "Kural eklendi",
           "Правило удалено": "Kural silindi",
           "Скрыто постов: {n}": "Gizlenen gönderi: {n}",
-          "Ничего не найдено": "Hiçbir şey bulunamadı",
           "Скрыть пост": "Gönderiyi gizle",
           "Пост скрыт: {id}": "Gönderi gizlendi: {id}",
           "Пост снова виден: {id}": "Gönderi yeniden görünüyor: {id}",
@@ -4915,7 +4894,7 @@ function core(storedSettings) {
           "Создать новое правило": "สร้างกฎใหม่",
           "То же самое делает клавиша {key}": "ปุ่ม {key} ทำสิ่งเดียวกัน",
           "Теги": "แท็ก",
-          "Через пробел или запятую": "คั่นด้วยช่องว่างหรือจุลภาค",
+          "Теги через запятую": "แท็ก คั่นด้วยจุลภาค",
           "Пользователь": "ผู้ใช้",
           "Видимость": "การมองเห็น",
           "Скрыть": "ซ่อน",
@@ -4929,7 +4908,6 @@ function core(storedSettings) {
           "Правило добавлено": "เพิ่มกฎแล้ว",
           "Правило удалено": "ลบกฎแล้ว",
           "Скрыто постов: {n}": "โพสต์ที่ซ่อน: {n}",
-          "Ничего не найдено": "ไม่พบสิ่งใด",
           "Скрыть пост": "ซ่อนโพสต์",
           "Пост скрыт: {id}": "ซ่อนโพสต์แล้ว: {id}",
           "Пост снова виден: {id}": "แสดงโพสต์อีกครั้งแล้ว: {id}",
@@ -5128,7 +5106,7 @@ function core(storedSettings) {
           "Создать новое правило": "नया नियम बनाएँ",
           "То же самое делает клавиша {key}": "{key} कुंजी भी यही करती है",
           "Теги": "टैग",
-          "Через пробел или запятую": "स्पेस या अल्पविराम से अलग करें",
+          "Теги через запятую": "टैग, अल्पविराम से अलग",
           "Пользователь": "उपयोगकर्ता",
           "Видимость": "दृश्यता",
           "Скрыть": "छिपाएँ",
@@ -5142,7 +5120,6 @@ function core(storedSettings) {
           "Правило добавлено": "नियम जोड़ा गया",
           "Правило удалено": "नियम हटाया गया",
           "Скрыто постов: {n}": "छिपाई गई पोस्ट: {n}",
-          "Ничего не найдено": "कुछ नहीं मिला",
           "Скрыть пост": "पोस्ट छिपाएँ",
           "Пост скрыт: {id}": "पोस्ट छिपाई गई: {id}",
           "Пост снова виден: {id}": "पोस्ट फिर से दिख रही है: {id}",
@@ -5341,7 +5318,7 @@ function core(storedSettings) {
           "Создать новое правило": "Buat aturan baru",
           "То же самое делает клавиша {key}": "Tombol {key} melakukan hal yang sama",
           "Теги": "Tag",
-          "Через пробел или запятую": "Dipisahkan dengan spasi atau koma",
+          "Теги через запятую": "Tag, dipisahkan koma",
           "Пользователь": "Pengguna",
           "Видимость": "Visibilitas",
           "Скрыть": "Sembunyikan",
@@ -5355,7 +5332,6 @@ function core(storedSettings) {
           "Правило добавлено": "Aturan ditambahkan",
           "Правило удалено": "Aturan dihapus",
           "Скрыто постов: {n}": "Postingan tersembunyi: {n}",
-          "Ничего не найдено": "Tidak ada yang ditemukan",
           "Скрыть пост": "Sembunyikan postingan",
           "Пост скрыт: {id}": "Postingan disembunyikan: {id}",
           "Пост снова виден: {id}": "Postingan terlihat lagi: {id}",
@@ -5554,7 +5530,7 @@ function core(storedSettings) {
           "Создать новое правило": "Cipta peraturan baharu",
           "То же самое делает клавиша {key}": "Kekunci {key} melakukan perkara yang sama",
           "Теги": "Tag",
-          "Через пробел или запятую": "Dipisahkan dengan ruang atau koma",
+          "Теги через запятую": "Tag, dipisahkan dengan koma",
           "Пользователь": "Pengguna",
           "Видимость": "Keterlihatan",
           "Скрыть": "Sembunyikan",
@@ -5568,7 +5544,6 @@ function core(storedSettings) {
           "Правило добавлено": "Peraturan ditambah",
           "Правило удалено": "Peraturan dipadam",
           "Скрыто постов: {n}": "Siaran tersembunyi: {n}",
-          "Ничего не найдено": "Tiada apa-apa dijumpai",
           "Скрыть пост": "Sembunyikan siaran",
           "Пост скрыт: {id}": "Siaran disembunyikan: {id}",
           "Пост снова виден: {id}": "Siaran kelihatan semula: {id}",
@@ -5683,8 +5658,10 @@ function core(storedSettings) {
 
   // Сайт зовёт тег по-разному в зависимости от ответа, а нам нужно одно написание
   const tagKey = (v) => String(v == null ? '' : v).trim().toLowerCase().replace(/\s+/g, '_');
+  // у тега бывает и переведённое имя, и исходное — правилу годится любое из них
   const tagNames = (list) => (Array.isArray(list)
-    ? list.map((x) => tagKey(isObj(x) ? (x.name || x.tagName || x.name_en || x.name_ja) : x)).filter(Boolean)
+    ? [...new Set(list.flatMap((x) => (isObj(x) ? [x.name, x.tagName, x.name_en, x.name_ja] : [x])
+      .map(tagKey).filter(Boolean)))]
     : undefined);
   const ownerName = (src) => {
     for (const o of [src.author, src.user, src.uploader]) if (isObj(o) && o.name) return String(o.name);
@@ -7712,6 +7689,33 @@ function core(storedSettings) {
     mass.titleEl = null;
   }
 
+  // Выпадающий список подсказок тегов: общий для массовой загрузки и окна правила
+  const SUGG_CSS = `
+    .sugg {
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; max-height: 40vh; overflow-y: auto;
+      padding: 8px 0; border-radius: 4px; background-color: #424242; color: #fff;
+      box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+      font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .sugg[hidden] { display: none; }
+    .sopt { position: relative; display: flex; align-items: center; box-sizing: border-box; cursor: pointer; }
+    .sopt:hover, .sopt.active { background-color: rgba(255,255,255,.08); }
+    .sinner { width: 100%; min-width: 0; }
+    .schipcol { display: flex !important; align-items: center; min-width: 0; }
+    .schip { min-width: 0; }
+    .shist { flex: none; width: 18px; height: 18px; margin-right: 8px; fill: currentColor; opacity: .55; }
+    .sname { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sextra { margin-left: auto; flex: none; color: #aaa; font-size: 12px; }
+    .sforget {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px;
+      border: 0; border-radius: 50%; background: rgba(0,0,0,.55); color: #fff; font-size: 11px; line-height: 22px;
+      cursor: pointer; opacity: 0; transition: opacity .1s;
+    }
+    .sopt.hist:hover .sforget, .sopt.hist.active .sforget { opacity: 1; }
+    .sforget:hover { background: #b3261e; }
+    .snote { padding: 10px 16px; color: rgba(255,255,255,.7); font-size: 14px; }
+  `;
+
   const MASS_CSS = `
     * { box-sizing: border-box; }
     .page { max-width: 1320px; margin: 0 auto; padding: 0 16px 48px; font: 14px/1.4 Roboto, "Segoe UI", Arial, sans-serif; color: #fff; }
@@ -7754,31 +7758,9 @@ function core(storedSettings) {
       flex: 1 1 auto; min-width: 0; padding: 6px 10px; border-radius: 6px; border: 1px solid #555;
       background: #1f1f1f; color: #fff; font: inherit;
     }
-    .sugg {
-      position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; max-height: 40vh; overflow-y: auto;
-      padding: 8px 0; border-radius: 4px; background-color: #424242; color: #fff;
-      box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
-      font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-    .sugg[hidden] { display: none; }
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; border: 1px solid #555; background: #3a3a3a; color: #eee; font: inherit; cursor: pointer; }
     .btn:hover { background: #454545; }
-    .sopt { position: relative; display: flex; align-items: center; box-sizing: border-box; cursor: pointer; }
-    .sopt:hover, .sopt.active { background-color: rgba(255,255,255,.08); }
-    .sinner { width: 100%; min-width: 0; }
-    .schipcol { display: flex !important; align-items: center; min-width: 0; }
-    .schip { min-width: 0; }
-    .shist { flex: none; width: 18px; height: 18px; margin-right: 8px; fill: currentColor; opacity: .55; }
-    .sname { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .sextra { margin-left: auto; flex: none; color: #aaa; font-size: 12px; }
-    .sforget {
-      position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px;
-      border: 0; border-radius: 50%; background: rgba(0,0,0,.55); color: #fff; font-size: 11px; line-height: 22px;
-      cursor: pointer; opacity: 0; transition: opacity .1s;
-    }
-    .sopt.hist:hover .sforget, .sopt.hist.active .sforget { opacity: 1; }
-    .sforget:hover { background: #b3261e; }
-    .snote { padding: 10px 16px; color: rgba(255,255,255,.7); font-size: 14px; }
+    ${SUGG_CSS}
     .taginput:focus { outline: 2px solid #ff8c00; outline-offset: 0; border-color: transparent; }
     .drop {
       display: block; border: 2px dashed #666; border-radius: 10px; padding: 36px 16px; margin-bottom: 16px;
@@ -11213,18 +11195,8 @@ function core(storedSettings) {
     .tabs { display: flex; gap: 6px; margin: 0 0 12px; }
     .tab { flex: 1 1 0; padding: 7px 10px; font-weight: 500; }
     .tab.on { background: #ff8c00; border-color: #ff8c00; color: #fff; }
+    ${SUGG_CSS}
     .fld { position: relative; display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
-    .acbox {
-      position: absolute; left: 0; right: 0; top: 100%; z-index: 5; display: none;
-      max-height: 220px; overflow: auto; margin-top: 2px; border: 1px solid #555;
-      border-radius: 8px; background: #1f1f1f; box-shadow: 0 8px 24px rgba(0, 0, 0, .6);
-    }
-    .acbox.on { display: block; }
-    .acitem { display: flex; align-items: center; gap: 10px; padding: 7px 10px; cursor: pointer; }
-    .acitem > span:first-child { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .acitem:hover, .acitem.on { background: rgba(255, 140, 0, .25); }
-    .acnote { flex: none; color: #999; font-size: 12px; }
-    .acempty { padding: 7px 10px; color: #999; }
     .fld > span { color: #bbb; }
     .fld input[type=text] {
       padding: 8px 10px; border-radius: 6px; border: 1px solid #555;
@@ -11930,6 +11902,36 @@ function core(storedSettings) {
     .actions { margin: 4px -16px 0; padding: 10px 16px 24px; border-radius: 0; }
   `;
 
+  // Цвета типов тегов и рейтинга — из кода сайта (configs/constants/tag-types.js,
+  // palette.rating): чипы в подсказке выглядят так же, как на Sankaku
+  const TAG_TYPE_COLORS = {
+    0: '#FB8A00', 1: '#FF3620', 2: '#E61700', 3: '#821B7B', 4: '#A3229A', 5: '#B698FF', 8: '#98AEFF',
+    9: '#0042BD', 10: '#EE005B', 11: '#9B7A00', 12: '#C29900', 13: '#E9B800', 14: '#B6C8D8', 15: '#009E2E',
+    16: '#00C53A', 17: '#00EC46', 18: '#016E4E', 19: '#018961', 20: '#01A474', 21: '#1C6CFF', 22: '#0053EC',
+    23: '#AAAAAA',
+  };
+  const RATINGS = { s: ['G', '#26D938'], q: ['R15+', '#FB62D0'], e: ['R18+', '#D20B0B'] };
+  const ratingColor = (label) => (Object.values(RATINGS).find((r) => r[0] === label) || [])[1] || '';
+
+  // Строка подсказки из ответа API: чип цвета типа | рейтинг | число постов
+  function buildApiRow(row, o) {
+    applyStyle(row, (suggLook && suggLook.row) || PLAIN_ROW);
+    const inner = make('div', 'sinner', { display: 'flex', 'align-items': 'center', gap: '12px', width: '100%' });
+    const col = make('div', 'schipcol', { flex: '1 1 auto' });
+    if (o.history) col.appendChild(historyIcon());
+    col.appendChild(make('span', 'schip', { ...PLAIN_CHIP, 'background-color': o.color || PLAIN_CHIP['background-color'] }, o.label));
+    inner.appendChild(col);
+    if (o.rating) {
+      const rc = ratingColor(o.rating);
+      inner.appendChild(make('span', 'srating', {
+        flex: 'none', padding: '0 6px', 'border-radius': '4px', border: `1px solid ${rc || '#888'}`,
+        color: rc || '#ccc', 'font-size': '13px', 'font-weight': '700', 'line-height': '20px',
+      }, o.rating));
+    }
+    if (o.count) inner.appendChild(make('span', 'sextra', { 'min-width': '44px', 'text-align': 'right' }, o.count));
+    row.appendChild(inner);
+  }
+
   // ---- Подсказки тегов и пользователей ----
   // Адреса те же, что у самого сайта: tags/autosuggest?tag=… и users/autosuggest?name=…
   async function suggestList(kind, q) {
@@ -11942,111 +11944,202 @@ function core(storedSettings) {
     return list.map((x) => {
       const name = isObj(x) ? (x.name || x.tagName || x.name_en) : x;
       if (!name) return null;
+      if (kind !== 'tag') return { value: String(name), label: String(name) };
       const count = isObj(x) ? (x.post_count ?? x.count) : null;
-      return kind === 'tag'
-        ? { value: tagKey(name), label: tagKey(name), note: typeof count === 'number' ? shortCount(count) : '' }
-        : { value: String(name), label: String(name), note: '' };
+      const rating = isObj(x) && RATINGS[String(x.rating || '').toLowerCase()];
+      return {
+        value: tagKey(name),
+        label: String(name).replace(/_/g, ' '),
+        color: isObj(x) ? TAG_TYPE_COLORS[Number(x.type ?? x.tagType)] || TAG_TYPE_COLORS[0] : '',
+        rating: rating ? rating[0] : '',
+        count: typeof count === 'number' ? shortCount(count) : '',
+      };
     }).filter(Boolean).slice(0, 10);
   }
 
+  // Поле ввода с подсказками в оформлении массовой загрузки. Теги: через
+  // запятую, пробелы сразу превращаются в «_», на пустом поле — недавние теги,
+  // пока идёт запрос — «Загрузка…». Пользователь: одна строка, без истории
   function attachSuggest(input, kind) {
+    const multi = kind === 'tag';
     const box = document.createElement('div');
-    box.className = 'acbox';
+    box.className = 'sugg';
+    box.setAttribute('role', 'listbox');
+    box.hidden = true;
     input.parentElement.appendChild(box);
-    let items = [];
-    let pick = -1;
-    let timer = 0;
-    let seq = 0;
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('autocomplete', 'off');
+    input.spellcheck = false;
+    const st = { options: [], active: -1, server: [], query: '', timer: 0, token: 0 };
+    const root = input.getRootNode();
 
-    // у тегов подсказку ищем для последнего слова, у пользователя — для всей строки
-    const term = () => (kind === 'tag' ? input.value.split(/[\s,]+/).pop() : input.value.trim());
+    const term = () => (multi ? lastSegment(input.value) : input.value.trim());
+    const used = () => {
+      if (!multi) return new Set();
+      const parts = input.value.split(/[,;]/);
+      parts.pop();
+      return new Set(parts.map(normTag).filter(Boolean));
+    };
 
-    function close() {
-      box.replaceChildren();
-      box.classList.remove('on');
-      items = [];
-      pick = -1;
+    function compose(query, server) {
+      if (!multi) return server || [];
+      const skip = used();
+      const list = loadHistory().filter((h) => !skip.has(h.key));
+      const k = normTag(query);
+      const hist = !k ? list.slice(0, 15) : list.filter((h) => {
+        const n = normTag(h.label);
+        return n.startsWith(k) || h.key.startsWith(k) || (k.length > 1 && n.includes(k));
+      }).slice(0, 6);
+      const byKey = new Map((server || []).map((d) => [normTag(d.label), d]));
+      const top = hist.map((h) => ({ ...(byKey.get(h.key) || h.desc || { label: h.label }), history: true, key: h.key }));
+      const seen = new Set(top.map((x) => x.key));
+      return [...top, ...(server || []).filter((d) => !seen.has(normTag(d.label)) && !skip.has(normTag(d.label)))];
     }
 
-    function apply(value) {
-      if (kind === 'tag') {
-        const parts = input.value.split(/[\s,]+/);
-        parts[parts.length - 1] = value;
-        input.value = parts.filter(Boolean).join(' ') + ' ';
-      } else {
-        input.value = value;
-      }
-      close();
-      input.focus();
+    function hide() {
+      st.options = [];
+      st.active = -1;
+      box.hidden = true;
+      box.replaceChildren();
+      input.setAttribute('aria-expanded', 'false');
     }
 
-    function render(empty) {
-      box.replaceChildren();
-      if (empty) {
-        const none = document.createElement('div');
-        none.className = 'acempty';
-        none.textContent = t('Ничего не найдено');
-        box.appendChild(none);
-        box.classList.add('on');
-        return;
+    function render(list, note) {
+      if (root.activeElement !== input) { hide(); return; }
+      st.options = list;
+      st.active = -1;
+      if (suggLook) {
+        applyStyle(box, suggLook.paper);
+        applyStyle(box, suggLook.listbox);
       }
-      if (!items.length) { box.classList.remove('on'); return; }
-      items.forEach((it, i) => {
+      const rows = list.map((o, i) => {
         const row = document.createElement('div');
-        row.className = 'acitem' + (i === pick ? ' on' : '');
-        const name = document.createElement('span');
-        name.textContent = it.label;
-        row.appendChild(name);
-        if (it.note) {
-          const note = document.createElement('span');
-          note.className = 'acnote';
-          note.textContent = it.note;
-          row.appendChild(note);
+        row.className = 'sopt' + (o.history ? ' hist' : '');
+        row.setAttribute('role', 'option');
+        if (o.styles) buildRichRow(row, o);
+        else if (multi && (o.color || o.history)) buildApiRow(row, o);
+        else buildTextRow(row, o);
+        if (o.history) {
+          const forget = make('button', 'sforget', null, '✕');
+          forget.type = 'button';
+          forget.tabIndex = -1;
+          forget.title = t('Убрать из недавних');
+          forget.addEventListener('mousedown', (e) => e.preventDefault());
+          forget.addEventListener('click', (e) => {
+            e.stopPropagation();
+            forgetTag(o.key);
+            render(compose(st.query, st.server), '');
+          });
+          row.appendChild(forget);
         }
-        // mousedown, а не click: иначе поле потеряет фокус раньше выбора
-        row.addEventListener('mousedown', (e) => { e.preventDefault(); apply(it.value); });
-        box.appendChild(row);
+        row.addEventListener('mousedown', (e) => e.preventDefault()); // фокус остаётся в поле
+        row.addEventListener('click', () => pick(i));
+        return row;
       });
-      box.classList.add('on');
+      if (note) rows.push(make('div', 'snote', null, note));
+      box.replaceChildren(...rows);
+      box.hidden = rows.length === 0;
+      input.setAttribute('aria-expanded', String(!box.hidden));
     }
 
-    async function load() {
-      const q = term();
-      if (q.length < 2) { close(); return; }
-      const my = ++seq;
-      const list = await suggestList(kind, q);
-      if (my !== seq) return; // ответ на прошлый запрос уже никому не нужен
-      if (!list) { close(); return; } // сайт не ответил — молча живём без подсказок
-      items = list;
-      pick = -1;
-      render(!items.length);
+    function highlight(index) {
+      const n = st.options.length;
+      if (!n) return;
+      st.active = (index + n) % n;
+      const rows = box.querySelectorAll('.sopt');
+      rows.forEach((r, i) => r.classList.toggle('active', i === st.active));
+      if (rows[st.active]) rows[st.active].scrollIntoView({ block: 'nearest' });
+    }
+
+    function remember(opt) {
+      const list = loadHistory();
+      const key = normTag(opt.label);
+      const idx = list.findIndex((h) => h.key === key);
+      const prev = idx >= 0 ? list.splice(idx, 1)[0] : null;
+      const desc = opt.styles || opt.color ? bareDesc(opt) : prev ? prev.desc : null;
+      list.unshift({ key, label: opt.label, desc, ts: Date.now() });
+      saveHistory(list);
+    }
+
+    function pick(index) {
+      const opt = st.options[index];
+      if (!opt) return;
+      if (multi) {
+        const v = input.value;
+        const cut = Math.max(v.lastIndexOf(','), v.lastIndexOf(';'));
+        input.value = underscoreTags((cut >= 0 ? v.slice(0, cut + 1) : '') + opt.label) + ', ';
+        remember(opt);
+      } else {
+        input.value = opt.value || opt.label;
+      }
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+      if (multi) showRecent();
+      else hide();
+    }
+
+    function showRecent() {
+      st.query = '';
+      st.server = [];
+      if (multi) render(compose('', null), '');
+      else hide();
+    }
+
+    async function load(query) {
+      const my = ++st.token;
+      const list = await suggestList(kind, query);
+      if (my !== st.token) return; // ответ на прошлый запрос уже никому не нужен
+      st.server = list || [];
+      const shown = compose(query, st.server);
+      render(shown, list === null || shown.length ? '' : t('Нет вариантов'));
     }
 
     input.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(load, 250);
+      if (multi) forceUnderscores(input);
+      clearTimeout(st.timer);
+      const q = term();
+      st.query = q;
+      if (!q) { st.token++; showRecent(); return; }
+      // недавние — мгновенно, запрос к сайту — после паузы в наборе
+      const k = normTag(q);
+      render(compose(q, st.server.filter((d) => normTag(d.label).includes(k))), t('Загрузка…'));
+      st.timer = setTimeout(() => load(q), 200);
     });
-    input.addEventListener('blur', () => setTimeout(close, 120));
+
     input.addEventListener('keydown', (e) => {
-      if (!items.length) {
-        if (e.key === 'Escape' && box.classList.contains('on')) { e.stopPropagation(); close(); }
-        return;
-      }
+      const open = !box.hidden && st.options.length > 0;
       if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
         e.preventDefault();
         e.stopPropagation();
-        pick = (pick + (e.key === 'ArrowDown' ? 1 : items.length - 1) + (pick < 0 && e.key === 'ArrowUp' ? 1 : 0)) % items.length;
-        render(false);
-      } else if (e.key === 'Enter' && pick >= 0) {
+        if (!open) {
+          if (term()) load(term());
+          else showRecent();
+          return;
+        }
+        const step = e.key === 'ArrowDown' ? 1 : -1;
+        highlight(st.active < 0 ? (step > 0 ? 0 : -1) : st.active + step);
+      } else if (e.key === 'Enter' && !e.isComposing && open && st.active >= 0) {
         e.preventDefault();
         e.stopPropagation();
-        apply(items[pick].value);
-      } else if (e.key === 'Escape') {
+        pick(st.active);
+      } else if (e.key === 'Escape' && !box.hidden) {
+        // закрываем список, а не всё окно
         e.preventDefault();
         e.stopPropagation();
-        close();
+        hide();
       }
     });
+
+    const reopen = () => {
+      if (!box.hidden) return;
+      if (term()) load(term());
+      else showRecent();
+    };
+    input.addEventListener('focus', reopen);
+    input.addEventListener('mousedown', () => setTimeout(reopen, 0));
+    input.addEventListener('blur', () => setTimeout(() => { if (root.activeElement !== input) hide(); }, 150));
+    return { reopen };
   }
 
   // ---- Окно «Создать новое правило» ----
@@ -12064,7 +12157,7 @@ function core(storedSettings) {
       <form class="dlg" tabindex="-1" role="dialog" aria-modal="true" aria-label="${T('Создать новое правило')}">
         <h2>${T('Создать новое правило')}</h2>
         <div class="fld"><span>${T('Теги')}</span>
-          <input type="text" class="rtags" placeholder="${T('Через пробел или запятую')}"></div>
+          <input type="text" class="rtags" placeholder="${T('Теги через запятую')}"></div>
         <div class="fld"><span>${T('Пользователь')}</span><input type="text" class="ruser"></div>
         <div class="fld"><span>${T('Видимость')}</span>
           <div class="picks">
@@ -12091,16 +12184,18 @@ function core(storedSettings) {
     });
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const tags = root.querySelector('.rtags').value.split(/[\s,]+/).map(tagKey).filter(Boolean);
+      const tags = [...new Set(root.querySelector('.rtags').value.split(/[,;]/)
+        .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean))];
       const user = root.querySelector('.ruser').value.trim();
       if (!tags.length && !user) { toast(t('Укажите хотя бы один тег или пользователя'), true); return; }
       const mode = root.querySelector('input[name="mode"]:checked').value;
       close();
       onCreate({ tags, user, mode });
     });
-    attachSuggest(root.querySelector('.rtags'), 'tag');
+    const tagField = attachSuggest(root.querySelector('.rtags'), 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');
     root.querySelector('.rtags').focus();
+    tagField.reopen(); // недавние теги — сразу, не дожидаясь события фокуса
   }
 
   // ---- Вкладка «Плагин» на странице настроек сайта ----

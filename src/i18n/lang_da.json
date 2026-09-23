@@ -188,7 +188,7 @@
  "186": "Opret en ny regel",
  "187": "Tasten {key} gør det samme",
  "188": "Tags",
- "189": "Adskilt med mellemrum eller komma",
+ "189": "Tags adskilt med komma",
  "190": "Bruger",
  "191": "Synlighed",
  "192": "Skjul",
@@ -202,12 +202,11 @@
  "200": "Reglen er tilføjet",
  "201": "Reglen er slettet",
  "202": "Skjulte opslag: {n}",
- "203": "Intet fundet",
- "204": "Skjul opslaget",
- "205": "Opslag skjult: {id}",
- "206": "Opslaget vises igen: {id}",
- "207": "Opslag skjult med tasten ({n})",
- "208": "Vis opslaget igen",
- "209": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular",
- "210": "automatiske tags er der allerede: {n}"
+ "203": "Skjul opslaget",
+ "204": "Opslag skjult: {id}",
+ "205": "Opslaget vises igen: {id}",
+ "206": "Opslag skjult med tasten ({n})",
+ "207": "Vis opslaget igen",
+ "208": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular",
+ "209": "automatiske tags er der allerede: {n}"
 }

@@ -188,7 +188,7 @@
  "186": "Nieuwe regel maken",
  "187": "De toets {key} doet hetzelfde",
  "188": "Tags",
- "189": "Gescheiden door spaties of komma’s",
+ "189": "Tags, gescheiden door komma’s",
  "190": "Gebruiker",
  "191": "Zichtbaarheid",
  "192": "Verbergen",
@@ -202,12 +202,11 @@
  "200": "Regel toegevoegd",
  "201": "Regel verwijderd",
  "202": "Verborgen posts: {n}",
- "203": "Niets gevonden",
- "204": "Post verbergen",
- "205": "Post verborgen: {id}",
- "206": "Post weer zichtbaar: {id}",
- "207": "Met de toets verborgen posts ({n})",
- "208": "Post weer tonen",
- "209": "De site twijfelt aan de classificatie en wacht op uw beslissing — open het formulier van de post",
- "210": "automatische tags al aanwezig: {n}"
+ "203": "Post verbergen",
+ "204": "Post verborgen: {id}",
+ "205": "Post weer zichtbaar: {id}",
+ "206": "Met de toets verborgen posts ({n})",
+ "207": "Post weer tonen",
+ "208": "De site twijfelt aan de classificatie en wacht op uw beslissing — open het formulier van de post",
+ "209": "automatische tags al aanwezig: {n}"
 }

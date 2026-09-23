@@ -188,7 +188,7 @@
  "186": "Cipta peraturan baharu",
  "187": "Kekunci {key} melakukan perkara yang sama",
  "188": "Tag",
- "189": "Dipisahkan dengan ruang atau koma",
+ "189": "Tag, dipisahkan dengan koma",
  "190": "Pengguna",
  "191": "Keterlihatan",
  "192": "Sembunyikan",
@@ -202,12 +202,11 @@
  "200": "Peraturan ditambah",
  "201": "Peraturan dipadam",
  "202": "Siaran tersembunyi: {n}",
- "203": "Tiada apa-apa dijumpai",
- "204": "Sembunyikan siaran",
- "205": "Siaran disembunyikan: {id}",
- "206": "Siaran kelihatan semula: {id}",
- "207": "Siaran yang disembunyikan dengan kekunci ({n})",
- "208": "Tunjukkan siaran semula",
- "209": "Laman meragui penarafan dan menunggu keputusan anda — buka borang siaran",
- "210": "tag automatik sudah ada: {n}"
+ "203": "Sembunyikan siaran",
+ "204": "Siaran disembunyikan: {id}",
+ "205": "Siaran kelihatan semula: {id}",
+ "206": "Siaran yang disembunyikan dengan kekunci ({n})",
+ "207": "Tunjukkan siaran semula",
+ "208": "Laman meragui penarafan dan menunggu keputusan anda — buka borang siaran",
+ "209": "tag automatik sudah ada: {n}"
 }

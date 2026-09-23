@@ -188,7 +188,7 @@
  "186": "Luo uusi sääntö",
  "187": "Näppäin {key} tekee saman",
  "188": "Tunnisteet",
- "189": "Välilyönnillä tai pilkulla eroteltuna",
+ "189": "Tunnisteet pilkulla eroteltuina",
  "190": "Käyttäjä",
  "191": "Näkyvyys",
  "192": "Piilota",
@@ -202,12 +202,11 @@
  "200": "Sääntö lisätty",
  "201": "Sääntö poistettu",
  "202": "Piilotettuja julkaisuja: {n}",
- "203": "Ei löytynyt mitään",
- "204": "Piilota julkaisu",
- "205": "Julkaisu piilotettu: {id}",
- "206": "Julkaisu näkyy taas: {id}",
- "207": "Näppäimellä piilotetut julkaisut ({n})",
- "208": "Näytä julkaisu taas",
- "209": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake",
- "210": "automaattiset tunnisteet jo paikallaan: {n}"
+ "203": "Piilota julkaisu",
+ "204": "Julkaisu piilotettu: {id}",
+ "205": "Julkaisu näkyy taas: {id}",
+ "206": "Näppäimellä piilotetut julkaisut ({n})",
+ "207": "Näytä julkaisu taas",
+ "208": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake",
+ "209": "automaattiset tunnisteet jo paikallaan: {n}"
 }

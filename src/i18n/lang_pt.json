@@ -188,7 +188,7 @@
  "186": "Criar uma nova regra",
  "187": "A tecla {key} faz o mesmo",
  "188": "Etiquetas",
- "189": "Separadas por espaços ou vírgulas",
+ "189": "Etiquetas separadas por vírgulas",
  "190": "Utilizador",
  "191": "Visibilidade",
  "192": "Ocultar",
@@ -202,12 +202,11 @@
  "200": "Regra adicionada",
  "201": "Regra eliminada",
  "202": "Publicações ocultas: {n}",
- "203": "Nada encontrado",
- "204": "Ocultar a publicação",
- "205": "Publicação ocultada: {id}",
- "206": "Publicação visível novamente: {id}",
- "207": "Publicações ocultadas com a tecla ({n})",
- "208": "Mostrar a publicação de novo",
- "209": "O site duvida da classificação e aguarda a sua decisão — abra o formulário da publicação",
- "210": "etiquetas automáticas já colocadas: {n}"
+ "203": "Ocultar a publicação",
+ "204": "Publicação ocultada: {id}",
+ "205": "Publicação visível novamente: {id}",
+ "206": "Publicações ocultadas com a tecla ({n})",
+ "207": "Mostrar a publicação de novo",
+ "208": "O site duvida da classificação e aguarda a sua decisão — abra o formulário da publicação",
+ "209": "etiquetas automáticas já colocadas: {n}"
 }

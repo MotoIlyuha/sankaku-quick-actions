@@ -188,7 +188,7 @@
  "186": "Crear una regla nueva",
  "187": "La tecla {key} hace lo mismo",
  "188": "Etiquetas",
- "189": "Separadas por espacios o comas",
+ "189": "Etiquetas separadas por comas",
  "190": "Usuario",
  "191": "Visibilidad",
  "192": "Ocultar",
@@ -202,12 +202,11 @@
  "200": "Regla añadida",
  "201": "Regla eliminada",
  "202": "Publicaciones ocultas: {n}",
- "203": "No se ha encontrado nada",
- "204": "Ocultar la publicación",
- "205": "Publicación oculta: {id}",
- "206": "La publicación vuelve a verse: {id}",
- "207": "Publicaciones ocultas con la tecla ({n})",
- "208": "Volver a mostrar la publicación",
- "209": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación",
- "210": "etiquetas automáticas ya puestas: {n}"
+ "203": "Ocultar la publicación",
+ "204": "Publicación oculta: {id}",
+ "205": "La publicación vuelve a verse: {id}",
+ "206": "Publicaciones ocultas con la tecla ({n})",
+ "207": "Volver a mostrar la publicación",
+ "208": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación",
+ "209": "etiquetas automáticas ya puestas: {n}"
 }

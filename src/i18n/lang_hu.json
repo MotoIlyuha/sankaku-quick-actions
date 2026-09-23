@@ -188,7 +188,7 @@
  "186": "Új szabály létrehozása",
  "187": "A(z) {key} billentyű ugyanezt teszi",
  "188": "Címkék",
- "189": "Szóközzel vagy vesszővel elválasztva",
+ "189": "Címkék vesszővel elválasztva",
  "190": "Felhasználó",
  "191": "Láthatóság",
  "192": "Elrejtés",
@@ -202,12 +202,11 @@
  "200": "Szabály hozzáadva",
  "201": "Szabály törölve",
  "202": "Elrejtett bejegyzések: {n}",
- "203": "Nincs találat",
- "204": "Bejegyzés elrejtése",
- "205": "Bejegyzés elrejtve: {id}",
- "206": "A bejegyzés ismét látszik: {id}",
- "207": "A billentyűvel elrejtett bejegyzések ({n})",
- "208": "Bejegyzés újbóli megjelenítése",
- "209": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját",
- "210": "az automatikus címkék már megvannak: {n}"
+ "203": "Bejegyzés elrejtése",
+ "204": "Bejegyzés elrejtve: {id}",
+ "205": "A bejegyzés ismét látszik: {id}",
+ "206": "A billentyűvel elrejtett bejegyzések ({n})",
+ "207": "Bejegyzés újbóli megjelenítése",
+ "208": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját",
+ "209": "az automatikus címkék már megvannak: {n}"
 }

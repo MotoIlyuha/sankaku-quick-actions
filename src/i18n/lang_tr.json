@@ -188,7 +188,7 @@
  "186": "Yeni kural oluştur",
  "187": "{key} tuşu da aynısını yapar",
  "188": "Etiketler",
- "189": "Boşluk veya virgülle ayırın",
+ "189": "Virgülle ayrılmış etiketler",
  "190": "Kullanıcı",
  "191": "Görünürlük",
  "192": "Gizle",
@@ -202,12 +202,11 @@
  "200": "Kural eklendi",
  "201": "Kural silindi",
  "202": "Gizlenen gönderi: {n}",
- "203": "Hiçbir şey bulunamadı",
- "204": "Gönderiyi gizle",
- "205": "Gönderi gizlendi: {id}",
- "206": "Gönderi yeniden görünüyor: {id}",
- "207": "Tuşla gizlenen gönderiler ({n})",
- "208": "Gönderiyi yeniden göster",
- "209": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın",
- "210": "otomatik etiketler zaten var: {n}"
+ "203": "Gönderiyi gizle",
+ "204": "Gönderi gizlendi: {id}",
+ "205": "Gönderi yeniden görünüyor: {id}",
+ "206": "Tuşla gizlenen gönderiler ({n})",
+ "207": "Gönderiyi yeniden göster",
+ "208": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın",
+ "209": "otomatik etiketler zaten var: {n}"
 }
