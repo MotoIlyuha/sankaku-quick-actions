@@ -463,8 +463,7 @@ function core(storedSettings) {
           "Вернуть пост": "Show the post again",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "The site doubts the rating and is waiting for your decision — open the post form",
           "автотеги уже на месте: {n}": "auto tags already in place: {n}",
-          "Добавленные теги ({n})": "Added tags ({n})",
-          "Убрать тег": "Remove the tag"
+          "Уже в чёрном списке ({n})": "Already blacklisted ({n})"
     },
     'ja': {
           "Массовая загрузка": "一括アップロード",
@@ -677,8 +676,7 @@ function core(storedSettings) {
           "Вернуть пост": "投稿を再び表示",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "サイトがレーティングを疑問視し、判断を待っています。投稿フォームを開いてください",
           "автотеги уже на месте: {n}": "自動タグは設定済み：{n}",
-          "Добавленные теги ({n})": "追加したタグ（{n}）",
-          "Убрать тег": "タグを外す"
+          "Уже в чёрном списке ({n})": "ブラックリスト登録済み（{n}）"
     },
     'zh': {
           "Массовая загрузка": "批量上传",
@@ -891,8 +889,7 @@ function core(storedSettings) {
           "Вернуть пост": "重新显示帖子",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "网站对分级有疑问，正在等待你的决定——请打开帖子表单",
           "автотеги уже на месте: {n}": "自动标签已就位：{n}",
-          "Добавленные теги ({n})": "已添加的标签（{n}）",
-          "Убрать тег": "移除标签"
+          "Уже в чёрном списке ({n})": "已在黑名单中（{n}）"
     },
     'zh-tw': {
           "Массовая загрузка": "批次上傳",
@@ -1105,8 +1102,7 @@ function core(storedSettings) {
           "Вернуть пост": "重新顯示貼文",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "網站對分級有疑問，正在等待你的決定——請開啟貼文表單",
           "автотеги уже на месте: {n}": "自動標籤已就位：{n}",
-          "Добавленные теги ({n})": "已新增的標籤（{n}）",
-          "Убрать тег": "移除標籤"
+          "Уже в чёрном списке ({n})": "已在黑名單中（{n}）"
     },
     'ko': {
           "Массовая загрузка": "일괄 업로드",
@@ -1319,8 +1315,7 @@ function core(storedSettings) {
           "Вернуть пост": "게시물 다시 표시",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "사이트가 등급을 의심하며 결정을 기다리고 있습니다. 게시물 양식을 여세요",
           "автотеги уже на месте: {n}": "자동 태그가 이미 있음: {n}",
-          "Добавленные теги ({n})": "추가한 태그 ({n})",
-          "Убрать тег": "태그 제거"
+          "Уже в чёрном списке ({n})": "이미 블랙리스트에 있음 ({n})"
     },
     'de': {
           "Массовая загрузка": "Massen-Upload",
@@ -1533,8 +1528,7 @@ function core(storedSettings) {
           "Вернуть пост": "Beitrag wieder anzeigen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Die Seite zweifelt an der Einstufung und wartet auf Ihre Entscheidung — öffnen Sie das Beitragsformular",
           "автотеги уже на месте: {n}": "Auto-Tags schon vorhanden: {n}",
-          "Добавленные теги ({n})": "Hinzugefügte Tags ({n})",
-          "Убрать тег": "Tag entfernen"
+          "Уже в чёрном списке ({n})": "Bereits auf der Blacklist ({n})"
     },
     'fr': {
           "Массовая загрузка": "Envoi groupé",
@@ -1747,8 +1741,7 @@ function core(storedSettings) {
           "Вернуть пост": "Réafficher le post",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Le site doute du classement et attend votre décision : ouvrez le formulaire du post",
           "автотеги уже на месте: {n}": "tags automatiques déjà en place : {n}",
-          "Добавленные теги ({n})": "Tags ajoutés ({n})",
-          "Убрать тег": "Retirer le tag"
+          "Уже в чёрном списке ({n})": "Déjà dans la liste noire ({n})"
     },
     'es': {
           "Массовая загрузка": "Subida masiva",
@@ -1961,8 +1954,7 @@ function core(storedSettings) {
           "Вернуть пост": "Volver a mostrar la publicación",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "El sitio duda de la clasificación y espera su decisión: abra el formulario de la publicación",
           "автотеги уже на месте: {n}": "etiquetas automáticas ya puestas: {n}",
-          "Добавленные теги ({n})": "Etiquetas añadidas ({n})",
-          "Убрать тег": "Quitar la etiqueta"
+          "Уже в чёрном списке ({n})": "Ya en la lista negra ({n})"
     },
     'pt': {
           "Массовая загрузка": "Envio em massa",
@@ -2175,8 +2167,7 @@ function core(storedSettings) {
           "Вернуть пост": "Mostrar a publicação de novo",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "O site duvida da classificação e aguarda a sua decisão — abra o formulário da publicação",
           "автотеги уже на месте: {n}": "etiquetas automáticas já colocadas: {n}",
-          "Добавленные теги ({n})": "Etiquetas adicionadas ({n})",
-          "Убрать тег": "Remover a etiqueta"
+          "Уже в чёрном списке ({n})": "Já na lista negra ({n})"
     },
     'it': {
           "Массовая загрузка": "Caricamento in blocco",
@@ -2389,8 +2380,7 @@ function core(storedSettings) {
           "Вернуть пост": "Mostra di nuovo il post",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Il sito dubita della classificazione e attende la tua decisione: apri il modulo del post",
           "автотеги уже на месте: {n}": "tag automatici già presenti: {n}",
-          "Добавленные теги ({n})": "Tag aggiunti ({n})",
-          "Убрать тег": "Rimuovi il tag"
+          "Уже в чёрном списке ({n})": "Già nella lista nera ({n})"
     },
     'nl': {
           "Массовая загрузка": "Bulkupload",
@@ -2603,8 +2593,7 @@ function core(storedSettings) {
           "Вернуть пост": "Post weer tonen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "De site twijfelt aan de classificatie en wacht op uw beslissing — open het formulier van de post",
           "автотеги уже на месте: {n}": "automatische tags al aanwezig: {n}",
-          "Добавленные теги ({n})": "Toegevoegde tags ({n})",
-          "Убрать тег": "Tag verwijderen"
+          "Уже в чёрном списке ({n})": "Al op de zwarte lijst ({n})"
     },
     'pl': {
           "Массовая загрузка": "Masowe wysyłanie",
@@ -2817,8 +2806,7 @@ function core(storedSettings) {
           "Вернуть пост": "Pokaż post ponownie",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Serwis ma wątpliwości co do oceny i czeka na decyzję — otwórz formularz posta",
           "автотеги уже на месте: {n}": "automatyczne tagi już są: {n}",
-          "Добавленные теги ({n})": "Dodane tagi ({n})",
-          "Убрать тег": "Usuń tag"
+          "Уже в чёрном списке ({n})": "Już na czarnej liście ({n})"
     },
     'sv': {
           "Массовая загрузка": "Massuppladdning",
@@ -3031,8 +3019,7 @@ function core(storedSettings) {
           "Вернуть пост": "Visa inlägget igen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Webbplatsen tvivlar på klassningen och väntar på ditt beslut — öppna inläggets formulär",
           "автотеги уже на месте: {n}": "automatiska taggar finns redan: {n}",
-          "Добавленные теги ({n})": "Tillagda taggar ({n})",
-          "Убрать тег": "Ta bort taggen"
+          "Уже в чёрном списке ({n})": "Redan svartlistade ({n})"
     },
     'da': {
           "Массовая загрузка": "Masseupload",
@@ -3245,8 +3232,7 @@ function core(storedSettings) {
           "Вернуть пост": "Vis opslaget igen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden er i tvivl om vurderingen og venter på din beslutning — åbn opslagets formular",
           "автотеги уже на месте: {n}": "automatiske tags er der allerede: {n}",
-          "Добавленные теги ({n})": "Tilføjede tags ({n})",
-          "Убрать тег": "Fjern tagget"
+          "Уже в чёрном списке ({n})": "Allerede på sortlisten ({n})"
     },
     'no': {
           "Массовая загрузка": "Masseopplasting",
@@ -3459,8 +3445,7 @@ function core(storedSettings) {
           "Вернуть пост": "Vis innlegget igjen",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Siden tviler på vurderingen og venter på din avgjørelse — åpne skjemaet for innlegget",
           "автотеги уже на месте: {n}": "automatiske tagger er allerede på plass: {n}",
-          "Добавленные теги ({n})": "Lagt til tagger ({n})",
-          "Убрать тег": "Fjern taggen"
+          "Уже в чёрном списке ({n})": "Allerede på svartelisten ({n})"
     },
     'fi': {
           "Массовая загрузка": "Joukkolähetys",
@@ -3673,8 +3658,7 @@ function core(storedSettings) {
           "Вернуть пост": "Näytä julkaisu taas",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Sivusto epäilee luokitusta ja odottaa päätöstäsi — avaa julkaisun lomake",
           "автотеги уже на месте: {n}": "automaattiset tunnisteet jo paikallaan: {n}",
-          "Добавленные теги ({n})": "Lisätyt tunnisteet ({n})",
-          "Убрать тег": "Poista tunniste"
+          "Уже в чёрном списке ({n})": "Jo mustalla listalla ({n})"
     },
     'hu': {
           "Массовая загрузка": "Tömeges feltöltés",
@@ -3887,8 +3871,7 @@ function core(storedSettings) {
           "Вернуть пост": "Bejegyzés újbóli megjelenítése",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Az oldal kételkedik a besorolásban, és a döntésére vár — nyissa meg a bejegyzés űrlapját",
           "автотеги уже на месте: {n}": "az automatikus címkék már megvannak: {n}",
-          "Добавленные теги ({n})": "Hozzáadott címkék ({n})",
-          "Убрать тег": "Címke eltávolítása"
+          "Уже в чёрном списке ({n})": "Már a feketelistán ({n})"
     },
     'ro': {
           "Массовая загрузка": "Încărcare în masă",
@@ -4101,8 +4084,7 @@ function core(storedSettings) {
           "Вернуть пост": "Arată din nou postarea",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site-ul are îndoieli privind ratingul și așteaptă decizia dvs. — deschideți formularul postării",
           "автотеги уже на месте: {n}": "etichetele automate sunt deja puse: {n}",
-          "Добавленные теги ({n})": "Etichete adăugate ({n})",
-          "Убрать тег": "Elimină eticheta"
+          "Уже в чёрном списке ({n})": "Deja în lista neagră ({n})"
     },
     'bg': {
           "Массовая загрузка": "Масово качване",
@@ -4315,8 +4297,7 @@ function core(storedSettings) {
           "Вернуть пост": "Показване на публикацията отново",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Сайтът се съмнява в рейтинга и чака решение — отворете формуляра на публикацията",
           "автотеги уже на месте: {n}": "автоматичните тагове вече са налице: {n}",
-          "Добавленные теги ({n})": "Добавени тагове ({n})",
-          "Убрать тег": "Премахване на тага"
+          "Уже в чёрном списке ({n})": "Вече в черния списък ({n})"
     },
     'el': {
           "Массовая загрузка": "Μαζική μεταφόρτωση",
@@ -4529,8 +4510,7 @@ function core(storedSettings) {
           "Вернуть пост": "Εμφάνιση της ανάρτησης ξανά",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Ο ιστότοπος αμφιβάλλει για τη βαθμολογία και περιμένει απόφαση — ανοίξτε τη φόρμα της ανάρτησης",
           "автотеги уже на месте: {n}": "οι αυτόματες ετικέτες υπάρχουν ήδη: {n}",
-          "Добавленные теги ({n})": "Ετικέτες που προστέθηκαν ({n})",
-          "Убрать тег": "Αφαίρεση ετικέτας"
+          "Уже в чёрном списке ({n})": "Ήδη στη μαύρη λίστα ({n})"
     },
     'tr': {
           "Массовая загрузка": "Toplu yükleme",
@@ -4743,8 +4723,7 @@ function core(storedSettings) {
           "Вернуть пост": "Gönderiyi yeniden göster",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Site derecelendirmeden emin değil ve kararınızı bekliyor — gönderi formunu açın",
           "автотеги уже на месте: {n}": "otomatik etiketler zaten var: {n}",
-          "Добавленные теги ({n})": "Eklenen etiketler ({n})",
-          "Убрать тег": "Etiketi kaldır"
+          "Уже в чёрном списке ({n})": "Zaten kara listede ({n})"
     },
     'th': {
           "Массовая загрузка": "อัปโหลดหลายไฟล์",
@@ -4957,8 +4936,7 @@ function core(storedSettings) {
           "Вернуть пост": "แสดงโพสต์อีกครั้ง",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "เว็บไซต์ไม่แน่ใจเรื่องเรตติ้งและรอการตัดสินใจ — เปิดแบบฟอร์มของโพสต์",
           "автотеги уже на месте: {n}": "มีแท็กอัตโนมัติแล้ว: {n}",
-          "Добавленные теги ({n})": "แท็กที่เพิ่มแล้ว ({n})",
-          "Убрать тег": "นำแท็กออก"
+          "Уже в чёрном списке ({n})": "อยู่ในบัญชีดำแล้ว ({n})"
     },
     'hi': {
           "Массовая загрузка": "एक साथ अपलोड",
@@ -5171,8 +5149,7 @@ function core(storedSettings) {
           "Вернуть пост": "पोस्ट फिर दिखाएँ",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "साइट को रेटिंग पर संदेह है और वह आपके निर्णय की प्रतीक्षा कर रही है — पोस्ट का फ़ॉर्म खोलें",
           "автотеги уже на месте: {n}": "ऑटो टैग पहले से लगे हैं: {n}",
-          "Добавленные теги ({n})": "जोड़े गए टैग ({n})",
-          "Убрать тег": "टैग हटाएँ"
+          "Уже в чёрном списке ({n})": "पहले से ब्लैकलिस्ट में ({n})"
     },
     'id': {
           "Массовая загрузка": "Unggah massal",
@@ -5385,8 +5362,7 @@ function core(storedSettings) {
           "Вернуть пост": "Tampilkan postingan lagi",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Situs meragukan rating dan menunggu keputusan Anda — buka formulir postingan",
           "автотеги уже на месте: {n}": "tag otomatis sudah ada: {n}",
-          "Добавленные теги ({n})": "Tag yang ditambahkan ({n})",
-          "Убрать тег": "Hapus tag"
+          "Уже в чёрном списке ({n})": "Sudah di daftar hitam ({n})"
     },
     'ms': {
           "Массовая загрузка": "Muat naik pukal",
@@ -5599,8 +5575,7 @@ function core(storedSettings) {
           "Вернуть пост": "Tunjukkan siaran semula",
           "Сайт сомневается в рейтинге и ждёт решения — откройте форму поста": "Laman meragui penarafan dan menunggu keputusan anda — buka borang siaran",
           "автотеги уже на месте: {n}": "tag automatik sudah ada: {n}",
-          "Добавленные теги ({n})": "Tag yang ditambah ({n})",
-          "Убрать тег": "Buang tag"
+          "Уже в чёрном списке ({n})": "Sudah dalam senarai hitam ({n})"
     },
   } /* SKQ_I18N_END */;
 
@@ -11330,16 +11305,14 @@ function core(storedSettings) {
     .rtaglist { margin: -6px 0 14px; }
     .rtaglist summary { cursor: pointer; color: #bbb; user-select: none; }
     .rtaglist summary:hover { color: #fff; }
-    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 180px; overflow-y: auto; padding: 4px; }
     .tchip {
       display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
       border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
     }
-    .tchipdel {
-      width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
-      background: rgba(0, 0, 0, .3); color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
-    }
-    .tchipdel:hover { background: rgba(0, 0, 0, .55); }
+    .tchip { padding: 0 12px; }
+    /* этот тег уже введён в поле — значит, он в чёрном списке второй раз */
+    .tchip.dup { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff8c00; }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .rrow {
       display: flex; align-items: center; gap: 10px; padding: 8px 10px;
@@ -12241,6 +12214,61 @@ function core(storedSettings) {
     return { reopen };
   }
 
+  // ---- Теги, которые уже в чёрном списке ----
+  // Правила сайта: GET users/blacklist?entity=tags → { list: [{ tags: [...] }] }
+  let siteBlacklistCache = null;
+
+  async function siteBlacklist() {
+    if (siteBlacklistCache && Date.now() - siteBlacklistCache.at < 60000) return siteBlacklistCache.tags;
+    const tags = [];
+    try {
+      const data = await api('GET', '/users/blacklist?entity=tags&limit=100&page=1');
+      const list = isObj(data) ? (Array.isArray(data.list) ? data.list : Array.isArray(data.records) ? data.records
+        : Array.isArray(data.data) ? data.data : []) : Array.isArray(data) ? data : [];
+      for (const item of list) {
+        if (!isObj(item)) continue;
+        for (const tag of Array.isArray(item.tags) ? item.tags : []) if (isObj(tag) || typeof tag === 'string') tags.push(tag);
+      }
+    } catch (e) {
+      log('site blacklist', e.message);
+      return null;
+    }
+    siteBlacklistCache = { at: Date.now(), tags };
+    return tags;
+  }
+
+  // Один тег — одна запись, как бы он ни был записан: переведённое имя,
+  // исходное, английское; сначала свои правила, свежие сверху
+  function blacklistedTags(siteTags) {
+    const out = [];
+    const byKey = new Map();
+    const add = (keys, label, color) => {
+      const known = keys.map((k) => byKey.get(k)).find(Boolean);
+      if (known) {
+        keys.forEach((k) => { known.keys.add(k); byKey.set(k, known); });
+        if (!known.color && color) known.color = color;
+        return;
+      }
+      const entry = { key: keys[0], keys: new Set(keys), label, color };
+      keys.forEach((k) => byKey.set(k, entry));
+      out.push(entry);
+    };
+    for (const rule of [...ruleList()].reverse()) {
+      for (const tag of Array.isArray(rule.tags) ? rule.tags : []) {
+        const key = tagKey(tag);
+        if (key) add([key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
+      }
+    }
+    for (const tag of siteTags || []) {
+      const keys = tagNames([tag]) || [];
+      if (!keys.length) continue;
+      const label = isObj(tag) ? String(tag.name || tag.tagName || tag.name_en || keys[0]) : String(tag);
+      const color = isObj(tag) ? TAG_TYPE_COLORS[Number(tag.type ?? tag.tagType)] || '' : '';
+      add(keys, label.replace(/_/g, ' '), color);
+    }
+    return out;
+  }
+
   // ---- Окно «Создать новое правило» ----
   function openRuleDialog(onCreate) {
     if (!document.body) return;
@@ -12292,41 +12320,36 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
-    // Уже добавленные теги — свёрнутым списком с крестиками: длинную строку
-    // через запятую глазами не проверишь
+    // Теги, которые уже в чёрном списке — в правилах плагина и в правилах
+    // самого сайта, — чтобы не вбивать одно и то же дважды. Тег, который
+    // сейчас введён в поле и уже есть в списке, подсвечивается
     const tagsInput = root.querySelector('.rtags');
     const tagList = root.querySelector('.rtaglist');
-    const enteredTags = () => [...new Set(tagsInput.value.split(/[,;]/)
-      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean))];
+    const enteredKeys = () => new Set(tagsInput.value.split(/[,;]/)
+      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean));
+    let listed = blacklistedTags(null);
 
     function renderTagList() {
-      const tags = enteredTags();
-      tagList.hidden = tags.length === 0;
-      tagList.querySelector('summary').textContent = t('Добавленные теги ({n})', { n: tags.length });
-      const chips = tags.map((tag) => {
+      const typed = enteredKeys();
+      tagList.hidden = listed.length === 0;
+      tagList.querySelector('summary').textContent = t('Уже в чёрном списке ({n})', { n: listed.length });
+      const chips = listed.map((entry) => {
         const chip = document.createElement('span');
-        chip.className = 'tchip';
-        chip.style.backgroundColor = tagColorCache.get(tag) || '#616161';
-        chip.appendChild(document.createTextNode(tag.replace(/_/g, ' ')));
-        const del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'tchipdel';
-        del.title = t('Убрать тег');
-        del.textContent = '✕';
-        del.addEventListener('click', () => {
-          const rest = enteredTags().filter((x) => x !== tag);
-          tagsInput.value = rest.length ? rest.join(', ') + ', ' : '';
-          tagsInput.focus();
-          // как будто стёрли руками: список обновится, подсказки закроются
-          tagsInput.dispatchEvent(new Event('input'));
-        });
-        chip.appendChild(del);
+        chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
+        chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
+        chip.textContent = entry.label;
         return chip;
       });
       tagList.querySelector('.rtagchips').replaceChildren(...chips);
     }
     tagsInput.addEventListener('input', renderTagList);
     tagsInput.addEventListener('skq-change', renderTagList);
+    renderTagList();
+    siteBlacklist().then((site) => {
+      if (!host.isConnected || !site) return;
+      listed = blacklistedTags(site);
+      renderTagList();
+    });
 
     const tagField = attachSuggest(tagsInput, 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');

@@ -5877,16 +5877,14 @@ function core(storedSettings) {
     .rtaglist { margin: -6px 0 14px; }
     .rtaglist summary { cursor: pointer; color: #bbb; user-select: none; }
     .rtaglist summary:hover { color: #fff; }
-    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .rtagchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 180px; overflow-y: auto; padding: 4px; }
     .tchip {
       display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 4px 0 12px;
       border-radius: 14px; color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap;
     }
-    .tchipdel {
-      width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
-      background: rgba(0, 0, 0, .3); color: #fff; font-size: 10px; line-height: 20px; cursor: pointer;
-    }
-    .tchipdel:hover { background: rgba(0, 0, 0, .55); }
+    .tchip { padding: 0 12px; }
+    /* этот тег уже введён в поле — значит, он в чёрном списке второй раз */
+    .tchip.dup { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #ff8c00; }
     .rlist { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .rrow {
       display: flex; align-items: center; gap: 10px; padding: 8px 10px;
@@ -6788,6 +6786,61 @@ function core(storedSettings) {
     return { reopen };
   }
 
+  // ---- Теги, которые уже в чёрном списке ----
+  // Правила сайта: GET users/blacklist?entity=tags → { list: [{ tags: [...] }] }
+  let siteBlacklistCache = null;
+
+  async function siteBlacklist() {
+    if (siteBlacklistCache && Date.now() - siteBlacklistCache.at < 60000) return siteBlacklistCache.tags;
+    const tags = [];
+    try {
+      const data = await api('GET', '/users/blacklist?entity=tags&limit=100&page=1');
+      const list = isObj(data) ? (Array.isArray(data.list) ? data.list : Array.isArray(data.records) ? data.records
+        : Array.isArray(data.data) ? data.data : []) : Array.isArray(data) ? data : [];
+      for (const item of list) {
+        if (!isObj(item)) continue;
+        for (const tag of Array.isArray(item.tags) ? item.tags : []) if (isObj(tag) || typeof tag === 'string') tags.push(tag);
+      }
+    } catch (e) {
+      log('site blacklist', e.message);
+      return null;
+    }
+    siteBlacklistCache = { at: Date.now(), tags };
+    return tags;
+  }
+
+  // Один тег — одна запись, как бы он ни был записан: переведённое имя,
+  // исходное, английское; сначала свои правила, свежие сверху
+  function blacklistedTags(siteTags) {
+    const out = [];
+    const byKey = new Map();
+    const add = (keys, label, color) => {
+      const known = keys.map((k) => byKey.get(k)).find(Boolean);
+      if (known) {
+        keys.forEach((k) => { known.keys.add(k); byKey.set(k, known); });
+        if (!known.color && color) known.color = color;
+        return;
+      }
+      const entry = { key: keys[0], keys: new Set(keys), label, color };
+      keys.forEach((k) => byKey.set(k, entry));
+      out.push(entry);
+    };
+    for (const rule of [...ruleList()].reverse()) {
+      for (const tag of Array.isArray(rule.tags) ? rule.tags : []) {
+        const key = tagKey(tag);
+        if (key) add([key], key.replace(/_/g, ' '), tagColorCache.get(key) || '');
+      }
+    }
+    for (const tag of siteTags || []) {
+      const keys = tagNames([tag]) || [];
+      if (!keys.length) continue;
+      const label = isObj(tag) ? String(tag.name || tag.tagName || tag.name_en || keys[0]) : String(tag);
+      const color = isObj(tag) ? TAG_TYPE_COLORS[Number(tag.type ?? tag.tagType)] || '' : '';
+      add(keys, label.replace(/_/g, ' '), color);
+    }
+    return out;
+  }
+
   // ---- Окно «Создать новое правило» ----
   function openRuleDialog(onCreate) {
     if (!document.body) return;
@@ -6839,41 +6892,36 @@ function core(storedSettings) {
       close();
       onCreate({ tags, user, mode });
     });
-    // Уже добавленные теги — свёрнутым списком с крестиками: длинную строку
-    // через запятую глазами не проверишь
+    // Теги, которые уже в чёрном списке — в правилах плагина и в правилах
+    // самого сайта, — чтобы не вбивать одно и то же дважды. Тег, который
+    // сейчас введён в поле и уже есть в списке, подсвечивается
     const tagsInput = root.querySelector('.rtags');
     const tagList = root.querySelector('.rtaglist');
-    const enteredTags = () => [...new Set(tagsInput.value.split(/[,;]/)
-      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean))];
+    const enteredKeys = () => new Set(tagsInput.value.split(/[,;]/)
+      .map((x) => tagKey(underscoreTags(x.trim())).replace(/^_+|_+$/g, '')).filter(Boolean));
+    let listed = blacklistedTags(null);
 
     function renderTagList() {
-      const tags = enteredTags();
-      tagList.hidden = tags.length === 0;
-      tagList.querySelector('summary').textContent = t('Добавленные теги ({n})', { n: tags.length });
-      const chips = tags.map((tag) => {
+      const typed = enteredKeys();
+      tagList.hidden = listed.length === 0;
+      tagList.querySelector('summary').textContent = t('Уже в чёрном списке ({n})', { n: listed.length });
+      const chips = listed.map((entry) => {
         const chip = document.createElement('span');
-        chip.className = 'tchip';
-        chip.style.backgroundColor = tagColorCache.get(tag) || '#616161';
-        chip.appendChild(document.createTextNode(tag.replace(/_/g, ' ')));
-        const del = document.createElement('button');
-        del.type = 'button';
-        del.className = 'tchipdel';
-        del.title = t('Убрать тег');
-        del.textContent = '✕';
-        del.addEventListener('click', () => {
-          const rest = enteredTags().filter((x) => x !== tag);
-          tagsInput.value = rest.length ? rest.join(', ') + ', ' : '';
-          tagsInput.focus();
-          // как будто стёрли руками: список обновится, подсказки закроются
-          tagsInput.dispatchEvent(new Event('input'));
-        });
-        chip.appendChild(del);
+        chip.className = 'tchip' + ([...entry.keys].some((k) => typed.has(k)) ? ' dup' : '');
+        chip.style.backgroundColor = entry.color || tagColorCache.get(entry.key) || '#616161';
+        chip.textContent = entry.label;
         return chip;
       });
       tagList.querySelector('.rtagchips').replaceChildren(...chips);
     }
     tagsInput.addEventListener('input', renderTagList);
     tagsInput.addEventListener('skq-change', renderTagList);
+    renderTagList();
+    siteBlacklist().then((site) => {
+      if (!host.isConnected || !site) return;
+      listed = blacklistedTags(site);
+      renderTagList();
+    });
 
     const tagField = attachSuggest(tagsInput, 'tag');
     attachSuggest(root.querySelector('.ruser'), 'user');
