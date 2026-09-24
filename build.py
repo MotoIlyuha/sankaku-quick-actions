@@ -182,6 +182,10 @@ def build():
     write(us_path, userscript)
     # копия в корне: по ней стоит установка у пользователя
     write(os.path.join(ROOT, 'sankaku-quick-actions.user.js'), userscript)
+    # для Greasy Fork: обновления идут оттуда же, адреса GitHub там запрещены
+    greasy = '\n'.join(l for l in userscript.split('\n')
+                       if not l.startswith(('// @downloadURL', '// @updateURL')))
+    write(os.path.join(DIST, 'greasyfork', 'sankaku-quick-actions.user.js'), greasy)
 
     # --- расширения ---
     core_main = ('// Ядро расширения: тот же код, что и в юзерскрипте, выполняется в контексте страницы.\n'

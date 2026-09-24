@@ -1,9 +1,12 @@
 // ==UserScript==
 // @name         Sankaku: оценки и избранное без открытия поста
+// @name:en      Quick Actions for Sankaku
 // @namespace    skq-quick-actions
 // @version      {{VERSION}}
-// @description  Делает звёзды рейтинга и сердечко избранного кликабельными; стрелки — выбор карточки, 1-5 — оценка, F — избранное
+// @description  Оценки и избранное прямо в ленте, горячие клавиши, массовая загрузка, правила скрытия постов и отключение рекламы на Sankaku Complex. Неофициальный.
+// @description:en Rate and favorite posts right in the feed, hotkeys, bulk upload, post hiding rules and ad removal on Sankaku Complex. Unofficial.
 // @author       MotoIlyuha
+// @license      MIT
 // @homepageURL  {{REPO}}
 // @supportURL   {{REPO}}/issues
 // @downloadURL  {{RAW}}/sankaku-quick-actions.user.js
